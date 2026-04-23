@@ -24,7 +24,7 @@ export const Route = createFileRoute("/ordina")({
 
 // 👉 Sostituisci questo con l'URL del tuo Google Apps Script Web App
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/REPLACE_WITH_YOUR_DEPLOYED_SCRIPT_ID/exec";
+  "https://script.google.com/macros/s/AKfycbx8QLjmeBLw62VDxf3hakKu4HpIHHXw7THzMCrkMGvnG0TziDPYWQ-aySJrpyf5ZSdsjg/exec";
 
 const ENERGIE = [
   { id: "normale", label: "NORMALE", color: "#E8E8E8", symbol: "★" },
