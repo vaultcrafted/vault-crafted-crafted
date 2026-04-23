@@ -40,10 +40,10 @@ export function HowItWorks() {
             {steps.map((s, i) => (
               <Reveal key={s.n} delay={i * 0.2} className="relative">
                 <div className="flex flex-col items-center text-center md:items-start md:text-left">
-                  <div className="relative z-10 mb-8 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border border-gold/40 bg-background font-display text-xl text-gold shadow-[0_0_30px_-8px_var(--gold)] transition-all hover:bg-gold hover:text-background">
+                  <div className="relative z-10 mb-8 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border border-gold/40 bg-surface-2 font-display text-xl text-gold shadow-[0_0_30px_-8px_var(--gold)] transition-all hover:bg-gold hover:text-background">
                     {s.n}
                   </div>
-                  <h3 className="font-display mb-3 text-2xl tracking-tight">{s.title}</h3>
+                  <h3 className="font-display mb-3 text-2xl tracking-tight text-foreground">{s.title}</h3>
                   <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
                     {s.desc}
                   </p>
