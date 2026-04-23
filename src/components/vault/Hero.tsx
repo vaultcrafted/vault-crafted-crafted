@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Particles } from "./Particles";
-
-const FORM_URL = "https://forms.gle/u22oCjkFigvW1xjt8";
 
 export function Hero() {
   return (
@@ -72,15 +71,23 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.9 }}
           className="mt-12"
         >
-          <a
-            href={FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-gold group inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]"
-          >
-            Crea ora la tua carta
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </a>
+          <div className="flex flex-col items-center gap-4 sm:flex-row">
+            <Link
+              to="/ordina"
+              className="btn-gold group inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]"
+            >
+              Ordina ora
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+            <a
+              href="https://forms.gle/u22oCjkFigvW1xjt8"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-7 py-4 text-xs font-semibold uppercase tracking-[0.25em] text-gold transition-colors hover:bg-gold/10"
+            >
+              Crea ora la tua carta
+            </a>
+          </div>
         </motion.div>
       </div>
 
