@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Hero } from "@/components/vault/Hero";
 import { ValueProps } from "@/components/vault/ValueProps";
 import { HowItWorks } from "@/components/vault/HowItWorks";
+import { VideoSection } from "@/components/vault/VideoSection";
 import { Gallery } from "@/components/vault/Gallery";
 import { Faq } from "@/components/vault/Faq";
 import { Newsletter } from "@/components/vault/Newsletter";
@@ -33,6 +34,7 @@ function Index() {
       <Hero />
       <ValueProps />
       <HowItWorks />
+      <VideoSection />
       <Gallery />
       <Faq />
       <Newsletter />
