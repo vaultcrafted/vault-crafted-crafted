@@ -4,6 +4,7 @@ import { ValueProps } from "@/components/vault/ValueProps";
 import { HowItWorks } from "@/components/vault/HowItWorks";
 import { VideoSection } from "@/components/vault/VideoSection";
 import { Gallery } from "@/components/vault/Gallery";
+import { CardsCarousel } from "@/components/vault/CardsCarousel";
 import { Faq } from "@/components/vault/Faq";
 import { Newsletter } from "@/components/vault/Newsletter";
 import { FinalCta } from "@/components/vault/FinalCta";
@@ -36,6 +37,7 @@ function Index() {
       <HowItWorks />
       <VideoSection />
       <Gallery />
+      <CardsCarousel />
       <Faq />
       <Newsletter />
       <FinalCta />
