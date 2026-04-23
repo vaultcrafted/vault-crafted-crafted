@@ -98,12 +98,12 @@
   --muted: oklch(0.35 0.04 218);
   --muted-foreground: oklch(0.78 0.02 220);
 
-  --accent: oklch(0.88 0.17 200); /* cyan accent #00E5FF */
-  --accent-foreground: oklch(0.2 0.04 270);
+  --accent: oklch(0.7 0.2 40); /* orange accent #FF6B2B */
+  --accent-foreground: oklch(0.99 0 0);
 
-  --gold: oklch(0.88 0.17 200); /* #00E5FF */
-  --gold-soft: oklch(0.94 0.11 200);
-  --gold-deep: oklch(0.75 0.18 215);
+  --gold: oklch(0.7 0.2 40); /* #FF6B2B */
+  --gold-soft: oklch(0.8 0.16 45);
+  --gold-deep: oklch(0.6 0.21 35);
 
   --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(0.98 0 0);
