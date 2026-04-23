@@ -6,7 +6,7 @@ const FORM_URL = "https://forms.gle/u22oCjkFigvW1xjt8";
 
 export function FinalCta() {
   return (
-    <section className="relative overflow-hidden border-y border-border/40 bg-background py-32 md:py-44 vault-grain">
+    <section className="relative overflow-hidden border-y border-border/40 bg-surface-2 py-32 md:py-44 vault-grain">
       <Particles count={30} />
       <div
         aria-hidden

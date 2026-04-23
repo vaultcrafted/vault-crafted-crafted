@@ -17,14 +17,14 @@ const images = [
 
 export function Gallery() {
   return (
-    <section className="relative bg-background py-24 md:py-32">
+    <section className="relative bg-surface-1 py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6">
         <Reveal className="mb-16 max-w-3xl">
           <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-gold">La collezione</p>
-          <h2 className="font-display text-4xl leading-[1.05] tracking-tight md:text-6xl">
+          <h2 className="font-display text-4xl leading-[1.05] tracking-tight text-foreground md:text-6xl">
             Non sono semplici carte.
             <br />
-            <em className="text-gradient-gold">Sono pezzi unici.</em>
+            <em className="text-gold italic">Sono pezzi unici.</em>
           </h2>
         </Reveal>
 
@@ -33,7 +33,7 @@ export function Gallery() {
             <Reveal
               key={i}
               delay={i * 0.08}
-              className={`group relative overflow-hidden rounded-sm border border-border/60 bg-card ${img.span}`}
+              className={`group relative overflow-hidden rounded-sm border border-border/60 bg-surface-2 ${img.span}`}
             >
               <img
                 src={img.src}

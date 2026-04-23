@@ -11,10 +11,10 @@ export function Newsletter() {
   }
 
   return (
-    <section className="relative bg-background py-24 md:py-32">
+    <section className="relative bg-surface-1 py-24 md:py-32">
       <div className="mx-auto max-w-5xl px-6">
         <Reveal>
-          <div className="relative overflow-hidden rounded-sm border border-gold/40 bg-card/40 p-10 backdrop-blur-sm md:p-16">
+          <div className="relative overflow-hidden rounded-md border border-gold/40 bg-surface-2 p-10 backdrop-blur-sm md:p-16">
             {/* Corner accents */}
             <div className="absolute left-0 top-0 h-8 w-8 border-l-2 border-t-2 border-gold" />
             <div className="absolute right-0 top-0 h-8 w-8 border-r-2 border-t-2 border-gold" />
@@ -26,8 +26,8 @@ export function Newsletter() {
                 <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-gold">
                   Inner circle
                 </p>
-                <h2 className="font-display text-3xl leading-tight tracking-tight md:text-4xl">
-                  Entra nella <em className="text-gradient-gold">cerchia ristretta</em>.
+                <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
+                  Entra nella <em className="text-gold italic">cerchia ristretta</em>.
                 </h2>
                 <p className="mt-4 text-sm text-muted-foreground">
                   Drop esclusivi, anteprime, accesso prioritario. Solo per chi è dentro.
@@ -70,7 +70,7 @@ export function Newsletter() {
                   </div>
                   <button
                     type="submit"
-                    className="btn-gold mt-4 w-full rounded-sm px-6 py-4 text-xs font-semibold uppercase tracking-[0.3em]"
+                    className="btn-gold mt-4 w-full rounded-md px-6 py-4 text-xs font-semibold uppercase tracking-[0.3em]"
                   >
                     Iscriviti
                   </button>

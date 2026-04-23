@@ -54,6 +54,10 @@
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
   --color-gold-deep: var(--gold-deep);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-cream: var(--cream);
+  --color-ink: var(--ink);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -65,28 +69,37 @@
 }
 
 :root {
-  --radius: 0.25rem;
+  --radius: 0.5rem;
 
-  /* Vault palette */
-  --background: oklch(0.12 0.005 80); /* near black #0D0D0D */
-  --foreground: oklch(0.98 0.005 80);
+  /* Vault palette — petrol/teal */
+  --background: oklch(0.32 0.04 220); /* deep teal #0A3040 */
+  --foreground: oklch(0.98 0.005 220);
 
-  --card: oklch(0.15 0.005 80);
-  --card-foreground: oklch(0.98 0.005 80);
-  --popover: oklch(0.15 0.005 80);
-  --popover-foreground: oklch(0.98 0.005 80);
+  /* Alternating dark surfaces */
+  --surface-1: oklch(0.35 0.04 218); /* #0D3D4A */
+  --surface-2: oklch(0.28 0.04 222); /* #0A2A38 */
 
-  --primary: oklch(0.76 0.13 82); /* gold #C9A84C */
-  --primary-foreground: oklch(0.12 0.005 80);
+  /* Cards: off-white cream with dark navy ink */
+  --cream: oklch(0.96 0.012 80); /* #F5F0E8 */
+  --ink: oklch(0.2 0.04 270); /* #1A1A2E */
 
-  --secondary: oklch(0.18 0.005 80);
-  --secondary-foreground: oklch(0.98 0.005 80);
+  --card: var(--cream);
+  --card-foreground: var(--ink);
+  --popover: var(--cream);
+  --popover-foreground: var(--ink);
 
-  --muted: oklch(0.2 0.005 80);
-  --muted-foreground: oklch(0.7 0.01 80);
+  /* CTA primary — petrol */
+  --primary: oklch(0.4 0.045 220); /* #1E4D5C */
+  --primary-foreground: oklch(0.99 0 0);
 
-  --accent: oklch(0.76 0.13 82);
-  --accent-foreground: oklch(0.12 0.005 80);
+  --secondary: oklch(0.35 0.04 218);
+  --secondary-foreground: oklch(0.98 0.005 220);
+
+  --muted: oklch(0.35 0.04 218);
+  --muted-foreground: oklch(0.78 0.02 220);
+
+  --accent: oklch(0.76 0.13 82); /* gold accent retained */
+  --accent-foreground: oklch(0.2 0.04 270);
 
   --gold: oklch(0.76 0.13 82);
   --gold-soft: oklch(0.85 0.1 85);
@@ -95,9 +108,9 @@
   --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(0.98 0 0);
 
-  --border: oklch(0.25 0.01 80 / 60%);
-  --input: oklch(0.2 0.005 80);
-  --ring: oklch(0.76 0.13 82);
+  --border: oklch(0.5 0.03 220 / 35%);
+  --input: oklch(0.35 0.04 218);
+  --ring: oklch(0.4 0.045 220);
 }
 
 @layer base {
@@ -152,27 +165,25 @@
 
   .vault-grain {
     background-image:
-      radial-gradient(circle at 20% 30%, oklch(0.76 0.13 82 / 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, oklch(0.76 0.13 82 / 0.05) 0%, transparent 50%);
+      radial-gradient(circle at 20% 30%, oklch(0 0 0 / 0.18) 0%, transparent 55%),
+      radial-gradient(circle at 80% 70%, oklch(0 0 0 / 0.15) 0%, transparent 55%),
+      radial-gradient(circle at 50% 50%, oklch(1 0 0 / 0.015) 0%, transparent 70%);
   }
 
   .btn-gold {
-    background: linear-gradient(135deg, var(--gold-soft), var(--gold) 60%, var(--gold-deep));
-    color: var(--background);
-    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow:
-      0 1px 0 0 oklch(1 0 0 / 0.3) inset,
-      0 -1px 0 0 oklch(0 0 0 / 0.2) inset,
-      0 8px 24px -8px oklch(0.76 0.13 82 / 0.5);
+      0 1px 0 0 oklch(1 0 0 / 0.08) inset,
+      0 8px 24px -10px oklch(0 0 0 / 0.5);
   }
   .btn-gold:hover {
-    transform: translateY(-2px);
+    filter: brightness(1.18);
+    transform: translateY(-1px);
     box-shadow:
-      0 1px 0 0 oklch(1 0 0 / 0.4) inset,
-      0 -1px 0 0 oklch(0 0 0 / 0.2) inset,
-      0 0 0 1px var(--gold-soft),
-      0 12px 40px -8px oklch(0.76 0.13 82 / 0.8),
-      0 0 60px -10px oklch(0.85 0.1 85 / 0.6);
+      0 1px 0 0 oklch(1 0 0 / 0.12) inset,
+      0 12px 32px -10px oklch(0 0 0 / 0.55);
   }
 
   .shimmer-text {
