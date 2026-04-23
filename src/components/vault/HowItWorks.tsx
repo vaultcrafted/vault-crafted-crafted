@@ -20,12 +20,12 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="relative bg-background py-24 md:py-32">
+    <section className="relative bg-surface-2 py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6">
         <Reveal className="mb-20 text-center">
           <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-gold">Il processo</p>
-          <h2 className="font-display text-4xl tracking-tight md:text-5xl">
-            Tre passi. <em className="text-gradient-gold">Una carta tua.</em>
+          <h2 className="font-display text-4xl tracking-tight text-foreground md:text-5xl">
+            Tre passi. <em className="text-gold italic">Una carta tua.</em>
           </h2>
         </Reveal>
 
