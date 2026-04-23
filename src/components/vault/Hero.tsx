@@ -51,11 +51,9 @@ export function Hero() {
           transition={{ duration: 1.2, delay: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
           className="font-display text-5xl font-bold leading-[0.95] tracking-tight md:text-7xl lg:text-[7.5rem]"
         >
-          BENVENUTO NEL
+       BENVENUTO NEL
 <br />
-<span className="shimmer-text italic">MONDO DI</span>
-<br />
-<span className="shimmer-text italic text-[1.4em]">VAULT</span>
+<span className="shimmer-text italic">MONDO DI VAULT</span>
         </motion.h1>
 
         <motion.p
