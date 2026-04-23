@@ -1,26 +1,43 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Hero } from "@/components/vault/Hero";
+import { ValueProps } from "@/components/vault/ValueProps";
+import { HowItWorks } from "@/components/vault/HowItWorks";
+import { Gallery } from "@/components/vault/Gallery";
+import { Faq } from "@/components/vault/Faq";
+import { Newsletter } from "@/components/vault/Newsletter";
+import { FinalCta } from "@/components/vault/FinalCta";
+import { Footer } from "@/components/vault/Footer";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  head: () => ({
+    meta: [
+      { title: "Vault Crafted — Carte da collezione personalizzate, uniche" },
+      {
+        name: "description",
+        content:
+          "Vault Crafted crea carte da collezione personalizzate e numerate. Zero template, pezzi unici, packaging premium. Crea ora la tua carta.",
+      },
+      { property: "og:title", content: "Vault Crafted — Pezzi unici, mai template" },
+      {
+        property: "og:description",
+        content: "Carte personalizzate, uniche, create per distinguersi.",
+      },
+    ],
+  }),
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
-
 function Index() {
-  return <PlaceholderIndex />;
+  return (
+    <main className="bg-background text-foreground">
+      <Hero />
+      <ValueProps />
+      <HowItWorks />
+      <Gallery />
+      <Faq />
+      <Newsletter />
+      <FinalCta />
+      <Footer />
+    </main>
+  );
 }
