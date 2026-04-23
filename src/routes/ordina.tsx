@@ -399,7 +399,29 @@ function OrdinaPage() {
             ))}
           </div>
         </FormSection>
+{/* Contatti */}
+<FormSection title="Benissimo, ora ho bisogno di chiederti due informazioni di contatto">
+  <p className="mb-3 text-sm text-muted-foreground">Prima di iniziare, inserisci il tuo nome e cognome</p>
+</FormSection>
 
+<FormSection title="Nome e Cognome" required>
+  <input type="text" name="nome_cognome" required maxLength={100} placeholder="La tua risposta" className="vault-input" />
+</FormSection>
+
+<FormSection title="Cellulare" required>
+  <p className="mb-3 text-sm text-muted-foreground">Inserisci il tuo cellulare</p>
+  <input type="tel" name="cellulare" required maxLength={20} placeholder="La tua risposta" className="vault-input" />
+</FormSection>
+
+<FormSection title="E-Mail" required>
+  <p className="mb-3 text-sm text-muted-foreground">Inserisci la tua e-mail (tranquillo, servirà solo per la spedizione, non ti mandiamo spam)</p>
+  <input type="email" name="email_contatto" required maxLength={255} placeholder="La tua risposta" className="vault-input" />
+</FormSection>
+
+<FormSection title="Spedizione" required>
+  <p className="mb-3 text-sm text-muted-foreground">Inserisci l'indirizzo di spedizione completo (città, provincia, CAP, via e numero civico) per ricevere la tua carta VAULT. Spedizione al costo di 4,99€</p>
+  <input type="text" name="spedizione" required maxLength={300} placeholder="La tua risposta" className="vault-input" />
+</FormSection>
         {/* Submit */}
         <div className="flex flex-col items-center gap-4 pt-6">
           {error && (
