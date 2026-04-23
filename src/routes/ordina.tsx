@@ -191,18 +191,6 @@ function OrdinaPage() {
           </p>
         </FormSection>
 
-        {/* Email */}
-        <FormSection title="Email" required>
-          <input
-            type="email"
-            name="email"
-            required
-            maxLength={255}
-            placeholder="latuaemail@esempio.com"
-            className="vault-input"
-          />
-        </FormSection>
-
         {/* Energia */}
         <FormSection title="Energia" required>
           <p className="mb-4 text-sm text-muted-foreground">
