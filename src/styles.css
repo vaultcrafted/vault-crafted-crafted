@@ -165,27 +165,25 @@
 
   .vault-grain {
     background-image:
-      radial-gradient(circle at 20% 30%, oklch(0.76 0.13 82 / 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, oklch(0.76 0.13 82 / 0.05) 0%, transparent 50%);
+      radial-gradient(circle at 20% 30%, oklch(0 0 0 / 0.18) 0%, transparent 55%),
+      radial-gradient(circle at 80% 70%, oklch(0 0 0 / 0.15) 0%, transparent 55%),
+      radial-gradient(circle at 50% 50%, oklch(1 0 0 / 0.015) 0%, transparent 70%);
   }
 
   .btn-gold {
-    background: linear-gradient(135deg, var(--gold-soft), var(--gold) 60%, var(--gold-deep));
-    color: var(--background);
-    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow:
-      0 1px 0 0 oklch(1 0 0 / 0.3) inset,
-      0 -1px 0 0 oklch(0 0 0 / 0.2) inset,
-      0 8px 24px -8px oklch(0.76 0.13 82 / 0.5);
+      0 1px 0 0 oklch(1 0 0 / 0.08) inset,
+      0 8px 24px -10px oklch(0 0 0 / 0.5);
   }
   .btn-gold:hover {
-    transform: translateY(-2px);
+    filter: brightness(1.18);
+    transform: translateY(-1px);
     box-shadow:
-      0 1px 0 0 oklch(1 0 0 / 0.4) inset,
-      0 -1px 0 0 oklch(0 0 0 / 0.2) inset,
-      0 0 0 1px var(--gold-soft),
-      0 12px 40px -8px oklch(0.76 0.13 82 / 0.8),
-      0 0 60px -10px oklch(0.85 0.1 85 / 0.6);
+      0 1px 0 0 oklch(1 0 0 / 0.12) inset,
+      0 12px 32px -10px oklch(0 0 0 / 0.55);
   }
 
   .shimmer-text {
