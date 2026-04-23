@@ -52,8 +52,10 @@ export function Hero() {
           className="font-display text-5xl font-bold leading-[0.95] tracking-tight md:text-7xl lg:text-[7.5rem]"
         >
           BENVENUTO NEL
-          <br />
-          <span className="shimmer-text italic">MONDO DI VAULT</span>
+<br />
+<span className="shimmer-text italic">MONDO DI</span>
+<br />
+<span className="shimmer-text italic text-[1.4em]">VAULT</span>
         </motion.h1>
 
         <motion.p
