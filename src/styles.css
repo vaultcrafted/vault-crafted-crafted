@@ -88,9 +88,9 @@
   --popover: var(--cream);
   --popover-foreground: var(--ink);
 
-  /* CTA primary — petrol */
-  --primary: oklch(0.4 0.045 220); /* #1E4D5C */
-  --primary-foreground: oklch(0.99 0 0);
+  /* CTA primary — white on dark navy */
+  --primary: oklch(1 0 0); /* #FFFFFF */
+  --primary-foreground: oklch(0.32 0.04 220); /* #0A3040 */
 
   --secondary: oklch(0.35 0.04 218);
   --secondary-foreground: oklch(0.98 0.005 220);
@@ -98,12 +98,12 @@
   --muted: oklch(0.35 0.04 218);
   --muted-foreground: oklch(0.78 0.02 220);
 
-  --accent: oklch(0.7 0.2 40); /* orange accent #FF6B2B */
-  --accent-foreground: oklch(0.99 0 0);
+  --accent: oklch(1 0 0); /* white accent #FFFFFF */
+  --accent-foreground: oklch(0.32 0.04 220);
 
-  --gold: oklch(0.7 0.2 40); /* #FF6B2B */
-  --gold-soft: oklch(0.8 0.16 45);
-  --gold-deep: oklch(0.6 0.21 35);
+  --gold: oklch(1 0 0); /* #FFFFFF */
+  --gold-soft: oklch(1 0 0);
+  --gold-deep: oklch(0.92 0 0);
 
   --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(0.98 0 0);
@@ -175,15 +175,16 @@
     color: var(--primary-foreground);
     transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow:
-      0 1px 0 0 oklch(1 0 0 / 0.08) inset,
-      0 8px 24px -10px oklch(0 0 0 / 0.5);
+      0 1px 0 0 oklch(1 0 0 / 0.4) inset,
+      0 8px 24px -10px oklch(1 0 0 / 0.25);
   }
   .btn-gold:hover {
-    filter: brightness(1.18);
     transform: translateY(-1px);
     box-shadow:
-      0 1px 0 0 oklch(1 0 0 / 0.12) inset,
-      0 12px 32px -10px oklch(0 0 0 / 0.55);
+      0 1px 0 0 oklch(1 0 0 / 0.5) inset,
+      0 0 0 1px oklch(1 0 0 / 0.5),
+      0 12px 40px -8px oklch(1 0 0 / 0.45),
+      0 0 60px -10px oklch(1 0 0 / 0.35);
   }
 
   .shimmer-text {
