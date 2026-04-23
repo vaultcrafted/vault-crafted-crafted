@@ -33,11 +33,11 @@ function Index() {
   return (
     <main className="bg-background text-foreground">
       <Hero />
+      <CardsCarousel />
       <ValueProps />
       <HowItWorks />
       <VideoSection />
       <Gallery />
-      <CardsCarousel />
       <Faq />
       <Newsletter />
       <FinalCta />
