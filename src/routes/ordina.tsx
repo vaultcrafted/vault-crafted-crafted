@@ -22,7 +22,6 @@ export const Route = createFileRoute("/ordina")({
   }),
 });
 
-// 👉 Sostituisci questo con l'URL del tuo Google Apps Script Web App
 const APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbx8QLjmeBLw62VDxf3hakKu4HpIHHXw7THzMCrkMGvnG0TziDPYWQ-aySJrpyf5ZSdsjg/exec";
 
@@ -71,8 +70,6 @@ function OrdinaPage() {
     try {
       const form = e.currentTarget;
       const formData = new FormData(form);
-
-      // Convert file to base64 so it's safe for Apps Script
       const file = formData.get("grafica") as File | null;
       const payload: Record<string, unknown> = {};
       formData.forEach((value, key) => {
@@ -92,7 +89,7 @@ function OrdinaPage() {
 
       await fetch(APPS_SCRIPT_URL, {
         method: "POST",
-        mode: "no-cors", // Apps Script web apps don't return CORS headers
+        mode: "no-cors",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload),
       });
@@ -176,37 +173,28 @@ function OrdinaPage() {
             VAULT <em className="shimmer-text">CRAFTED</em>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground">
-            Questo modulo è il primo passo per <strong className="text-foreground">trasformare la tua idea in una carta VAULT</strong>. Inserisci le tue preferenze, <strong className="text-foreground">noi le rendiamo reali.</strong>
+            Pochi minuti. Un'idea. <strong className="text-foreground">Una carta che nessun altro avrà mai.</strong>
           </p>
-          <p className="mt-4 text-sm text-muted-foreground">👉 Bastano pochi minuti.</p>
         </motion.div>
       </section>
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="mx-auto max-w-3xl space-y-6 px-6 py-16">
-        {/* Intro card */}
         <FormSection title="Possiamo finalmente iniziare">
           <p className="text-sm text-muted-foreground">
             Prenditi il tempo che serve e raccontaci la tua idea. Trasformeremo le tue indicazioni in <strong className="text-foreground">una carta unica, creata su misura per te</strong>.
           </p>
         </FormSection>
 
-        {/* Energia */}
         <FormSection title="Energia" required>
           <p className="mb-4 text-sm text-muted-foreground">
             Scegli l'energia che rappresenta la tua carta: è l'elemento che ne definisce <strong className="text-foreground">stile, carattere e identità</strong>.
           </p>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {ENERGIE.map((e) => (
-              <label
-                key={e.id}
-                className="vault-radio-card group"
-              >
+              <label key={e.id} className="vault-radio-card group">
                 <input type="radio" name="energia" value={e.label} required className="peer sr-only" />
-                <div
-                  className="flex h-20 w-full items-center justify-center rounded-md text-3xl"
-                  style={{ background: e.color }}
-                >
+                <div className="flex h-20 w-full items-center justify-center rounded-md text-3xl" style={{ background: e.color }}>
                   {e.symbol}
                 </div>
                 <span className="mt-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider">
@@ -218,23 +206,11 @@ function OrdinaPage() {
           </div>
         </FormSection>
 
-        {/* Tipologia */}
         <FormSection title="Tipologia di carta" required>
           <p className="mb-3 text-sm text-muted-foreground">
-            Ora puoi selezionare il <strong className="text-foreground">design che preferisci</strong> tra diversi modelli disponibili. Le carte mostrate sono <strong className="text-foreground">esempi di stile</strong>: scegli quella che più rispecchia la tua idea.
+            Seleziona il <strong className="text-foreground">design che preferisci</strong>. Accanto a ogni opzione troverai il <strong className="text-foreground">prezzo finale</strong>, che include progettazione, stampa, taglio e scatola protettiva con gadget.
           </p>
-          <p className="mb-3 text-sm text-muted-foreground">
-            Accanto a ogni opzione troverai il <strong className="text-foreground">prezzo finale</strong>, che include tutto il necessario:
-          </p>
-          <ul className="mb-4 ml-5 list-disc space-y-1 text-sm text-muted-foreground">
-            <li>Progettazione e realizzazione</li>
-            <li>Stampa</li>
-            <li>Taglio</li>
-            <li>Scatola protettiva con gadget</li>
-          </ul>
-          <p className="mb-4 text-sm text-muted-foreground">
-            👉 Nessun costo nascosto. Quello che vedi è quello che ottieni.
-          </p>
+          <p className="mb-4 text-sm text-muted-foreground">👉 Nessun costo nascosto. Quello che vedi è quello che ottieni.</p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {TIPOLOGIE.map((t) => (
               <label key={t.id} className="vault-radio-row">
@@ -247,19 +223,16 @@ function OrdinaPage() {
           </div>
         </FormSection>
 
-        {/* Nome */}
         <FormSection title="Nome" required>
           <p className="mb-3 text-sm text-muted-foreground">Scegli il nome da mettere sulla tua carta</p>
           <input type="text" name="nome" required maxLength={100} placeholder="La tua risposta" className="vault-input" />
         </FormSection>
 
-        {/* HP */}
         <FormSection title="HP" required>
           <p className="mb-3 text-sm text-muted-foreground">Scegli quanti HP avrà la tua carta (max 3 cifre)</p>
           <input type="text" name="hp" required maxLength={3} pattern="[0-9]{1,3}" placeholder="La tua risposta" className="vault-input" />
         </FormSection>
 
-        {/* ATTACCO 1 */}
         <FormSection title="Attacco 1" required>
           <p className="mb-3 text-sm text-muted-foreground">
             Scegli che attacco vorresti. Non deve per forza essere un'azione, può essere anche qualcosa di divertente o di ignorante, l'unico limite è la fantasia!
@@ -273,7 +246,7 @@ function OrdinaPage() {
         </FormSection>
 
         <FormSection title="Attacco 1 (Energie)" required>
-          <p className="mb-3 text-sm text-muted-foreground">Scegli quante a quali energie dovrebbe avere il tuo attacco (Max 4 energie)</p>
+          <p className="mb-3 text-sm text-muted-foreground">Scegli quante e quali energie dovrebbe avere il tuo attacco (Max 4 energie)</p>
           <input type="text" name="attacco1_energie" required maxLength={120} placeholder="La tua risposta" className="vault-input" />
         </FormSection>
 
@@ -282,7 +255,6 @@ function OrdinaPage() {
           <input type="text" name="attacco1_danni" required maxLength={10} placeholder="La tua risposta" className="vault-input" />
         </FormSection>
 
-        {/* ATTACCO 2 */}
         <FormSection title="Attacco 2 (non obbligatorio)">
           <p className="mb-3 text-sm text-muted-foreground">
             Scegli un secondo attacco che vorresti avere nella tua carta, ma non sei obbligato, se ti piace avere solo 1 ATTACCO va bene ugualmente
@@ -296,7 +268,7 @@ function OrdinaPage() {
         </FormSection>
 
         <FormSection title="Attacco 2 (Energie)">
-          <p className="mb-3 text-sm text-muted-foreground">Scegli quante a quali energie dovrebbe avere il tuo attacco (Max 4 energie)</p>
+          <p className="mb-3 text-sm text-muted-foreground">Scegli quante e quali energie dovrebbe avere il tuo attacco (Max 4 energie)</p>
           <input type="text" name="attacco2_energie" maxLength={120} placeholder="La tua risposta" className="vault-input" />
         </FormSection>
 
@@ -305,7 +277,6 @@ function OrdinaPage() {
           <input type="text" name="attacco2_danni" maxLength={10} placeholder="La tua risposta" className="vault-input" />
         </FormSection>
 
-        {/* Resistenza / Debolezza */}
         <FormSection title="Resistenza" required>
           <p className="mb-3 text-sm text-muted-foreground">
             Indicare a quale energia si ha la resistenza (es: Fuoco, Erba ecc...). Non deve per forza essere un'energia ma può anche essere un emoticon di qualcosa di simpatico o inerente al contesto
@@ -334,10 +305,9 @@ function OrdinaPage() {
           <input type="text" name="frase" maxLength={200} placeholder="La tua risposta" className="vault-input" />
         </FormSection>
 
-        {/* File upload */}
         <FormSection title="Carica la tua grafica definitiva" required>
           <p className="mb-3 text-sm text-muted-foreground">
-            Qui hai la possibilità di caricare quella che sarà la foto finale che verrà applicata alla foto. Non effettuiamo il servizio di grafica.
+            Carica la foto finale che verrà applicata alla carta. Non effettuiamo il servizio di grafica.
           </p>
           <p className="mb-3 text-xs text-muted-foreground">
             Carica 1 file supportato: PDF, document, drawing o image. Massimo 10 MB.
@@ -368,13 +338,9 @@ function OrdinaPage() {
           </label>
         </FormSection>
 
-        {/* Custodia */}
         <FormSection title="Custodia / Holder" required>
           <p className="mb-3 text-sm text-muted-foreground">
-            Scegli il <strong className="text-foreground">tipo di custodia protettiva</strong> in cui verrà inserita la tua carta personalizzata. Ogni opzione offre <strong className="text-foreground">livelli diversi di protezione, stile ed esposizione</strong>.
-          </p>
-          <p className="mb-4 text-sm text-muted-foreground">
-            Le custodie prevedono <strong className="text-foreground">un costo aggiuntivo</strong>, indicato chiaramente accanto alla selezione. 👉 Scegli con attenzione quella più adatta alla tua carta.
+            Scegli il <strong className="text-foreground">tipo di custodia protettiva</strong>. Ogni opzione offre <strong className="text-foreground">livelli diversi di protezione, stile ed esposizione</strong>. Le custodie prevedono un costo aggiuntivo.
           </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {CUSTODIE.map((c) => (
@@ -387,29 +353,27 @@ function OrdinaPage() {
             ))}
           </div>
         </FormSection>
-{/* Contatti */}
-<FormSection title="Benissimo, ora ho bisogno di chiederti due informazioni di contatto">
-  <p className="mb-3 text-sm text-muted-foreground">Prima di iniziare, inserisci il tuo nome e cognome</p>
-</FormSection>
 
-<FormSection title="Nome e Cognome" required>
-  <input type="text" name="nome_cognome" required maxLength={100} placeholder="La tua risposta" className="vault-input" />
-</FormSection>
+        <FormSection title="Nome e Cognome" required>
+          <p className="mb-3 text-sm text-muted-foreground">Prima di concludere, inserisci il tuo nome e cognome</p>
+          <input type="text" name="nome_cognome" required maxLength={100} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
 
-<FormSection title="Cellulare" required>
-  <p className="mb-3 text-sm text-muted-foreground">Inserisci il tuo cellulare</p>
-  <input type="tel" name="cellulare" required maxLength={20} placeholder="La tua risposta" className="vault-input" />
-</FormSection>
+        <FormSection title="Cellulare" required>
+          <p className="mb-3 text-sm text-muted-foreground">Inserisci il tuo cellulare</p>
+          <input type="tel" name="cellulare" required maxLength={20} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
 
-<FormSection title="E-Mail" required>
-  <p className="mb-3 text-sm text-muted-foreground">Inserisci la tua e-mail (tranquillo, servirà solo per la spedizione, non ti mandiamo spam)</p>
-  <input type="email" name="email_contatto" required maxLength={255} placeholder="La tua risposta" className="vault-input" />
-</FormSection>
+        <FormSection title="E-Mail" required>
+          <p className="mb-3 text-sm text-muted-foreground">Inserisci la tua e-mail (tranquillo, servirà solo per la spedizione, non ti mandiamo spam)</p>
+          <input type="email" name="email_contatto" required maxLength={255} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
 
-<FormSection title="Spedizione" required>
-  <p className="mb-3 text-sm text-muted-foreground">Inserisci l'indirizzo di spedizione completo (città, provincia, CAP, via e numero civico) per ricevere la tua carta VAULT. Spedizione al costo di 4,99€</p>
-  <input type="text" name="spedizione" required maxLength={300} placeholder="La tua risposta" className="vault-input" />
-</FormSection>
+        <FormSection title="Spedizione" required>
+          <p className="mb-3 text-sm text-muted-foreground">Inserisci l'indirizzo di spedizione completo (città, provincia, CAP, via e numero civico). Spedizione al costo di 4,99€</p>
+          <input type="text" name="spedizione" required maxLength={300} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
         {/* Submit */}
         <div className="flex flex-col items-center gap-4 pt-6">
           {error && (
