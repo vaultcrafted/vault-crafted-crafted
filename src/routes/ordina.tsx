@@ -145,7 +145,7 @@ function OrdinaPage() {
             <ArrowLeft className="h-3.5 w-3.5" />
             Indietro
           </Link>
-          <div className="font-display text-lg tracking-[0.3em] text-gold">VAULT</div>
+          <Link to="/" className="font-display text-lg tracking-[0.3em] text-gold transition-colors hover:text-gold/70">VAULT</Link>
           <div className="w-16" />
         </div>
       </header>
