@@ -80,6 +80,13 @@ export function Hero() {
               >
                 Tutte le carte
               </Link>
+              <Link
+  to="/regalo"
+  onClick={() => setMenuOpen(false)}
+  className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
+>
+  Regalo perfetto
+</Link>
             </motion.div>
           </>
         )}
