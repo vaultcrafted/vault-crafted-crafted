@@ -1,7 +1,7 @@
 import { Facebook, Instagram } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 const TIKTOK_URL = "https://www.tiktok.com/@vault_crftd";
-
 const socials = [
   {
     name: "Facebook",
@@ -30,10 +30,9 @@ export function Footer() {
               Crafted · Italy
             </p>
           </div>
-
           <div className="flex items-center gap-3">
             {socials.map(({ name, href, Icon }) => (
-              <a
+              
                 key={name}
                 href={href}
                 target="_blank"
@@ -44,7 +43,7 @@ export function Footer() {
                 <Icon className="h-4 w-4" strokeWidth={1.5} />
               </a>
             ))}
-            <a
+            
               href={TIKTOK_URL}
               target="_blank"
               rel="noopener noreferrer"
@@ -54,11 +53,18 @@ export function Footer() {
               <TikTokIcon className="h-4 w-4" />
             </a>
           </div>
-
-          <div className="text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground md:text-right">
-            © {new Date().getFullYear()} Vault Crafted
-            <br />
-            Tutti i diritti riservati
+          <div className="text-center md:text-right">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              © {new Date().getFullYear()} Vault Crafted
+              <br />
+              Tutti i diritti riservati
+            </p>
+            <Link
+              to="/termini"
+              className="mt-3 block text-[10px] uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
+            >
+              Termini e Condizioni
+            </Link>
           </div>
         </div>
       </div>
