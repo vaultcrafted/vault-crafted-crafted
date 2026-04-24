@@ -79,14 +79,6 @@ export function Hero() {
               Ordina ora
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <a
-              href="https://forms.gle/u22oCjkFigvW1xjt8"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-7 py-4 text-xs font-semibold uppercase tracking-[0.25em] text-gold transition-colors hover:bg-gold/10"
-            >
-              Crea ora la tua carta
-            </a>
           </div>
         </motion.div>
       </div>
