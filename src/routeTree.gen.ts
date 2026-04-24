@@ -9,10 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TerminiRouteImport } from './routes/termini'
 import { Route as OrdinaRouteImport } from './routes/ordina'
 import { Route as ChiSiamoRouteImport } from './routes/chi-siamo'
+import { Route as CarteRouteImport } from './routes/carte'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TerminiRoute = TerminiRouteImport.update({
+  id: '/termini',
+  path: '/termini',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrdinaRoute = OrdinaRouteImport.update({
   id: '/ordina',
   path: '/ordina',
@@ -23,6 +30,11 @@ const ChiSiamoRoute = ChiSiamoRouteImport.update({
   path: '/chi-siamo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CarteRoute = CarteRouteImport.update({
+  id: '/carte',
+  path: '/carte',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -31,36 +43,51 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/carte': typeof CarteRoute
   '/chi-siamo': typeof ChiSiamoRoute
   '/ordina': typeof OrdinaRoute
+  '/termini': typeof TerminiRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/carte': typeof CarteRoute
   '/chi-siamo': typeof ChiSiamoRoute
   '/ordina': typeof OrdinaRoute
+  '/termini': typeof TerminiRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/carte': typeof CarteRoute
   '/chi-siamo': typeof ChiSiamoRoute
   '/ordina': typeof OrdinaRoute
+  '/termini': typeof TerminiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chi-siamo' | '/ordina'
+  fullPaths: '/' | '/carte' | '/chi-siamo' | '/ordina' | '/termini'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chi-siamo' | '/ordina'
-  id: '__root__' | '/' | '/chi-siamo' | '/ordina'
+  to: '/' | '/carte' | '/chi-siamo' | '/ordina' | '/termini'
+  id: '__root__' | '/' | '/carte' | '/chi-siamo' | '/ordina' | '/termini'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CarteRoute: typeof CarteRoute
   ChiSiamoRoute: typeof ChiSiamoRoute
   OrdinaRoute: typeof OrdinaRoute
+  TerminiRoute: typeof TerminiRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termini': {
+      id: '/termini'
+      path: '/termini'
+      fullPath: '/termini'
+      preLoaderRoute: typeof TerminiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ordina': {
       id: '/ordina'
       path: '/ordina'
@@ -75,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChiSiamoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/carte': {
+      id: '/carte'
+      path: '/carte'
+      fullPath: '/carte'
+      preLoaderRoute: typeof CarteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -87,8 +121,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CarteRoute: CarteRoute,
   ChiSiamoRoute: ChiSiamoRoute,
   OrdinaRoute: OrdinaRoute,
+  TerminiRoute: TerminiRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
