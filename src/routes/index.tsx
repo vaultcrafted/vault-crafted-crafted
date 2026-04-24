@@ -9,6 +9,7 @@ import { Faq } from "@/components/vault/Faq";
 import { Newsletter } from "@/components/vault/Newsletter";
 import { FinalCta } from "@/components/vault/FinalCta";
 import { Footer } from "@/components/vault/Footer";
+import { WhatsappButton } from "@/components/vault/WhatsappButton";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -42,6 +43,7 @@ function Index() {
       <Newsletter />
       <FinalCta />
       <Footer />
+      <WhatsappButton />
     </main>
   );
 }
