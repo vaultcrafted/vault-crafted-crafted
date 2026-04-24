@@ -1,9 +1,12 @@
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Menu, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Particles } from "./Particles";
+import { useState } from "react";
 
 export function Hero() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background vault-grain">
       <Particles count={50} />
@@ -13,8 +16,7 @@ export function Hero() {
         aria-hidden
         className="absolute left-1/2 top-1/2 -z-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-3xl"
         style={{
-          background:
-            "radial-gradient(circle, oklch(0.76 0.13 82 / 0.4) 0%, transparent 60%)",
+          background: "radial-gradient(circle, oklch(0.76 0.13 82 / 0.4) 0%, transparent 60%)",
         }}
       />
 
@@ -23,14 +25,54 @@ export function Hero() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="absolute left-0 right-0 top-0 z-10 flex items-center justify-between px-6 py-6 md:px-12"
+        className="absolute left-0 right-0 top-0 z-20 flex items-center justify-between px-6 py-6 md:px-12"
       >
         <div className="font-display text-lg tracking-[0.3em] text-gold">VAULT</div>
-        <div className="hidden items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted-foreground md:flex">
-          <span className="h-px w-8 bg-gold/60" />
-          Crafted in Italy
+
+        {/* Desktop menu */}
+        <div className="hidden items-center gap-8 md:flex">
+          <Link to="/ordina" className="text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold">
+            Ordina ora
+          </Link>
+          <a href="#chi-siamo" className="text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold">
+            Chi siamo
+          </a>
+          <a href="#gallery" className="text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold">
+            Tutte le carte
+          </a>
         </div>
+
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="z-30 text-gold md:hidden"
+        >
+          {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
       </motion.div>
+
+      {/* Mobile dropdown menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="absolute left-0 right-0 top-16 z-20 flex flex-col gap-4 border-b border-gold/20 bg-background/95 px-6 py-6 backdrop-blur-sm md:hidden"
+          >
+            <Link to="/ordina" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-gold">
+              Ordina ora
+            </Link>
+            <a href="#chi-siamo" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
+              Chi siamo
+            </a>
+            <a href="#gallery" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
+              Tutte le carte
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center px-6 text-center">
         <motion.div
@@ -51,9 +93,9 @@ export function Hero() {
           transition={{ duration: 1.2, delay: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
           className="font-display text-5xl font-bold leading-[0.95] tracking-tight md:text-7xl lg:text-[7.5rem]"
         >
-       BENVENUTO NEL
-<br />
-<span className="shimmer-text italic">MONDO DI VAULT</span>
+          BENVENUTO NEL
+          <br />
+          <span className="shimmer-text italic">MONDO DI VAULT</span>
         </motion.h1>
 
         <motion.p
