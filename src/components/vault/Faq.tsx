@@ -9,19 +9,31 @@ import { Reveal } from "./Reveal";
 const faqs = [
   {
     q: "Quanto tempo serve?",
-    a: "Dalla bozza approvata alla consegna passano 3-4 giorni. Lavoriamo a mano, una carta per volta — la qualità non si improvvisa.",
+    a: "Il processo completo si divide in due fasi. Dalla ricezione dell'ordine, entro 24-48 ore ti inviamo la bozza grafica da approvare. Una volta approvata e confermato il pagamento, la carta viene prodotta e spedita in 3-4 giorni lavorativi. I tempi di consegna tramite corriere sono di circa 5-7 giorni lavorativi. In totale, dalla compilazione del form alla carta in mano, puoi aspettarti circa 7-10 giorni lavorativi.",
   },
   {
     q: "Posso modificare il design dopo l'approvazione della bozza?",
-    a: "Le modifiche sono incluse fino all'approvazione finale. Una volta dato il via libera, la carta entra in produzione e non è più modificabile — è il momento in cui diventa unica.",
+    a: "Sì, puoi richiedere tutte le modifiche che vuoi prima di approvare la bozza finale — senza costi aggiuntivi. Il nostro obiettivo è che tu sia al 100% soddisfatto prima di procedere. Una volta dato il via libera definitivo e confermato il pagamento, la carta entra in produzione e non è più modificabile. È quel momento preciso in cui smette di essere un progetto e diventa il tuo pezzo unico.",
   },
   {
     q: "Come funziona la spedizione?",
-    a: "Spedizione tracciata in tutta Italia a 4,99€. Tempi di consegna 5/7 giorni lavorativi. Ogni pacco è sigillato con cura nel packaging Vault premium.",
+    a: "Spedizioni in tutta Italia tramite corriere espresso tracciato al costo fisso di 4,99€. I tempi di consegna sono di circa 5-7 giorni lavorativi dalla spedizione. Ogni ordine viene imballato con cura nel packaging premium Vault: custodia rigida, sigillo e presentazione curata nei dettagli. Riceverai un'email con il codice di tracciamento non appena il pacco verrà affidato al corriere.",
   },
   {
     q: "Perché scegliere Vault?",
-    a: "Perché non vendiamo template. Ogni carta è disegnata da zero, numerata, irripetibile. Non possiedi una stampa: possiedi un pezzo che esiste solo per te.",
+    a: "Perché Vault Crafted non vende stampe: crea oggetti da collezione. Ogni carta è progettata da zero partendo dalla tua idea, numerata 1/1 e prodotta in un unico esemplare. Non esistono template, non esistono duplicati. Quello che ricevi è un pezzo che esiste solo per te — con il tuo nome, la tua storia, i tuoi dettagli. È la differenza tra possedere qualcosa e possedere qualcosa di tuo.",
+  },
+  {
+    q: "Posso ordinare una carta come regalo?",
+    a: "Assolutamente sì — anzi, è uno dei regali più originali che puoi fare. Puoi compilare il form con i dettagli della persona a cui è destinata e inserire l'indirizzo di spedizione direttamente. Se vuoi una confezione regalo particolare o una dedica speciale, scrivicelo nella sezione 'Frase personalizzata' del form o contattaci via WhatsApp prima di completare l'ordine.",
+  },
+  {
+    q: "Che formato deve avere la foto che carico?",
+    a: "Per ottenere il miglior risultato di stampa, la foto dovrebbe essere in alta risoluzione (minimo 1000x1000 pixel) e in formato JPG, PNG o PDF. Evita foto sfocate, scattate in condizioni di scarsa luce o con risoluzione bassa — potrebbero compromettere la qualità finale della carta. Se hai dubbi sulla tua immagine, caricala comunque e ti faremo sapere in fase di bozza se è necessario sostituirla.",
+  },
+  {
+    q: "Come avviene il pagamento?",
+    a: "Il pagamento avviene dopo l'approvazione della bozza grafica. Una volta che hai dato il via libera al design, ti invieremo via email il totale da pagare (carta + custodia scelta + spedizione) e le istruzioni per effettuare il pagamento. La produzione parte esclusivamente dopo la conferma del pagamento. Ti chiediamo di inviare la ricevuta rispondendo all'email di conferma.",
   },
 ];
 
@@ -35,7 +47,6 @@ export function Faq() {
             Le risposte che <em className="text-gold italic">cerchi</em>.
           </h2>
         </Reveal>
-
         <Reveal>
           <Accordion type="single" collapsible className="w-full space-y-4">
             {faqs.map((f, i) => (
