@@ -27,7 +27,7 @@ export function Hero() {
         transition={{ duration: 0.8 }}
         className="absolute left-0 right-0 top-0 z-20 flex items-center justify-between px-6 py-6 md:px-12"
       >
-        <div className="font-display text-lg tracking-[0.3em] text-gold">VAULT</div>
+        <Link to="/" className="font-display text-lg tracking-[0.3em] text-gold transition-colors hover:text-gold/70">VAULT</Link>
 
         {/* Hamburger button */}
         <button
