@@ -5,13 +5,12 @@ import { ArrowLeft } from "lucide-react";
 export const Route = createFileRoute("/termini")({
   component: TerminiPage,
   head: () => ({
-    meta: [
-      { title: "Termini e Condizioni — Vault Crafted" },
-      {
-        name: "description",
-        content: "Termini e condizioni d'uso e privacy policy di Vault Crafted.",
-      },
-    ],
+   meta: [
+  { title: "Termini e Condizioni — Vault Crafted" },
+  { name: "description", content: "Leggi i termini e condizioni e la privacy policy di Vault Crafted. Informazioni su ordini, pagamenti, spedizioni e trattamento dei dati personali." },
+  { name: "robots", content: "index, follow" },
+  { property: "og:url", content: "https://vaultcrafted.com/termini" },
+],
   }),
 });
 
