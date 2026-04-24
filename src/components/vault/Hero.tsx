@@ -29,7 +29,7 @@ export function Hero() {
       >
         <div className="font-display text-lg tracking-[0.3em] text-gold">VAULT</div>
 
-        {/* Hamburger button — always visible */}
+        {/* Hamburger button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="z-30 text-gold"
@@ -38,38 +38,50 @@ export function Hero() {
         </button>
       </motion.div>
 
-      {/* Dropdown menu */}
+      {/* Side menu */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="absolute left-0 right-0 top-16 z-20 flex flex-col gap-6 border-b border-gold/20 bg-background/95 px-8 py-8 backdrop-blur-sm"
-          >
-            <Link
-              to="/ordina"
+          <>
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-20 bg-black/40 backdrop-blur-sm"
               onClick={() => setMenuOpen(false)}
-              className="text-sm uppercase tracking-[0.3em] text-gold transition-colors hover:text-gold/70"
+            />
+            {/* Panel */}
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              transition={{ duration: 0.3 }}
+              className="fixed right-0 top-0 z-30 flex h-full w-64 flex-col gap-8 border-l border-gold/20 bg-background/95 px-8 py-24 backdrop-blur-sm"
             >
-              Ordina ora
-            </Link>
-            <Link
-              to="/chi-siamo"
-              onClick={() => setMenuOpen(false)}
-              className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
-            >
-              Chi siamo
-            </Link>
-            <Link
-              to="/carte"
-              onClick={() => setMenuOpen(false)}
-              className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
-            >
-              Tutte le carte
-            </Link>
-          </motion.div>
+              <Link
+                to="/ordina"
+                onClick={() => setMenuOpen(false)}
+                className="text-sm uppercase tracking-[0.3em] text-gold transition-colors hover:text-gold/70"
+              >
+                Ordina ora
+              </Link>
+              <Link
+                to="/chi-siamo"
+                onClick={() => setMenuOpen(false)}
+                className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
+              >
+                Chi siamo
+              </Link>
+              <Link
+                to="/carte"
+                onClick={() => setMenuOpen(false)}
+                className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
+              >
+                Tutte le carte
+              </Link>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
