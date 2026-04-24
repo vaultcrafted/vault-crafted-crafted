@@ -7,12 +7,14 @@ export const Route = createFileRoute("/regalo")({
   component: RegaloPage,
   head: () => ({
     meta: [
-      { title: "Il regalo perfetto — Vault Crafted" },
-      {
-        name: "description",
-        content: "Cerca un regalo unico e originale? Vault Crafted crea carte da collezione personalizzate per ogni occasione. Compleanni, lauree, anniversari e molto altro.",
-      },
-    ],
+  { title: "Il regalo perfetto — Vault Crafted | Carte personalizzate" },
+  { name: "description", content: "Cerca un regalo originale e unico? Una carta da collezione personalizzata Vault Crafted è il regalo perfetto per compleanni, lauree, anniversari, Natale e molto altro." },
+  { name: "keywords", content: "regalo originale, regalo personalizzato, regalo compleanno unico, carta pokemon regalo, regalo laurea originale" },
+  { name: "robots", content: "index, follow" },
+  { property: "og:url", content: "https://vaultcrafted.com/regalo" },
+  { property: "og:title", content: "Il regalo perfetto — Vault Crafted" },
+  { property: "og:description", content: "Smetti di regalare cose che finiscono nel cassetto. Una carta Vault è unica, personalizzata e irripetibile." },
+],
   }),
 });
 
