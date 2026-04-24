@@ -32,6 +32,7 @@ export const Route = createFileRoute("/")({
   { name: "twitter:card", content: "summary_large_image" },
   { name: "twitter:title", content: "Vault Crafted — Carte da Collezione Personalizzate" },
   { name: "twitter:description", content: "Crea la tua carta da collezione personalizzata. Design unico, zero template, packaging premium." },
+      { name: "google-site-verification", content: "5VVqv2Exmkc5JKarfDezAdgDTeJYbm_nPoCsGzfOYTo" },
 ],
   }),
 });
