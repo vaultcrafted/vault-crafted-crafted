@@ -6,13 +6,14 @@ import { Particles } from "@/components/vault/Particles";
 export const Route = createFileRoute("/chi-siamo")({
   component: ChiSiamoPage,
   head: () => ({
-    meta: [
-      { title: "Chi siamo — Vault Crafted" },
-      {
-        name: "description",
-        content: "La storia di Vault Crafted: dalla passione per le carte Pokémon a un progetto unico di personalizzazione totale.",
-      },
-    ],
+   meta: [
+  { title: "Chi siamo — Vault Crafted | La nostra storia" },
+  { name: "description", content: "Scopri la storia di Vault Crafted: nata dalla passione per le carte Pokémon, oggi crea carte da collezione uniche e personalizzate dal novembre 2024." },
+  { name: "robots", content: "index, follow" },
+  { property: "og:url", content: "https://vaultcrafted.com/chi-siamo" },
+  { property: "og:title", content: "Chi siamo — Vault Crafted" },
+  { property: "og:description", content: "Dalla passione per i Pokémon a un progetto unico. Ogni carta nasce da zero, su misura per te." },
+],
   }),
 });
 
