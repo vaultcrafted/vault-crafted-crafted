@@ -6,13 +6,14 @@ import { Particles } from "@/components/vault/Particles";
 export const Route = createFileRoute("/carte")({
   component: CartePage,
   head: () => ({
-    meta: [
-      { title: "Tutte le carte — Vault Crafted" },
-      {
-        name: "description",
-        content: "Scopri tutte le carte personalizzate create da Vault Crafted. Pezzi unici, mai template.",
-      },
-    ],
+   meta: [
+  { title: "Tutte le carte — Vault Crafted | La collezione" },
+  { name: "description", content: "Sfoglia la collezione di carte da collezione personalizzate create da Vault Crafted. Ogni pezzo è unico, numerato e irripetibile." },
+  { name: "robots", content: "index, follow" },
+  { property: "og:url", content: "https://vaultcrafted.com/carte" },
+  { property: "og:title", content: "Tutte le carte — Vault Crafted" },
+  { property: "og:description", content: "Ogni carta è un pezzo unico. Sfoglia la nostra collezione e ordina la tua." },
+],
   }),
 });
 
