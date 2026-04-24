@@ -6,19 +6,14 @@ import { ArrowLeft, Upload, CheckCircle2, Loader2 } from "lucide-react";
 export const Route = createFileRoute("/ordina")({
   component: OrdinaPage,
   head: () => ({
-    meta: [
-      { title: "Ordina la tua carta — Vault Crafted" },
-      {
-        name: "description",
-        content:
-          "Compila il modulo per ordinare la tua carta da collezione personalizzata Vault Crafted. Pezzo unico, su misura.",
-      },
-      { property: "og:title", content: "Ordina la tua carta — Vault Crafted" },
-      {
-        property: "og:description",
-        content: "Trasforma la tua idea in una carta VAULT unica e personalizzata.",
-      },
-    ],
+   meta: [
+  { title: "Ordina la tua carta — Vault Crafted" },
+  { name: "description", content: "Compila il modulo e crea la tua carta da collezione personalizzata. Scegli energia, tipologia, attacchi e design. Pezzo unico, consegna in 7-10 giorni." },
+  { name: "robots", content: "index, follow" },
+  { property: "og:url", content: "https://vaultcrafted.com/ordina" },
+  { property: "og:title", content: "Ordina la tua carta — Vault Crafted" },
+  { property: "og:description", content: "Crea la tua carta personalizzata in pochi minuti. Zero template, design unico, packaging premium." },
+],
   }),
 });
 
