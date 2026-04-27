@@ -130,7 +130,6 @@ function OrdinaPage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground vault-grain">
-      {/* Header */}
       <header className="border-b border-border/40 bg-surface-2/60 backdrop-blur-sm">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-5">
           <Link
@@ -140,14 +139,13 @@ function OrdinaPage() {
             <ArrowLeft className="h-3.5 w-3.5" />
             Indietro
           </Link>
-          <Link to="/">
+          <Link to="/" aria-label="Vault Crafted home">
             <img src="/LOGO.png" alt="Vault Crafted" className="h-10 w-auto" />
           </Link>
           <div className="w-16" />
         </div>
       </header>
 
-      {/* Hero band */}
       <section className="relative overflow-hidden border-b border-border/40 bg-surface-1 px-6 py-20 text-center md:py-28">
         <div
           aria-hidden
@@ -172,3 +170,102 @@ function OrdinaPage() {
           <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground">
             Pochi minuti. Un'idea. <strong className="text-foreground">Una carta che nessun altro avrà mai.</strong>
           </p>
+        </motion.div>
+      </section>
+
+      <section className="px-6 py-16 md:py-24">
+        <motion.form
+          onSubmit={handleSubmit}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="mx-auto grid max-w-4xl gap-8"
+        >
+          {error && (
+            <div className="rounded-lg border border-destructive/40 bg-destructive/10 px-5 py-4 text-sm text-destructive">
+              {error}
+            </div>
+          )}
+
+          <div className="grid gap-5 rounded-lg border border-border/50 bg-surface-2/50 p-6 md:grid-cols-2 md:p-8">
+            <label className="grid gap-2 text-sm font-medium">
+              Nome e cognome
+              <input name="nome" required autoComplete="name" className="rounded-md border border-border bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-gold" />
+            </label>
+            <label className="grid gap-2 text-sm font-medium">
+              Email
+              <input name="email" type="email" required autoComplete="email" className="rounded-md border border-border bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-gold" />
+            </label>
+            <label className="grid gap-2 text-sm font-medium md:col-span-2">
+              Nome sulla carta
+              <input name="nomeCarta" required className="rounded-md border border-border bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-gold" />
+            </label>
+          </div>
+
+          <fieldset className="rounded-lg border border-border/50 bg-surface-2/50 p-6 md:p-8">
+            <legend className="px-2 font-display text-2xl">Energia</legend>
+            <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+              {ENERGIE.map((energia) => (
+                <label key={energia.id} className="flex cursor-pointer items-center gap-3 rounded-md border border-border bg-background px-4 py-3 text-sm transition-colors hover:border-gold">
+                  <input name="energia" type="radio" value={energia.label} required className="sr-only peer" />
+                  <span aria-hidden className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm text-ink ring-1 ring-border peer-checked:ring-2 peer-checked:ring-gold" style={{ backgroundColor: energia.color }}>
+                    {energia.symbol}
+                  </span>
+                  <span className="text-xs font-semibold uppercase tracking-[0.15em]">{energia.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset className="rounded-lg border border-border/50 bg-surface-2/50 p-6 md:p-8">
+            <legend className="px-2 font-display text-2xl">Tipologia</legend>
+            <div className="mt-5 grid gap-3 md:grid-cols-2">
+              {TIPOLOGIE.map((tipo) => (
+                <label key={tipo.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 text-sm transition-colors hover:border-gold">
+                  <span className="font-semibold uppercase tracking-[0.14em]">{tipo.label}</span>
+                  <span className="text-gold">{tipo.price}</span>
+                  <input name="tipologia" type="radio" value={`${tipo.label} ${tipo.price}`} required className="sr-only" />
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset className="rounded-lg border border-border/50 bg-surface-2/50 p-6 md:p-8">
+            <legend className="px-2 font-display text-2xl">Custodia</legend>
+            <div className="mt-5 grid gap-3 md:grid-cols-2">
+              {CUSTODIE.map((custodia) => (
+                <label key={custodia.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 text-sm transition-colors hover:border-gold">
+                  <span className="font-semibold uppercase tracking-[0.14em]">{custodia.label}</span>
+                  <span className="text-gold">{custodia.price}</span>
+                  <input name="custodia" type="radio" value={`${custodia.label} ${custodia.price}`} required className="sr-only" />
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <div className="grid gap-5 rounded-lg border border-border/50 bg-surface-2/50 p-6 md:p-8">
+            <label className="grid gap-2 text-sm font-medium">
+              Idea, attacchi e dettagli grafici
+              <textarea name="dettagli" required rows={6} className="resize-none rounded-md border border-border bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-gold" />
+            </label>
+            <label className="grid cursor-pointer gap-3 rounded-md border border-dashed border-border bg-background px-5 py-6 text-center transition-colors hover:border-gold">
+              <Upload className="mx-auto h-7 w-7 text-gold" />
+              <span className="text-sm font-medium">{fileName || "Carica una foto o reference"}</span>
+              <input name="grafica" type="file" accept="image/*,.pdf" className="sr-only" onChange={(event) => setFileName(event.currentTarget.files?.[0]?.name ?? "")} />
+            </label>
+          </div>
+
+          <label className="flex items-start gap-3 text-sm text-muted-foreground">
+            <input name="privacy" type="checkbox" required className="mt-1" />
+            Accetto di essere contattato per ricevere la bozza grafica, il totale e le istruzioni di pagamento.
+          </label>
+
+          <button type="submit" disabled={submitting} className="btn-gold inline-flex items-center justify-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em] disabled:cursor-not-allowed disabled:opacity-60">
+            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+            Invia ordine
+          </button>
+        </motion.form>
+      </section>
+    </main>
+  );
+}
