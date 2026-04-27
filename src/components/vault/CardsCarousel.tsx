@@ -68,7 +68,7 @@ export function CardsCarousel() {
                         src={c.src}
                         alt={c.alt}
                         loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-700 ease-out will-change-transform group-hover:scale-110"
+                        className="h-full w-full object-cover transition-transform duration-700 ease-out will-change-transform scale-125 group-hover:scale-150"
                       />
                     </div>
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-70 transition-opacity group-hover:opacity-30" />
