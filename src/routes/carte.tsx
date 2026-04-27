@@ -97,7 +97,7 @@ function CartePage() {
                 <motion.img
                   src={carta.src}
                   alt={carta.label}
-                  className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                  className="h-full w-full object-cover transition-transform duration-500 ease-out scale-125 group-hover:scale-[1.28]"
                   style={{ minHeight: i === 0 ? "400px" : "auto" }}
                 />
                 {/* Overlay */}
