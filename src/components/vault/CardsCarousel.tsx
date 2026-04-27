@@ -2,65 +2,12 @@ import { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Reveal } from "./Reveal";
-import AZZURRA from "@/assets/AZZURRA.png";
-import COLLE_DER_FOMENTO from "@/assets/COLLE DER FOMENTO.png";
-import DANNO from "@/assets/DANNO.png";
-import DIEGO_VALLINO from "@/assets/DIEGO VALLINO.png";
-import DJ_CRAIM from "@/assets/DJ CRAIM.png";
-import EPCORAW from "@/assets/EPCORAW.png";
-import ETR from "@/assets/ETR.png";
-import FABRI_FIBRA from "@/assets/FABRI FIBRA.png";
-import GEMITAIZ from "@/assets/GEMITAIZ.png";
-import GINO from "@/assets/GINO.png";
-import GRIME_SPITTERZ from "@/assets/GRIME SPITTERZ.png";
-import HAXO from "@/assets/HAXO.png";
-import IKB from "@/assets/IKB.png";
-import JAZ_E_BOBO from "@/assets/JAZ E BOBO.png";
-import KUROLILY from "@/assets/KUROLILY.png";
-import LAURA_MASSEI from "@/assets/LAURA MASSEI.png";
-import LAZZA from "@/assets/LAZZA.png";
-import LINCIO from "@/assets/LINCIO.png";
-import MATTAK from "@/assets/MATTAK.png";
-import MATTEO_IULIANI from "@/assets/MATTEO IULIANI.png";
-import MIRKO_GARDONI from "@/assets/MIRKO GARDONI.png";
-import OMEGA_RIOT from "@/assets/OMEGA RIOT.png";
-import PIPINO_IL_BREVE from "@/assets/PIPINO IL BREVE.png";
-import POPPI from "@/assets/POPPI.png";
-import PRODEST from "@/assets/PRODEST.png";
-import RIC_DE_LARGE from "@/assets/RIC DE LARGE.png";
-import RICCARDO_SALOMONI from "@/assets/RICCARDO SALOMONI.png";
-import WARCARD from "@/assets/WARCARD.png";
 
-const cards = [
-  { src: AZZURRA, alt: "Carta personalizzata Azzurra" },
-  { src: COLLE_DER_FOMENTO, alt: "Carta personalizzata Colle Der Fomento" },
-  { src: DANNO, alt: "Carta personalizzata Danno" },
-  { src: DIEGO_VALLINO, alt: "Carta personalizzata Diego Vallino" },
-  { src: DJ_CRAIM, alt: "Carta personalizzata DJ Craim" },
-  { src: EPCORAW, alt: "Carta personalizzata Epcoraw" },
-  { src: ETR, alt: "Carta personalizzata ETR" },
-  { src: FABRI_FIBRA, alt: "Carta personalizzata Fabri Fibra" },
-  { src: GEMITAIZ, alt: "Carta personalizzata Gemitaiz" },
-  { src: GINO, alt: "Carta personalizzata Gino" },
-  { src: GRIME_SPITTERZ, alt: "Carta personalizzata Grime Spitterz" },
-  { src: HAXO, alt: "Carta personalizzata Haxo" },
-  { src: IKB, alt: "Carta personalizzata IKB" },
-  { src: JAZ_E_BOBO, alt: "Carta personalizzata Jaz e Bobo" },
-  { src: KUROLILY, alt: "Carta personalizzata Kurolily" },
-  { src: LAURA_MASSEI, alt: "Carta personalizzata Laura Massei" },
-  { src: LAZZA, alt: "Carta personalizzata Lazza" },
-  { src: LINCIO, alt: "Carta personalizzata Lincio" },
-  { src: MATTAK, alt: "Carta personalizzata Mattak" },
-  { src: MATTEO_IULIANI, alt: "Carta personalizzata Matteo Iuliani" },
-  { src: MIRKO_GARDONI, alt: "Carta personalizzata Mirko Gardoni" },
-  { src: OMEGA_RIOT, alt: "Carta personalizzata Omega Riot" },
-  { src: PIPINO_IL_BREVE, alt: "Carta personalizzata Pipino il Breve" },
-  { src: POPPI, alt: "Carta personalizzata Poppi" },
-  { src: PRODEST, alt: "Carta personalizzata Prodest" },
-  { src: RIC_DE_LARGE, alt: "Carta personalizzata Ric de Large" },
-  { src: RICCARDO_SALOMONI, alt: "Carta personalizzata Riccardo Salomoni" },
-  { src: WARCARD, alt: "Carta personalizzata Warcard" },
-];
+const imageModules = import.meta.glob("@/assets/*.png", { eager: true }) as Record<string, { default: string }>;
+const cards = Object.entries(imageModules).map(([path, mod]) => ({
+  src: mod.default,
+  alt: path.split("/").pop()?.replace(".png", "") ?? "Carta personalizzata",
+}));
 
 export function CardsCarousel() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
