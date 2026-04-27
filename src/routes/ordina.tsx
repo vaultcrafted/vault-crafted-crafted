@@ -35,11 +35,11 @@ const ENERGIE = [
 ];
 
 const TIPOLOGIE = [
-  { id: "normale", label: "CARTA NORMALE", price: "€20", img: "/tipologie/CARTA NORMALE.png" },
-  { id: "normale-ex", label: "CARTA NORMALE EX", price: "€20", img: "/tipologie/CARTA NORMALE EX.png" },
-  { id: "full-art-ex", label: "CARTA FULL-ART EX", price: "€22", img: "/tipologie/CARTA FULL-ART EX.png" },
-  { id: "v", label: "CARTA V", price: "€23", img: "/tipologie/CARTA V.png" },
-  { id: "v-max", label: "CARTA V-MAX", price: "€25", img: "/tipologie/CARTA V-MAX.png" },
+  { id: "normale", label: "CARTA NORMALE", price: "€20", img: "/tipologie/CARTA-NORMALE.png" },
+  { id: "normale-ex", label: "CARTA NORMALE EX", price: "€20", img: "/tipologie/CARTA-NORMALE-EX.png" },
+  { id: "full-art-ex", label: "CARTA FULL-ART EX", price: "€22", img: "/tipologie/CARTA-FULL-ART-EX.png" },
+  { id: "v", label: "CARTA V", price: "€23", img: "/tipologie/CARTA-V.png" },
+  { id: "v-max", label: "CARTA V-MAX", price: "€25", img: "/tipologie/CARTA-V-MAX.png" },
 ];
 
 const CUSTODIE = [
