@@ -206,11 +206,9 @@ function OrdinaPage() {
             <legend className="px-2 font-display text-2xl">Energia</legend>
             <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
               {ENERGIE.map((energia) => (
-                <label key={energia.id} className="flex cursor-pointer items-center gap-3 rounded-md border border-border bg-background px-4 py-3 text-sm transition-colors hover:border-gold">
+                <label key={energia.id} className="relative flex cursor-pointer flex-col items-center gap-2 rounded-md border border-border bg-background px-3 py-4 text-sm transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
                   <input name="energia" type="radio" value={energia.label} required className="sr-only peer" />
-                  <span aria-hidden className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm text-ink ring-1 ring-border peer-checked:ring-2 peer-checked:ring-gold" style={{ backgroundColor: energia.color }}>
-                    {energia.symbol}
-                  </span>
+                  <img src={energia.img} alt={energia.label} className="h-12 w-12 object-contain" />
                   <span className="text-xs font-semibold uppercase tracking-[0.15em]">{energia.label}</span>
                 </label>
               ))}
@@ -221,7 +219,7 @@ function OrdinaPage() {
             <legend className="px-2 font-display text-2xl">Tipologia</legend>
             <div className="mt-5 grid gap-3 md:grid-cols-2">
               {TIPOLOGIE.map((tipo) => (
-                <label key={tipo.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 text-sm transition-colors hover:border-gold">
+                <label key={tipo.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 text-sm transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
                   <span className="font-semibold uppercase tracking-[0.14em]">{tipo.label}</span>
                   <span className="text-gold">{tipo.price}</span>
                   <input name="tipologia" type="radio" value={`${tipo.label} ${tipo.price}`} required className="sr-only" />
@@ -234,7 +232,7 @@ function OrdinaPage() {
             <legend className="px-2 font-display text-2xl">Custodia</legend>
             <div className="mt-5 grid gap-3 md:grid-cols-2">
               {CUSTODIE.map((custodia) => (
-                <label key={custodia.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 text-sm transition-colors hover:border-gold">
+                <label key={custodia.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 text-sm transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
                   <span className="font-semibold uppercase tracking-[0.14em]">{custodia.label}</span>
                   <span className="text-gold">{custodia.price}</span>
                   <input name="custodia" type="radio" value={`${custodia.label} ${custodia.price}`} required className="sr-only" />
