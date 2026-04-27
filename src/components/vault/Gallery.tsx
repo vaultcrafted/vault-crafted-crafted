@@ -1,19 +1,13 @@
 import { Reveal } from "./Reveal";
-import card1 from "@/assets/card-1.jpg";
-import card2 from "@/assets/card-2.jpg";
-import card3 from "@/assets/card-3.jpg";
-import card4 from "@/assets/card-4.jpg";
-import card5 from "@/assets/card-5.jpg";
-import card6 from "@/assets/card-6.jpg";
 
-const images = [
-  { src: card1, alt: "Carta personalizzata con ritratto in oro", span: "row-span-2" },
-  { src: card3, alt: "Carta nera con leone in oro", span: "" },
-  { src: card4, alt: "Carta da collezione con lupo illustrato", span: "" },
-  { src: card2, alt: "Carta con motivi geometrici dorati", span: "row-span-2" },
-  { src: card5, alt: "Packaging premium Vault con carte", span: "col-span-2" },
-  { src: card6, alt: "Stack di carte premium nere e oro", span: "" },
-];
+const imageModules = import.meta.glob("@/assets/*.png", { eager: true }) as Record<string, { default: string }>;
+const allCards = Object.entries(imageModules).map(([path, mod]) => ({
+  src: mod.default,
+  alt: path.split("/").pop()?.replace(".png", "") ?? "Carta",
+}));
+
+const spans = ["row-span-2", "", "", "row-span-2", "col-span-2", ""];
+const images = allCards.slice(0, 6).map((c, i) => ({ ...c, span: spans[i] ?? "" }));
 
 export function Gallery() {
   return (
