@@ -3,6 +3,7 @@ import { ArrowRight, Menu, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Particles } from "./Particles";
 import { useState } from "react";
+import logo from "/LOGO.png";
 
 export function Hero() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,7 +28,9 @@ export function Hero() {
         transition={{ duration: 0.8 }}
         className="absolute left-0 right-0 top-0 z-20 flex items-center justify-between px-6 py-6 md:px-12"
       >
-        <Link to="/" className="font-display text-lg tracking-[0.3em] text-gold transition-colors hover:text-gold/70">VAULT</Link>
+        <Link to="/">
+          <img src={logo} alt="Vault Crafted" className="h-10 w-auto" />
+        </Link>
 
         {/* Hamburger button */}
         <button
@@ -81,12 +84,12 @@ export function Hero() {
                 Tutte le carte
               </Link>
               <Link
-  to="/regalo"
-  onClick={() => setMenuOpen(false)}
-  className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
->
-  Regalo perfetto
-</Link>
+                to="/regalo"
+                onClick={() => setMenuOpen(false)}
+                className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
+              >
+                Regalo perfetto
+              </Link>
             </motion.div>
           </>
         )}
