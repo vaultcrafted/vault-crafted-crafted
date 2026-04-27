@@ -17,14 +17,12 @@ export const Route = createFileRoute("/carte")({
   }),
 });
 
-const CARTE = [
-  { id: 1, src: "/src/assets/card-1.jpg", label: "Carta 01" },
-  { id: 2, src: "/src/assets/card-2.jpg", label: "Carta 02" },
-  { id: 3, src: "/src/assets/card-3.jpg", label: "Carta 03" },
-  { id: 4, src: "/src/assets/card-4.jpg", label: "Carta 04" },
-  { id: 5, src: "/src/assets/card-5.jpg", label: "Carta 05" },
-  { id: 6, src: "/src/assets/card-6.jpg", label: "Carta 06" },
-];
+const imageModules = import.meta.glob("@/assets/*.png", { eager: true }) as Record<string, { default: string }>;
+const CARTE = Object.entries(imageModules).map(([path, mod], i) => ({
+  id: i + 1,
+  src: mod.default,
+  label: path.split("/").pop()?.replace(".png", "") ?? `Carta ${i + 1}`,
+}));
 
 function CartePage() {
   return (

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TerminiRouteImport } from './routes/termini'
+import { Route as RegaloRouteImport } from './routes/regalo'
 import { Route as OrdinaRouteImport } from './routes/ordina'
 import { Route as ChiSiamoRouteImport } from './routes/chi-siamo'
 import { Route as CarteRouteImport } from './routes/carte'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const TerminiRoute = TerminiRouteImport.update({
   id: '/termini',
   path: '/termini',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegaloRoute = RegaloRouteImport.update({
+  id: '/regalo',
+  path: '/regalo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrdinaRoute = OrdinaRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/carte': typeof CarteRoute
   '/chi-siamo': typeof ChiSiamoRoute
   '/ordina': typeof OrdinaRoute
+  '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/carte': typeof CarteRoute
   '/chi-siamo': typeof ChiSiamoRoute
   '/ordina': typeof OrdinaRoute
+  '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,22 @@ export interface FileRoutesById {
   '/carte': typeof CarteRoute
   '/chi-siamo': typeof ChiSiamoRoute
   '/ordina': typeof OrdinaRoute
+  '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/carte' | '/chi-siamo' | '/ordina' | '/termini'
+  fullPaths: '/' | '/carte' | '/chi-siamo' | '/ordina' | '/regalo' | '/termini'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/carte' | '/chi-siamo' | '/ordina' | '/termini'
-  id: '__root__' | '/' | '/carte' | '/chi-siamo' | '/ordina' | '/termini'
+  to: '/' | '/carte' | '/chi-siamo' | '/ordina' | '/regalo' | '/termini'
+  id:
+    | '__root__'
+    | '/'
+    | '/carte'
+    | '/chi-siamo'
+    | '/ordina'
+    | '/regalo'
+    | '/termini'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +92,7 @@ export interface RootRouteChildren {
   CarteRoute: typeof CarteRoute
   ChiSiamoRoute: typeof ChiSiamoRoute
   OrdinaRoute: typeof OrdinaRoute
+  RegaloRoute: typeof RegaloRoute
   TerminiRoute: typeof TerminiRoute
 }
 
@@ -86,6 +103,13 @@ declare module '@tanstack/react-router' {
       path: '/termini'
       fullPath: '/termini'
       preLoaderRoute: typeof TerminiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/regalo': {
+      id: '/regalo'
+      path: '/regalo'
+      fullPath: '/regalo'
+      preLoaderRoute: typeof RegaloRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ordina': {
@@ -124,6 +148,7 @@ const rootRouteChildren: RootRouteChildren = {
   CarteRoute: CarteRoute,
   ChiSiamoRoute: ChiSiamoRoute,
   OrdinaRoute: OrdinaRoute,
+  RegaloRoute: RegaloRoute,
   TerminiRoute: TerminiRoute,
 }
 export const routeTree = rootRouteImport
