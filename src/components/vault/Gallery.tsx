@@ -32,7 +32,7 @@ export function Gallery() {
                 src={img.src}
                 alt={img.alt}
                 loading="lazy"
-                className="h-full w-full object-cover transition-all duration-700 will-change-transform scale-125 group-hover:scale-[1.28]"
+                className="h-full w-full object-cover transition-all duration-700 will-change-transform scale-150 group-hover:scale-[1.55]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-30" />
               <div className="absolute bottom-4 left-4 text-[10px] uppercase tracking-[0.3em] text-gold opacity-0 transition-opacity duration-500 group-hover:opacity-100">
