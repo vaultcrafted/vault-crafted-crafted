@@ -35,11 +35,11 @@ const ENERGIE = [
 ];
 
 const TIPOLOGIE = [
-  { id: "normale", label: "CARTA NORMALE", price: "€20" },
-  { id: "normale-ex", label: "CARTA NORMALE EX", price: "€20" },
-  { id: "full-art-ex", label: "CARTA FULL-ART EX", price: "€22" },
-  { id: "v", label: "CARTA V", price: "€23" },
-  { id: "v-max", label: "CARTA V-MAX", price: "€25" },
+  { id: "normale", label: "CARTA NORMALE", price: "€20", img: "/tipologie/CARTA NORMALE.png" },
+  { id: "normale-ex", label: "CARTA NORMALE EX", price: "€20", img: "/tipologie/CARTA NORMALE EX.png" },
+  { id: "full-art-ex", label: "CARTA FULL-ART EX", price: "€22", img: "/tipologie/CARTA FULL-ART EX.png" },
+  { id: "v", label: "CARTA V", price: "€23", img: "/tipologie/CARTA V.png" },
+  { id: "v-max", label: "CARTA V-MAX", price: "€25", img: "/tipologie/CARTA V-MAX.png" },
 ];
 
 const CUSTODIE = [
@@ -207,7 +207,7 @@ function OrdinaPage() {
             <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
               {ENERGIE.map((energia) => (
                 <label key={energia.id} className="relative flex cursor-pointer flex-col items-center gap-2 rounded-md border border-border bg-background px-3 py-4 text-sm transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
-                  <input name="energia" type="radio" value={energia.label} required className="sr-only peer" />
+                  <input name="energia" type="radio" value={energia.label} required className="sr-only" />
                   <img src={energia.img} alt={energia.label} className="h-12 w-12 object-contain" />
                   <span className="text-xs font-semibold uppercase tracking-[0.15em]">{energia.label}</span>
                 </label>
@@ -217,12 +217,15 @@ function OrdinaPage() {
 
           <fieldset className="rounded-lg border border-border/50 bg-surface-2/50 p-6 md:p-8">
             <legend className="px-2 font-display text-2xl">Tipologia</legend>
-            <div className="mt-5 grid gap-3 md:grid-cols-2">
+            <div className="mt-5 grid gap-4 md:grid-cols-3">
               {TIPOLOGIE.map((tipo) => (
-                <label key={tipo.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 text-sm transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
-                  <span className="font-semibold uppercase tracking-[0.14em]">{tipo.label}</span>
-                  <span className="text-gold">{tipo.price}</span>
+                <label key={tipo.id} className="flex cursor-pointer flex-col overflow-hidden rounded-md border border-border bg-background text-sm transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
                   <input name="tipologia" type="radio" value={`${tipo.label} ${tipo.price}`} required className="sr-only" />
+                  <img src={tipo.img} alt={tipo.label} className="h-48 w-full object-cover" />
+                  <div className="flex items-center justify-between px-4 py-3">
+                    <span className="font-semibold uppercase tracking-[0.14em] text-xs">{tipo.label}</span>
+                    <span className="text-gold font-semibold">{tipo.price}</span>
+                  </div>
                 </label>
               ))}
             </div>
@@ -233,9 +236,9 @@ function OrdinaPage() {
             <div className="mt-5 grid gap-3 md:grid-cols-2">
               {CUSTODIE.map((custodia) => (
                 <label key={custodia.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 text-sm transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
-                  <span className="font-semibold uppercase tracking-[0.14em]">{custodia.label}</span>
-                  <span className="text-gold">{custodia.price}</span>
                   <input name="custodia" type="radio" value={`${custodia.label} ${custodia.price}`} required className="sr-only" />
+                  <span className="font-semibold uppercase tracking-[0.14em]">{custodia.label}</span>
+                  <span className="text-gold whitespace-nowrap">{custodia.price}</span>
                 </label>
               ))}
             </div>
