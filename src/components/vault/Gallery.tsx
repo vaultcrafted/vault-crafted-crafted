@@ -21,7 +21,6 @@ export function Gallery() {
             <em className="text-gold italic">Sono pezzi unici.</em>
           </h2>
         </Reveal>
-
         <div className="grid auto-rows-[180px] grid-cols-2 gap-4 md:auto-rows-[260px] md:grid-cols-4 md:gap-6">
           {images.map((img, i) => (
             <Reveal
@@ -33,7 +32,7 @@ export function Gallery() {
                 src={img.src}
                 alt={img.alt}
                 loading="lazy"
-                className="h-full w-full object-cover transition-all duration-700 will-change-transform group-hover:scale-105"
+                className="h-full w-full object-cover transition-all duration-700 will-change-transform scale-125 group-hover:scale-[1.28]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-30" />
               <div className="absolute bottom-4 left-4 text-[10px] uppercase tracking-[0.3em] text-gold opacity-0 transition-opacity duration-500 group-hover:opacity-100">
