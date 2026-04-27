@@ -40,7 +40,9 @@ function CartePage() {
           </Link>
           <Link
             to="/"
-            className="font-display text-lg tracking-[0.3em] text-gold transition-colors hover:text-gold/70"
+            <Link to="/">
+  <img src="/LOGO.png" alt="Vault Crafted" className="h-10 w-auto" />
+</Link>
           >
             VAULT
           </Link>
