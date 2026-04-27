@@ -221,7 +221,9 @@ function OrdinaPage() {
               {TIPOLOGIE.map((tipo) => (
                 <label key={tipo.id} className="flex cursor-pointer flex-col overflow-hidden rounded-md border border-border bg-background text-sm transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
                   <input name="tipologia" type="radio" value={`${tipo.label} ${tipo.price}`} required className="sr-only" />
-                  <img src={tipo.img} alt={tipo.label} className="h-48 w-full object-cover" />
+                  <div className="h-48 w-full overflow-hidden bg-surface-1">
+                    <img src={tipo.img} alt={tipo.label} className="h-full w-full object-contain scale-125" />
+                  </div>
                   <div className="flex items-center justify-between px-4 py-3">
                     <span className="font-semibold uppercase tracking-[0.14em] text-xs">{tipo.label}</span>
                     <span className="text-gold font-semibold">{tipo.price}</span>
