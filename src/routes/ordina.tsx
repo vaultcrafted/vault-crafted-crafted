@@ -21,17 +21,17 @@ const APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbx8QLjmeBLw62VDxf3hakKu4HpIHHXw7THzMCrkMGvnG0TziDPYWQ-aySJrpyf5ZSdsjg/exec";
 
 const ENERGIE = [
-  { id: "normale", label: "NORMALE", color: "#E8E8E8", symbol: "★" },
-  { id: "lotta", label: "LOTTA", color: "#D9663D", symbol: "✊" },
-  { id: "drago", label: "DRAGO", color: "#B89441", symbol: "🐉" },
-  { id: "acqua", label: "ACQUA", color: "#3B8FC7", symbol: "💧" },
-  { id: "psico", label: "PSICO", color: "#9B59B6", symbol: "👁" },
-  { id: "fuoco", label: "FUOCO", color: "#D9402B", symbol: "🔥" },
-  { id: "erba", label: "ERBA", color: "#5BA84A", symbol: "🌿" },
-  { id: "lampo", label: "LAMPO", color: "#F1C40F", symbol: "⚡" },
-  { id: "folletto", label: "FOLLETTO", color: "#D680B0", symbol: "✦" },
-  { id: "metallo", label: "METALLO", color: "#9AA5AD", symbol: "◆" },
-  { id: "oscurita", label: "OSCURITÀ", color: "#2C3E50", symbol: "◐" },
+  { id: "normale", label: "NORMALE", img: "/energie/NORMALE.png" },
+  { id: "lotta", label: "LOTTA", img: "/energie/LOTTA.png" },
+  { id: "drago", label: "DRAGO", img: "/energie/DRAGO.png" },
+  { id: "acqua", label: "ACQUA", img: "/energie/ACQUA.png" },
+  { id: "psico", label: "PSICO", img: "/energie/PSICO.png" },
+  { id: "fuoco", label: "FUOCO", img: "/energie/FUOCO.png" },
+  { id: "erba", label: "ERBA", img: "/energie/ERBA.png" },
+  { id: "elettro", label: "LAMPO", img: "/energie/ELETTRO.png" },
+  { id: "folletto", label: "FOLLETTO", img: "/energie/FOLLETTO.png" },
+  { id: "acciaio", label: "METALLO", img: "/energie/ACCIAIO.png" },
+  { id: "spettro", label: "OSCURITÀ", img: "/energie/SPETTRO.png" },
 ];
 
 const TIPOLOGIE = [
