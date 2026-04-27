@@ -130,6 +130,7 @@ function OrdinaPage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground vault-grain">
+      {/* Header */}
       <header className="border-b border-border/40 bg-surface-2/60 backdrop-blur-sm">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-5">
           <Link
@@ -146,6 +147,7 @@ function OrdinaPage() {
         </div>
       </header>
 
+      {/* Hero */}
       <section className="relative overflow-hidden border-b border-border/40 bg-surface-1 px-6 py-20 text-center md:py-28">
         <div
           aria-hidden
@@ -160,9 +162,7 @@ function OrdinaPage() {
         >
           <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-gold/30 bg-surface-2/60 px-5 py-2">
             <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-            <span className="text-[11px] uppercase tracking-[0.4em] text-gold">
-              Modulo d'ordine
-            </span>
+            <span className="text-[11px] uppercase tracking-[0.4em] text-gold">Modulo d'ordine</span>
           </div>
           <h1 className="font-display text-4xl leading-[0.95] tracking-tight md:text-6xl lg:text-7xl">
             VAULT <em className="shimmer-text">CRAFTED</em>
@@ -173,102 +173,268 @@ function OrdinaPage() {
         </motion.div>
       </section>
 
-      <section className="px-6 py-16 md:py-24">
-        <motion.form
-          onSubmit={handleSubmit}
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="mx-auto grid max-w-4xl gap-8"
-        >
-          {error && (
-            <div className="rounded-lg border border-destructive/40 bg-destructive/10 px-5 py-4 text-sm text-destructive">
-              {error}
-            </div>
-          )}
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="mx-auto max-w-3xl space-y-6 px-6 py-16">
 
-          <div className="grid gap-5 rounded-lg border border-border/50 bg-surface-2/50 p-6 md:grid-cols-2 md:p-8">
-            <label className="grid gap-2 text-sm font-medium">
-              Nome e cognome
-              <input name="nome" required autoComplete="name" className="rounded-md border border-border bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-gold" />
-            </label>
-            <label className="grid gap-2 text-sm font-medium">
-              Email
-              <input name="email" type="email" required autoComplete="email" className="rounded-md border border-border bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-gold" />
-            </label>
-            <label className="grid gap-2 text-sm font-medium md:col-span-2">
-              Nome sulla carta
-              <input name="nomeCarta" required className="rounded-md border border-border bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-gold" />
-            </label>
+        <FormSection title="Possiamo finalmente iniziare">
+          <p className="text-sm text-muted-foreground">
+            Prenditi il tempo che serve e raccontaci la tua idea. Trasformeremo le tue indicazioni in <strong className="text-foreground">una carta unica, creata su misura per te</strong>.
+          </p>
+        </FormSection>
+
+        <FormSection title="Energia" required>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Scegli l'energia che rappresenta la tua carta: è l'elemento che ne definisce <strong className="text-foreground">stile, carattere e identità</strong>.
+          </p>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+            {ENERGIE.map((e) => (
+              <label key={e.id} className="relative flex cursor-pointer flex-col items-center gap-2 rounded-md border border-border bg-background px-3 py-4 transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
+                <input type="radio" name="energia" value={e.label} required className="sr-only" />
+                <img src={e.img} alt={e.label} className="h-12 w-12 object-contain" />
+                <span className="text-xs font-semibold uppercase tracking-wider">{e.label}</span>
+              </label>
+            ))}
           </div>
+        </FormSection>
 
-          <fieldset className="rounded-lg border border-border/50 bg-surface-2/50 p-6 md:p-8">
-            <legend className="px-2 font-display text-2xl">Energia</legend>
-            <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
-              {ENERGIE.map((energia) => (
-                <label key={energia.id} className="relative flex cursor-pointer flex-col items-center gap-2 rounded-md border border-border bg-background px-3 py-4 text-sm transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
-                  <input name="energia" type="radio" value={energia.label} required className="sr-only" />
-                  <img src={energia.img} alt={energia.label} className="h-12 w-12 object-contain" />
-                  <span className="text-xs font-semibold uppercase tracking-[0.15em]">{energia.label}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset className="rounded-lg border border-border/50 bg-surface-2/50 p-6 md:p-8">
-            <legend className="px-2 font-display text-2xl">Tipologia</legend>
-            <div className="mt-5 grid gap-4 md:grid-cols-3">
-              {TIPOLOGIE.map((tipo) => (
-                <label key={tipo.id} className="flex cursor-pointer flex-col overflow-hidden rounded-md border border-border bg-background text-sm transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
-                  <input name="tipologia" type="radio" value={`${tipo.label} ${tipo.price}`} required className="sr-only" />
-                  <div className="h-48 w-full overflow-hidden bg-surface-1">
-                    <img src={tipo.img} alt={tipo.label} className="h-full w-full object-contain scale-125" />
-                  </div>
-                  <div className="flex items-center justify-between px-4 py-3">
-                    <span className="font-semibold uppercase tracking-[0.14em] text-xs">{tipo.label}</span>
-                    <span className="text-gold font-semibold">{tipo.price}</span>
-                  </div>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset className="rounded-lg border border-border/50 bg-surface-2/50 p-6 md:p-8">
-            <legend className="px-2 font-display text-2xl">Custodia</legend>
-            <div className="mt-5 grid gap-3 md:grid-cols-2">
-              {CUSTODIE.map((custodia) => (
-                <label key={custodia.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 text-sm transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
-                  <input name="custodia" type="radio" value={`${custodia.label} ${custodia.price}`} required className="sr-only" />
-                  <span className="font-semibold uppercase tracking-[0.14em]">{custodia.label}</span>
-                  <span className="text-gold whitespace-nowrap">{custodia.price}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          <div className="grid gap-5 rounded-lg border border-border/50 bg-surface-2/50 p-6 md:p-8">
-            <label className="grid gap-2 text-sm font-medium">
-              Idea, attacchi e dettagli grafici
-              <textarea name="dettagli" required rows={6} className="resize-none rounded-md border border-border bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-gold" />
-            </label>
-            <label className="grid cursor-pointer gap-3 rounded-md border border-dashed border-border bg-background px-5 py-6 text-center transition-colors hover:border-gold">
-              <Upload className="mx-auto h-7 w-7 text-gold" />
-              <span className="text-sm font-medium">{fileName || "Carica una foto o reference"}</span>
-              <input name="grafica" type="file" accept="image/*,.pdf" className="sr-only" onChange={(event) => setFileName(event.currentTarget.files?.[0]?.name ?? "")} />
-            </label>
+        <FormSection title="Tipologia di carta" required>
+          <p className="mb-3 text-sm text-muted-foreground">
+            Seleziona il <strong className="text-foreground">design che preferisci</strong>. Il prezzo include progettazione, stampa, taglio e scatola protettiva con gadget.
+          </p>
+          <p className="mb-4 text-sm text-muted-foreground">👉 Nessun costo nascosto. Quello che vedi è quello che ottieni.</p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+            {TIPOLOGIE.map((t) => (
+              <label key={t.id} className="flex cursor-pointer flex-col overflow-hidden rounded-md border border-border bg-background transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
+                <input type="radio" name="tipologia" value={`${t.label} - ${t.price}`} required className="sr-only" />
+                <div className="h-48 w-full overflow-hidden bg-surface-1">
+                  <img src={t.img} alt={t.label} className="h-full w-full object-contain scale-125" />
+                </div>
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span className="text-xs font-semibold uppercase tracking-wide">{t.label}</span>
+                  <span className="text-sm font-semibold text-gold">{t.price}</span>
+                </div>
+              </label>
+            ))}
           </div>
+        </FormSection>
 
-          <label className="flex items-start gap-3 text-sm text-muted-foreground">
-            <input name="privacy" type="checkbox" required className="mt-1" />
-            Accetto di essere contattato per ricevere la bozza grafica, il totale e le istruzioni di pagamento.
+        <FormSection title="Nome" required>
+          <p className="mb-3 text-sm text-muted-foreground">Scegli il nome da mettere sulla tua carta</p>
+          <input type="text" name="nome" required maxLength={100} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="HP" required>
+          <p className="mb-3 text-sm text-muted-foreground">Scegli quanti HP avrà la tua carta (max 3 cifre)</p>
+          <input type="text" name="hp" required maxLength={3} pattern="[0-9]{1,3}" placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Attacco 1" required>
+          <p className="mb-3 text-sm text-muted-foreground">
+            Scegli che attacco vorresti. Non deve per forza essere un'azione, può essere anche qualcosa di divertente o di ignorante, l'unico limite è la fantasia!
+          </p>
+          <input type="text" name="attacco1" required maxLength={120} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Attacco 1 (Descrizione)">
+          <p className="mb-3 text-sm text-muted-foreground">Puoi scegliere se inserire una breve descrizione sull'effetto della carta</p>
+          <input type="text" name="attacco1_descrizione" maxLength={300} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Attacco 1 (Energie)" required>
+          <p className="mb-3 text-sm text-muted-foreground">Scegli quante e quali energie dovrebbe avere il tuo attacco (Max 4 energie)</p>
+          <input type="text" name="attacco1_energie" required maxLength={120} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Attacco 1 (Danni)" required>
+          <p className="mb-3 text-sm text-muted-foreground">Scegli quanti danni dovrebbe fare il tuo attacco</p>
+          <input type="text" name="attacco1_danni" required maxLength={10} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Attacco 2 (non obbligatorio)">
+          <p className="mb-3 text-sm text-muted-foreground">
+            Scegli un secondo attacco che vorresti avere nella tua carta, ma non sei obbligato, se ti piace avere solo 1 ATTACCO va bene ugualmente
+          </p>
+          <input type="text" name="attacco2" maxLength={120} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Attacco 2 (Descrizione)">
+          <p className="mb-3 text-sm text-muted-foreground">Puoi scegliere se inserire una breve descrizione sull'effetto della carta</p>
+          <input type="text" name="attacco2_descrizione" maxLength={300} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Attacco 2 (Energie)">
+          <p className="mb-3 text-sm text-muted-foreground">Scegli quante e quali energie dovrebbe avere il tuo attacco (Max 4 energie)</p>
+          <input type="text" name="attacco2_energie" maxLength={120} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Attacco 2 (Danni)">
+          <p className="mb-3 text-sm text-muted-foreground">Scegli quanti danni dovrebbe fare il tuo attacco</p>
+          <input type="text" name="attacco2_danni" maxLength={10} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Resistenza" required>
+          <p className="mb-3 text-sm text-muted-foreground">
+            Indicare a quale energia si ha la resistenza (es: Fuoco, Erba ecc...). Non deve per forza essere un'energia ma può anche essere un emoticon di qualcosa di simpatico o inerente al contesto
+          </p>
+          <input type="text" name="resistenza" required maxLength={60} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Debolezza" required>
+          <p className="mb-3 text-sm text-muted-foreground">
+            Indicare a quale energia si ha la debolezza (es: Fuoco, Erba ecc...). Non deve per forza essere un'energia ma può anche essere un emoticon di qualcosa di simpatico o inerente al contesto
+          </p>
+          <input type="text" name="debolezza" required maxLength={60} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Costo di ritirata" required>
+          <p className="mb-3 text-sm text-muted-foreground">
+            Indicare quale tipo di energia e quante energie servono per il costo di ritirata (Es: 2 energia fuoco, 1 energia normale, 3 energia erba ecc...)
+          </p>
+          <input type="text" name="costo_ritirata" required maxLength={120} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Frase personalizzata">
+          <p className="mb-3 text-sm text-muted-foreground">
+            Infine inserisci un qualcosa che vorresti scrivere in fondo a destra della carta (Es: un augurio, una battuta, una citazione, un qualcosa di personale ecc...)
+          </p>
+          <input type="text" name="frase" maxLength={200} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Carica la tua grafica definitiva" required>
+          <p className="mb-3 text-sm text-muted-foreground">
+            Carica la foto finale che verrà applicata alla carta. Non effettuiamo il servizio di grafica.
+          </p>
+          <p className="mb-3 text-xs text-muted-foreground">
+            Carica 1 file supportato: PDF, document, drawing o image. Massimo 10 MB.
+          </p>
+          <label className="flex cursor-pointer items-center justify-center gap-3 rounded-md border-2 border-dashed border-gold/40 bg-surface-2/40 px-6 py-8 transition-colors hover:border-gold hover:bg-surface-2/70">
+            <Upload className="h-5 w-5 text-gold" />
+            <span className="text-sm font-semibold uppercase tracking-wider text-gold">
+              {fileName || "Aggiungi file"}
+            </span>
+            <input
+              type="file"
+              name="grafica"
+              required
+              accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,.svg"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f && f.size > 10 * 1024 * 1024) {
+                  setError("Il file supera i 10 MB");
+                  e.target.value = "";
+                  setFileName("");
+                  return;
+                }
+                setFileName(f?.name ?? "");
+                setError(null);
+              }}
+              className="hidden"
+            />
           </label>
+        </FormSection>
 
-          <button type="submit" disabled={submitting} className="btn-gold inline-flex items-center justify-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em] disabled:cursor-not-allowed disabled:opacity-60">
-            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-            Invia ordine
+        <FormSection title="Custodia / Holder" required>
+          <p className="mb-3 text-sm text-muted-foreground">
+            Scegli il <strong className="text-foreground">tipo di custodia protettiva</strong>. Ogni opzione offre <strong className="text-foreground">livelli diversi di protezione, stile ed esposizione</strong>. Le custodie prevedono un costo aggiuntivo.
+          </p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {CUSTODIE.map((c) => (
+              <label key={c.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
+                <input type="radio" name="custodia" value={`${c.label} ${c.price}`} required className="sr-only" />
+                <span className="text-sm font-semibold uppercase tracking-wide">{c.label}</span>
+                <span className="whitespace-nowrap text-sm text-gold">{c.price}</span>
+              </label>
+            ))}
+          </div>
+        </FormSection>
+
+        <FormSection title="Nome e Cognome" required>
+          <p className="mb-3 text-sm text-muted-foreground">Prima di concludere, inserisci il tuo nome e cognome</p>
+          <input type="text" name="nome_cognome" required maxLength={100} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Cellulare" required>
+          <p className="mb-3 text-sm text-muted-foreground">Inserisci il tuo cellulare</p>
+          <input type="tel" name="cellulare" required maxLength={20} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="E-Mail" required>
+          <p className="mb-3 text-sm text-muted-foreground">Inserisci la tua e-mail (tranquillo, servirà solo per la spedizione, non ti mandiamo spam)</p>
+          <input type="email" name="email_contatto" required maxLength={255} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        <FormSection title="Spedizione" required>
+          <p className="mb-3 text-sm text-muted-foreground">Inserisci l'indirizzo di spedizione completo (città, provincia, CAP, via e numero civico). Spedizione al costo di 4,99€</p>
+          <input type="text" name="spedizione" required maxLength={300} placeholder="La tua risposta" className="vault-input" />
+        </FormSection>
+
+        {/* Submit */}
+        <div className="flex flex-col items-center gap-4 pt-6">
+          {error && (
+            <p className="text-center text-sm text-destructive" role="alert">{error}</p>
+          )}
+          <button
+            type="submit"
+            disabled={submitting}
+            className="btn-gold inline-flex items-center gap-3 rounded-full px-12 py-5 text-sm font-semibold uppercase tracking-[0.25em] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Invio in corso…
+              </>
+            ) : (
+              "Invia ordine"
+            )}
           </button>
-        </motion.form>
-      </section>
+          <p className="max-w-md text-center text-xs text-muted-foreground">
+            Inviando il modulo accetti di essere contattato per definire i dettagli dell'ordine.
+          </p>
+        </div>
+      </form>
+
+      <style>{`
+        .vault-input {
+          width: 100%;
+          background: transparent;
+          border: none;
+          border-bottom: 1px solid color-mix(in oklab, var(--gold) 30%, transparent);
+          padding: 0.625rem 0.25rem;
+          color: var(--foreground);
+          font-family: var(--font-sans);
+          font-size: 0.95rem;
+          outline: none;
+          transition: border-color 0.2s ease;
+        }
+        .vault-input::placeholder { color: color-mix(in oklab, var(--foreground) 35%, transparent); }
+        .vault-input:focus { border-bottom-color: var(--gold); }
+      `}</style>
     </main>
+  );
+}
+
+function FormSection({
+  title,
+  required,
+  children,
+}: {
+  title: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5 }}
+      className="rounded-xl border border-border/50 bg-surface-1/60 p-6 backdrop-blur-sm md:p-8"
+    >
+      <h2 className="mb-2 font-display text-xl italic md:text-2xl">
+        {title}
+        {required && <span className="ml-1 text-destructive">*</span>}
+      </h2>
+      <div className="mt-4">{children}</div>
+    </motion.section>
   );
 }
