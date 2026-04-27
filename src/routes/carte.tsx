@@ -40,11 +40,10 @@ function CartePage() {
           </Link>
           <Link
             to="/"
-            <Link to="/">
-  <img src="/LOGO.png" alt="Vault Crafted" className="h-10 w-auto" />
-</Link>
+            aria-label="Vault Crafted home"
+            className="inline-flex items-center"
           >
-            VAULT
+            <img src="/LOGO.png" alt="Vault Crafted" className="h-10 w-auto" />
           </Link>
           <div className="w-16" />
         </div>
