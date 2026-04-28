@@ -109,11 +109,7 @@ function OrdinaPage() {
     return (
       <main className="min-h-screen bg-background text-foreground vault-grain">
         <div className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-          >
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }}>
             <CheckCircle2 className="mx-auto h-20 w-20 text-gold" />
             <h1 className="mt-8 font-display text-4xl leading-tight md:text-6xl">Ordine ricevuto!</h1>
             <p className="mt-6 text-lg text-muted-foreground">Ti contatteremo presto.</p>
@@ -160,7 +156,7 @@ function OrdinaPage() {
         </motion.div>
       </section>
 
-      {/* Layout con form + riquadro prezzo */}
+      {/* Layout */}
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="flex gap-8 items-start">
 
@@ -174,9 +170,7 @@ function OrdinaPage() {
             </FormSection>
 
             <FormSection title="Energia" required>
-              <p className="mb-4 text-sm text-muted-foreground">
-                Scegli l'energia che rappresenta la tua carta: è l'elemento che ne definisce <strong className="text-foreground">stile, carattere e identità</strong>.
-              </p>
+              <p className="mb-4 text-sm text-muted-foreground">Scegli l'energia che rappresenta la tua carta: è l'elemento che ne definisce <strong className="text-foreground">stile, carattere e identità</strong>.</p>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                 {ENERGIE.map((e) => (
                   <label key={e.id} className="relative flex cursor-pointer flex-col items-center gap-2 rounded-md border border-border bg-background px-3 py-4 transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
@@ -189,15 +183,12 @@ function OrdinaPage() {
             </FormSection>
 
             <FormSection title="Tipologia di carta" required>
-              <p className="mb-3 text-sm text-muted-foreground">
-                Seleziona il <strong className="text-foreground">design che preferisci</strong>. Il prezzo include progettazione, stampa, taglio e scatola protettiva con gadget.
-              </p>
+              <p className="mb-3 text-sm text-muted-foreground">Seleziona il <strong className="text-foreground">design che preferisci</strong>. Il prezzo include progettazione, stampa, taglio e scatola protettiva con gadget.</p>
               <p className="mb-4 text-sm text-muted-foreground">👉 Nessun costo nascosto. Quello che vedi è quello che ottieni.</p>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                 {TIPOLOGIE.map((t) => (
                   <label key={t.id} className="flex cursor-pointer flex-col overflow-hidden rounded-md border border-border bg-background transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
-                    <input type="radio" name="tipologia" value={`${t.label} - €${t.price}`} required className="sr-only"
-                      onChange={() => setSelectedTipologia(t)} />
+                    <input type="radio" name="tipologia" value={`${t.label} - €${t.price}`} required className="sr-only" onChange={() => setSelectedTipologia(t)} />
                     <div className="h-48 w-full overflow-hidden bg-surface-1">
                       <img src={t.img} alt={t.label} className="h-full w-full object-contain scale-125" />
                     </div>
@@ -261,22 +252,22 @@ function OrdinaPage() {
             </FormSection>
 
             <FormSection title="Resistenza" required>
-              <p className="mb-3 text-sm text-muted-foreground">Indicare a quale energia si ha la resistenza</p>
+              <p className="mb-3 text-sm text-muted-foreground">Indicare a quale energia si ha la resistenza (es: Fuoco, Erba ecc...). Non deve per forza essere un'energia ma può anche essere un emoticon di qualcosa di simpatico o inerente al contesto</p>
               <input type="text" name="resistenza" required maxLength={60} placeholder="La tua risposta" className="vault-input" />
             </FormSection>
 
             <FormSection title="Debolezza" required>
-              <p className="mb-3 text-sm text-muted-foreground">Indicare a quale energia si ha la debolezza</p>
+              <p className="mb-3 text-sm text-muted-foreground">Indicare a quale energia si ha la debolezza (es: Fuoco, Erba ecc...). Non deve per forza essere un'energia ma può anche essere un emoticon di qualcosa di simpatico o inerente al contesto</p>
               <input type="text" name="debolezza" required maxLength={60} placeholder="La tua risposta" className="vault-input" />
             </FormSection>
 
             <FormSection title="Costo di ritirata" required>
-              <p className="mb-3 text-sm text-muted-foreground">Indicare quale tipo di energia e quante energie servono per il costo di ritirata</p>
+              <p className="mb-3 text-sm text-muted-foreground">Indicare quale tipo di energia e quante energie servono per il costo di ritirata (Es: 2 energia fuoco, 1 energia normale, 3 energia erba ecc...)</p>
               <input type="text" name="costo_ritirata" required maxLength={120} placeholder="La tua risposta" className="vault-input" />
             </FormSection>
 
             <FormSection title="Frase personalizzata">
-              <p className="mb-3 text-sm text-muted-foreground">Inserisci un qualcosa che vorresti scrivere in fondo a destra della carta</p>
+              <p className="mb-3 text-sm text-muted-foreground">Infine inserisci un qualcosa che vorresti scrivere in fondo a destra della carta (Es: un augurio, una battuta, una citazione, un qualcosa di personale ecc...)</p>
               <input type="text" name="frase" maxLength={200} placeholder="La tua risposta" className="vault-input" />
             </FormSection>
 
@@ -296,12 +287,11 @@ function OrdinaPage() {
             </FormSection>
 
             <FormSection title="Custodia / Holder" required>
-              <p className="mb-3 text-sm text-muted-foreground">Scegli il <strong className="text-foreground">tipo di custodia protettiva</strong>. Le custodie prevedono un costo aggiuntivo.</p>
+              <p className="mb-3 text-sm text-muted-foreground">Scegli il <strong className="text-foreground">tipo di custodia protettiva</strong>. Ogni opzione offre <strong className="text-foreground">livelli diversi di protezione, stile ed esposizione</strong>. Le custodie prevedono un costo aggiuntivo.</p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {CUSTODIE.map((c) => (
                   <label key={c.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
-                    <input type="radio" name="custodia" value={`${c.label} +${c.price}€`} required className="sr-only"
-                      onChange={() => setSelectedCustodia(c)} />
+                    <input type="radio" name="custodia" value={`${c.label} +${c.price}€`} required className="sr-only" onChange={() => setSelectedCustodia(c)} />
                     <span className="text-sm font-semibold uppercase tracking-wide">{c.label}</span>
                     <span className="whitespace-nowrap text-sm text-gold">+ {c.price}€</span>
                   </label>
@@ -340,7 +330,7 @@ function OrdinaPage() {
             </div>
           </form>
 
-          {/* Riquadro prezzo fisso */}
+          {/* Riquadro prezzo sticky */}
           <div className="hidden lg:block w-72 shrink-0">
             <div className="sticky top-8 rounded-xl border border-gold/30 bg-surface-2/60 p-6 backdrop-blur-sm shadow-[0_0_40px_-10px_var(--gold)]">
               <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-gold">Riepilogo ordine</p>
@@ -374,7 +364,7 @@ function OrdinaPage() {
                   <span className="font-display text-2xl text-gold">
                     {selectedTipologia && selectedCustodia
                       ? `€${totale.toFixed(2)}`
-                      : <span className="text-base text-muted-foreground">Seleziona le opzioni</span>
+                      : <span className="text-base text-muted-foreground">—</span>
                     }
                   </span>
                 </div>
@@ -387,6 +377,16 @@ function OrdinaPage() {
                     ? "Seleziona la tipologia"
                     : "Seleziona la custodia"}
                 </p>
+              )}
+              {selectedTipologia && selectedCustodia && (
+                <button
+                  type="submit"
+                  form="ordine-form"
+                  disabled={submitting}
+                  className="mt-5 w-full btn-gold inline-flex items-center justify-center gap-3 rounded-full py-4 text-sm font-semibold uppercase tracking-[0.25em] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Invia ordine"}
+                </button>
               )}
             </div>
           </div>
