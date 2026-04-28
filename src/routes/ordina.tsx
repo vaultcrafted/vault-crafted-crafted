@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Upload, CheckCircle2, Loader2 } from "lucide-react";
 
@@ -52,6 +52,7 @@ const CUSTODIE = [
 ];
 
 const SPEDIZIONE = 4.99;
+const PREZZO_OLOGRAFICA = 9.99;
 
 function OrdinaPage() {
   const [submitting, setSubmitting] = useState(false);
@@ -60,17 +61,9 @@ function OrdinaPage() {
   const [fileName, setFileName] = useState<string>("");
   const [selectedTipologia, setSelectedTipologia] = useState<typeof TIPOLOGIE[0] | null>(null);
   const [selectedCustodia, setSelectedCustodia] = useState<typeof CUSTODIE[0] | null>(null);
-  const [riquadroTop, setRiquadroTop] = useState(32);
+  const [olografica, setOlografica] = useState(false);
 
-  const totale = (selectedTipologia?.price ?? 0) + (selectedCustodia?.price ?? 0) + SPEDIZIONE;
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setRiquadroTop(Math.max(32, window.scrollY + 32));
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const totale = (selectedTipologia?.price ?? 0) + (selectedCustodia?.price ?? 0) + (olografica ? PREZZO_OLOGRAFICA : 0) + SPEDIZIONE;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -210,6 +203,32 @@ function OrdinaPage() {
               </div>
             </FormSection>
 
+            <FormSection title="Pellicola Olografica">
+              <p className="mb-4 text-sm text-muted-foreground">
+                Vuoi aggiungere la <strong className="text-foreground">pellicola olografica</strong> alla tua carta? Dona un effetto brillante e cangiante che cambia con la luce — come le carte più rare. Costo aggiuntivo: <span className="text-gold font-semibold">€{PREZZO_OLOGRAFICA.toFixed(2)}</span>
+              </p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <label className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
+                  <input type="radio" name="olografica" value="Sì — Pellicola olografica +€9.99" required className="sr-only"
+                    onChange={() => setOlografica(true)} />
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-wide">✨ Sì, la voglio!</p>
+                    <p className="text-xs text-muted-foreground mt-1">Effetto olografico cangiante</p>
+                  </div>
+                  <span className="whitespace-nowrap text-sm font-semibold text-gold">+ €9.99</span>
+                </label>
+                <label className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
+                  <input type="radio" name="olografica" value="No — Senza pellicola olografica" required className="sr-only"
+                    onChange={() => setOlografica(false)} />
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-wide">No, grazie</p>
+                    <p className="text-xs text-muted-foreground mt-1">Carta standard senza pellicola</p>
+                  </div>
+                  <span className="whitespace-nowrap text-sm text-muted-foreground">+ €0</span>
+                </label>
+              </div>
+            </FormSection>
+
             <FormSection title="Nome" required>
               <p className="mb-3 text-sm text-muted-foreground">Scegli il nome da mettere sulla tua carta</p>
               <input type="text" name="nome" required maxLength={100} placeholder="La tua risposta" className="vault-input" />
@@ -339,9 +358,8 @@ function OrdinaPage() {
             </div>
           </form>
 
-         {/* Riquadro prezzo FIXED */}
-<div className="hidden lg:block w-72 fixed right-8 top-24">
-  
+          {/* Riquadro prezzo FIXED */}
+          <div className="hidden lg:block w-72 fixed right-8 top-24">
             <div className="rounded-xl border border-gold/30 bg-surface-2/60 p-6 backdrop-blur-sm shadow-[0_0_40px_-10px_var(--gold)]">
               <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-gold">Riepilogo ordine</p>
               <div className="space-y-3 text-sm">
@@ -354,6 +372,12 @@ function OrdinaPage() {
                 {selectedTipologia && (
                   <p className="text-xs text-muted-foreground">{selectedTipologia.label}</p>
                 )}
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Olografica</span>
+                  <span className="font-semibold">
+                    {olografica ? `+ €${PREZZO_OLOGRAFICA.toFixed(2)}` : <span className="text-muted-foreground/50">—</span>}
+                  </span>
+                </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Custodia</span>
                   <span className="font-semibold">
