@@ -339,11 +339,9 @@ function OrdinaPage() {
             </div>
           </form>
 
-          {/* Riquadro prezzo FIXED */}
-          <div
-            className="hidden lg:block w-72 fixed right-8"
-            style={{ top: `${riquadroTop}px` }}
-          >
+         {/* Riquadro prezzo FIXED */}
+<div className="hidden lg:block w-72 fixed right-8 top-24">
+  
             <div className="rounded-xl border border-gold/30 bg-surface-2/60 p-6 backdrop-blur-sm shadow-[0_0_40px_-10px_var(--gold)]">
               <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-gold">Riepilogo ordine</p>
               <div className="space-y-3 text-sm">
