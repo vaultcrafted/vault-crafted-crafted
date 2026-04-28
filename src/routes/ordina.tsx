@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Upload, CheckCircle2, Loader2 } from "lucide-react";
 
@@ -60,8 +60,17 @@ function OrdinaPage() {
   const [fileName, setFileName] = useState<string>("");
   const [selectedTipologia, setSelectedTipologia] = useState<typeof TIPOLOGIE[0] | null>(null);
   const [selectedCustodia, setSelectedCustodia] = useState<typeof CUSTODIE[0] | null>(null);
+  const [riquadroTop, setRiquadroTop] = useState(32);
 
   const totale = (selectedTipologia?.price ?? 0) + (selectedCustodia?.price ?? 0) + SPEDIZIONE;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setRiquadroTop(Math.max(32, window.scrollY + 32));
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -124,7 +133,7 @@ function OrdinaPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background text-foreground vault-grain">
+    <main className="bg-background text-foreground vault-grain">
       {/* Header */}
       <header className="border-b border-border/40 bg-surface-2/60 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
@@ -158,10 +167,10 @@ function OrdinaPage() {
 
       {/* Layout */}
       <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="flex gap-8 items-start">
+        <div className="relative flex gap-8">
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="flex-1 min-w-0 space-y-6">
+          <form onSubmit={handleSubmit} className="flex-1 min-w-0 space-y-6 pr-80">
 
             <FormSection title="Possiamo finalmente iniziare">
               <p className="text-sm text-muted-foreground">
@@ -252,22 +261,22 @@ function OrdinaPage() {
             </FormSection>
 
             <FormSection title="Resistenza" required>
-              <p className="mb-3 text-sm text-muted-foreground">Indicare a quale energia si ha la resistenza (es: Fuoco, Erba ecc...). Non deve per forza essere un'energia ma può anche essere un emoticon di qualcosa di simpatico o inerente al contesto</p>
+              <p className="mb-3 text-sm text-muted-foreground">Indicare a quale energia si ha la resistenza (es: Fuoco, Erba ecc...)</p>
               <input type="text" name="resistenza" required maxLength={60} placeholder="La tua risposta" className="vault-input" />
             </FormSection>
 
             <FormSection title="Debolezza" required>
-              <p className="mb-3 text-sm text-muted-foreground">Indicare a quale energia si ha la debolezza (es: Fuoco, Erba ecc...). Non deve per forza essere un'energia ma può anche essere un emoticon di qualcosa di simpatico o inerente al contesto</p>
+              <p className="mb-3 text-sm text-muted-foreground">Indicare a quale energia si ha la debolezza (es: Fuoco, Erba ecc...)</p>
               <input type="text" name="debolezza" required maxLength={60} placeholder="La tua risposta" className="vault-input" />
             </FormSection>
 
             <FormSection title="Costo di ritirata" required>
-              <p className="mb-3 text-sm text-muted-foreground">Indicare quale tipo di energia e quante energie servono per il costo di ritirata (Es: 2 energia fuoco, 1 energia normale, 3 energia erba ecc...)</p>
+              <p className="mb-3 text-sm text-muted-foreground">Indicare quale tipo di energia e quante energie servono per il costo di ritirata</p>
               <input type="text" name="costo_ritirata" required maxLength={120} placeholder="La tua risposta" className="vault-input" />
             </FormSection>
 
             <FormSection title="Frase personalizzata">
-              <p className="mb-3 text-sm text-muted-foreground">Infine inserisci un qualcosa che vorresti scrivere in fondo a destra della carta (Es: un augurio, una battuta, una citazione, un qualcosa di personale ecc...)</p>
+              <p className="mb-3 text-sm text-muted-foreground">Infine inserisci un qualcosa che vorresti scrivere in fondo a destra della carta</p>
               <input type="text" name="frase" maxLength={200} placeholder="La tua risposta" className="vault-input" />
             </FormSection>
 
@@ -287,7 +296,7 @@ function OrdinaPage() {
             </FormSection>
 
             <FormSection title="Custodia / Holder" required>
-              <p className="mb-3 text-sm text-muted-foreground">Scegli il <strong className="text-foreground">tipo di custodia protettiva</strong>. Ogni opzione offre <strong className="text-foreground">livelli diversi di protezione, stile ed esposizione</strong>. Le custodie prevedono un costo aggiuntivo.</p>
+              <p className="mb-3 text-sm text-muted-foreground">Scegli il <strong className="text-foreground">tipo di custodia protettiva</strong>. Le custodie prevedono un costo aggiuntivo.</p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {CUSTODIE.map((c) => (
                   <label key={c.id} className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
@@ -330,9 +339,12 @@ function OrdinaPage() {
             </div>
           </form>
 
-          {/* Riquadro prezzo sticky */}
-          <div className="hidden lg:block w-72 shrink-0">
-            <div className="sticky top-8 rounded-xl border border-gold/30 bg-surface-2/60 p-6 backdrop-blur-sm shadow-[0_0_40px_-10px_var(--gold)]">
+          {/* Riquadro prezzo FIXED */}
+          <div
+            className="hidden lg:block w-72 fixed right-8"
+            style={{ top: `${riquadroTop}px` }}
+          >
+            <div className="rounded-xl border border-gold/30 bg-surface-2/60 p-6 backdrop-blur-sm shadow-[0_0_40px_-10px_var(--gold)]">
               <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-gold">Riepilogo ordine</p>
               <div className="space-y-3 text-sm">
                 <div className="flex items-center justify-between">
@@ -364,18 +376,13 @@ function OrdinaPage() {
                   <span className="font-display text-2xl text-gold">
                     {selectedTipologia && selectedCustodia
                       ? `€${totale.toFixed(2)}`
-                      : <span className="text-base text-muted-foreground">—</span>
-                    }
+                      : <span className="text-base text-muted-foreground">—</span>}
                   </span>
                 </div>
               </div>
               {(!selectedTipologia || !selectedCustodia) && (
                 <p className="mt-3 text-xs text-muted-foreground text-center">
-                  {!selectedTipologia && !selectedCustodia
-                    ? "Seleziona tipologia e custodia"
-                    : !selectedTipologia
-                    ? "Seleziona la tipologia"
-                    : "Seleziona la custodia"}
+                  {!selectedTipologia && !selectedCustodia ? "Seleziona tipologia e custodia" : !selectedTipologia ? "Seleziona la tipologia" : "Seleziona la custodia"}
                 </p>
               )}
               {selectedTipologia && selectedCustodia && (
