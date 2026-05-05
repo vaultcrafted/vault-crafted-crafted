@@ -1,220 +1,101 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Gift } from "lucide-react";
-import { Particles } from "@/components/vault/Particles";
+import { Header } from "@/components/vault/Header";
 
-export const Route = createFileRoute("/regalo")({
-  component: RegaloPage,
+export const Route = createFileRoute("/termini")({
+  component: TerminiPage,
   head: () => ({
-    meta: [
-  { title: "Il regalo perfetto — Vault Crafted | Carte personalizzate" },
-  { name: "description", content: "Cerca un regalo originale e unico? Una carta da collezione personalizzata Vault Crafted è il regalo perfetto per compleanni, lauree, anniversari, Natale e molto altro." },
-  { name: "keywords", content: "regalo originale, regalo personalizzato, regalo compleanno unico, carta pokemon regalo, regalo laurea originale" },
+   meta: [
+  { title: "Termini e Condizioni — Vault Crafted" },
+  { name: "description", content: "Leggi i termini e condizioni e la privacy policy di Vault Crafted. Informazioni su ordini, pagamenti, spedizioni e trattamento dei dati personali." },
   { name: "robots", content: "index, follow" },
-  { property: "og:url", content: "https://vaultcrafted.com/regalo" },
-  { property: "og:title", content: "Il regalo perfetto — Vault Crafted" },
-  { property: "og:description", content: "Smetti di regalare cose che finiscono nel cassetto. Una carta Vault è unica, personalizzata e irripetibile." },
+  { property: "og:url", content: "https://vaultcrafted.com/termini" },
 ],
   }),
 });
 
-const OCCASIONI = [
-  { emoji: "🎂", title: "Compleanno", desc: "Un regalo che non finisce nel cassetto. Una carta con il suo nome, i suoi superpoteri, la sua storia. Ogni anno diversa, ogni anno unica." },
-  { emoji: "💍", title: "Anniversario", desc: "Trasforma un ricordo in un oggetto da collezione. La data, il luogo, le parole che contano — tutto su una carta che durerà per sempre." },
-  { emoji: "🎓", title: "Laurea", desc: "Ha sudato anni per quel traguardo. Dagli qualcosa che ricordi per sempre quel momento — una carta con il suo titolo, i suoi voti, la sua dedica." },
-  { emoji: "🎄", title: "Natale", desc: "Stanco dei soliti regali? Una carta personalizzata è il dono che nessuno si aspetta ma che tutti vorrebbero. Originale, esclusivo, irripetibile." },
-  { emoji: "💒", title: "Matrimonio", desc: "Un regalo agli sposi che va oltre le liste nozze. Una carta che racconta la loro storia, il loro giorno, il loro amore — in un pezzo unico da esporre." },
-  { emoji: "🐾", title: "Animale domestico", desc: "Il tuo cane, il tuo gatto, la tua tartaruga — tutti meritano una carta da collezione. Perché anche loro fanno parte della famiglia." },
-  { emoji: "👯", title: "Migliore amico", desc: "Quella persona che conosci da sempre e che merita qualcosa di speciale. Una carta con i suoi soprannomi, le sue mosse speciali, la vostra storia." },
-  { emoji: "👨‍👩‍👧", title: "Famiglia", desc: "Un regalo per papà, mamma, un fratello o una sorella. Qualcosa di personalissimo che solo tu potevi pensare per loro." },
-  { emoji: "🌟", title: "Per te stesso", desc: "Perché no? Ti sei guadagnato un pezzo unico. Creati la tua carta — con il tuo nome, i tuoi attacchi, la tua storia. Sei il protagonista." },
-];
-
-function RegaloPage() {
+function TerminiPage() {
   return (
     <main className="min-h-screen bg-background text-foreground vault-grain">
+      <Header />
 
-      {/* Header */}
-      <header className="border-b border-border/40 bg-surface-2/60 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-5">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Indietro
-          </Link>
-          <Link to="/">
-            <img src="/LOGO.png" alt="Vault Crafted" className="h-10 w-auto" />
-          </Link>
-          <div className="w-16" />
-        </div>
-      </header>
-
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-surface-1 px-6 py-28 text-center md:py-40">
-        <Particles count={30} />
-        <div
-          aria-hidden
-          className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-3xl"
-          style={{ background: "radial-gradient(circle, var(--gold) 0%, transparent 70%)" }}
-        />
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="relative z-10 mx-auto max-w-3xl"
-        >
-          <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-gold/30 bg-surface-2/60 px-5 py-2">
-            <Gift className="h-3.5 w-3.5 text-gold" />
-            <span className="text-[11px] uppercase tracking-[0.4em] text-gold">Il regalo perfetto</span>
-          </div>
-          <h1 className="font-display text-5xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl">
-            Un regalo che
-            <br />
-            <em className="shimmer-text">nessuno dimentica.</em>
-          </h1>
-          <p className="mx-auto mt-8 max-w-xl text-base text-muted-foreground md:text-lg">
-            Smettila di regalare cose che finiscono nel cassetto. Una carta Vault è un pezzo unico, personalizzato, irripetibile — qualcosa che la persona che ami terrà per sempre.
-          </p>
-          <Link
-            to="/ordina"
-            className="btn-gold group mt-10 inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]"
-          >
-            Crea il regalo ora
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </motion.div>
-      </section>
-
-      {/* Perché è il regalo perfetto */}
-      <section className="border-y border-border/40 bg-surface-2 px-6 py-20">
-        <div className="mx-auto max-w-4xl">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="mb-12 text-center font-display text-3xl tracking-tight md:text-5xl"
-          >
-            Perché è <em className="shimmer-text">diverso</em> da tutto il resto
-          </motion.h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {[
-              { num: "01", title: "È unico al mondo", desc: "Non esiste un secondo esemplare. Nessuno avrà mai la stessa carta — è progettata esclusivamente per chi la riceve." },
-              { num: "02", title: "Racconta una storia", desc: "Non è un oggetto qualsiasi. È un oggetto che parla di quella persona specifica — il suo nome, la sua personalità, i suoi momenti." },
-              { num: "03", title: "Dura per sempre", desc: "Stampata su materiali premium, protetta dalla custodia Vault. Non è un regalo usa e getta — è un pezzo da collezione." },
-            ].map((item) => (
-              <motion.div
-                key={item.num}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="rounded-xl border border-border/50 bg-surface-1/60 p-8"
-              >
-                <div className="mb-4 font-display text-4xl text-gold/40">{item.num}</div>
-                <h3 className="mb-3 font-display text-xl">{item.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Occasioni */}
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-5xl">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="mb-12 text-center font-display text-3xl tracking-tight md:text-5xl"
-          >
-            Per ogni <em className="shimmer-text">occasione</em>
-          </motion.h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {OCCASIONI.map((occ, i) => (
-              <motion.div
-                key={occ.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.07 }}
-                className="group rounded-xl border border-border/50 bg-surface-1/60 p-6 transition-all hover:border-gold/40 hover:bg-surface-2/60"
-              >
-                <div className="mb-4 text-4xl">{occ.emoji}</div>
-                <h3 className="mb-2 font-display text-lg text-foreground">{occ.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{occ.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Come funziona */}
-      <section className="border-y border-border/40 bg-surface-2 px-6 py-20">
-        <div className="mx-auto max-w-3xl text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="mb-12 font-display text-3xl tracking-tight md:text-5xl"
-          >
-            Come funziona <em className="shimmer-text">in 3 passi</em>
-          </motion.h2>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {[
-              { num: "1", title: "Compila il form", desc: "Raccontaci chi è la persona e cosa vuoi sulla carta. Ci vorranno 5 minuti." },
-              { num: "2", title: "Approva la bozza", desc: "Ti mandiamo il design da approvare. Puoi chiedere modifiche finché non è perfetto." },
-              { num: "3", title: "Ricevi il regalo", desc: "La carta arriva a casa tua in packaging premium, pronta da regalare." },
-            ].map((step) => (
-              <motion.div
-                key={step.num}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="flex flex-col items-center text-center"
-              >
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-gold/40 font-display text-2xl text-gold">
-                  {step.num}
-                </div>
-                <h3 className="mb-2 font-display text-lg">{step.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="px-6 py-20 text-center">
+      <section className="mx-auto max-w-3xl px-6 py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mx-auto max-w-xl"
         >
-          <h2 className="font-display text-3xl md:text-5xl">
-            Pronto a fare il <em className="shimmer-text">regalo perfetto?</em>
-          </h2>
-          <p className="mt-6 text-muted-foreground">
-            Pochi minuti. Un'idea. Un regalo che nessuno dimenticherà mai.
-          </p>
-          <Link
-            to="/ordina"
-            className="btn-gold group mt-10 inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]"
-          >
-            Crea il regalo ora
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+          <h1 className="font-display text-4xl tracking-tight md:text-6xl mb-4">
+            Termini e <em className="shimmer-text">Condizioni</em>
+          </h1>
+          <p className="text-sm text-muted-foreground mb-16">Ultimo aggiornamento: Aprile 2025</p>
+
+          <div className="space-y-12 text-muted-foreground leading-relaxed">
+            <div>
+              <h2 className="font-display text-xl text-foreground mb-4">1. Informazioni generali</h2>
+              <p>Vault Crafted è un servizio di creazione di carte da collezione personalizzate gestito da un privato con sede a Livorno Ferraris (VC), Italia. Per qualsiasi informazione puoi contattarci all'indirizzo <a href="mailto:vaultcrafted@gmail.com" className="text-gold hover:underline">vaultcrafted@gmail.com</a>.</p>
+            </div>
+            <div>
+              <h2 className="font-display text-xl text-foreground mb-4">2. Oggetto del servizio</h2>
+              <p>Vault Crafted realizza carte da collezione personalizzate su richiesta del cliente. Ogni carta è un pezzo unico, creato su misura in base alle indicazioni fornite tramite il modulo d'ordine. Il servizio include progettazione grafica, stampa, taglio e confezionamento della carta con la custodia scelta.</p>
+            </div>
+            <div>
+              <h2 className="font-display text-xl text-foreground mb-4">3. Processo d'ordine</h2>
+              <p>Il processo di ordinazione avviene nelle seguenti fasi:</p>
+              <ul className="mt-3 space-y-2 ml-4 list-disc">
+                <li>Il cliente compila il modulo d'ordine sul sito fornendo tutti i dettagli richiesti</li>
+                <li>Vault Crafted invia una bozza grafica pre-stampa via email per approvazione</li>
+                <li>Il cliente approva la bozza o richiede modifiche</li>
+                <li>Dopo l'approvazione viene comunicato il totale da pagare e le istruzioni per il pagamento</li>
+                <li>La produzione inizia esclusivamente dopo la conferma del pagamento</li>
+                <li>La carta viene spedita entro 3-4 giorni lavorativi dalla conferma del pagamento</li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="font-display text-xl text-foreground mb-4">4. Prezzi e pagamento</h2>
+              <p>I prezzi indicati sul sito sono comprensivi di progettazione, stampa, taglio e scatola protettiva con gadget. La spedizione ha un costo aggiuntivo di 4,99€. Le custodie protettive hanno costi aggiuntivi indicati sul sito. Il pagamento avviene tramite le modalità comunicate via email dopo l'approvazione della bozza. La produzione non inizia fino al ricevimento del pagamento.</p>
+            </div>
+            <div>
+              <h2 className="font-display text-xl text-foreground mb-4">5. Diritto di recesso e rimborsi</h2>
+              <p>Trattandosi di prodotti personalizzati e realizzati su misura, ai sensi dell'art. 59 lett. c) del Codice del Consumo (D.Lgs. 206/2005), <strong className="text-foreground">il diritto di recesso non si applica</strong> una volta approvata la bozza grafica e confermato il pagamento. È possibile richiedere modifiche alla bozza prima dell'approvazione finale senza costi aggiuntivi. In caso di difetti di produzione imputabili a Vault Crafted, verrà offerta la riproduzione gratuita della carta.</p>
+            </div>
+            <div>
+              <h2 className="font-display text-xl text-foreground mb-4">6. Materiali forniti dal cliente</h2>
+              <p>Il cliente è responsabile dei materiali (foto, immagini, testi) caricati tramite il modulo d'ordine. Caricando materiali, il cliente dichiara di possedere i diritti necessari per il loro utilizzo. Vault Crafted non è responsabile per eventuali violazioni di diritti di terzi derivanti dai materiali forniti dal cliente.</p>
+            </div>
+            <div>
+              <h2 className="font-display text-xl text-foreground mb-4">7. Spedizione</h2>
+              <p>Le spedizioni vengono effettuate tramite corriere espresso. I tempi di consegna sono indicativi e possono variare in base alla destinazione e a eventuali ritardi del corriere. Vault Crafted non è responsabile per ritardi imputabili al servizio di spedizione. In caso di mancata consegna o smarrimento, verrà aperta una pratica con il corriere.</p>
+            </div>
+            <div>
+              <h2 className="font-display text-xl text-foreground mb-4">8. Proprietà intellettuale</h2>
+              <p>Le carte create da Vault Crafted sono di proprietà esclusiva del cliente che le ha ordinate. Vault Crafted si riserva il diritto di utilizzare immagini delle carte realizzate a fini promozionali, salvo esplicita richiesta contraria da parte del cliente al momento dell'ordine.</p>
+            </div>
+            <div>
+              <h2 className="font-display text-xl text-foreground mb-4">9. Privacy e protezione dei dati (GDPR)</h2>
+              <p>Vault Crafted raccoglie e tratta i dati personali dei clienti esclusivamente per le seguenti finalità:</p>
+              <ul className="mt-3 space-y-2 ml-4 list-disc">
+                <li>Gestione e fulfillment degli ordini</li>
+                <li>Comunicazioni relative all'ordine (bozze, conferme, aggiornamenti spedizione)</li>
+                <li>Invio di comunicazioni promozionali (solo per gli iscritti alla newsletter, con consenso esplicito)</li>
+              </ul>
+              <p className="mt-4">I dati non vengono ceduti a terzi, ad eccezione del corriere per la spedizione. Il titolare del trattamento è Vault Crafted, contattabile all'indirizzo <a href="mailto:vaultcrafted@gmail.com" className="text-gold hover:underline">vaultcrafted@gmail.com</a>.</p>
+              <p className="mt-4">In conformità al Regolamento UE 2016/679 (GDPR), l'utente ha diritto di accedere, rettificare, cancellare i propri dati inviando una richiesta a <a href="mailto:vaultcrafted@gmail.com" className="text-gold hover:underline">vaultcrafted@gmail.com</a>.</p>
+            </div>
+            <div>
+              <h2 className="font-display text-xl text-foreground mb-4">10. Cookie</h2>
+              <p>Questo sito utilizza esclusivamente cookie tecnici necessari al funzionamento della pagina. Non vengono utilizzati cookie di profilazione o di terze parti a fini pubblicitari.</p>
+            </div>
+            <div>
+              <h2 className="font-display text-xl text-foreground mb-4">11. Legge applicabile</h2>
+              <p>I presenti termini sono regolati dalla legge italiana. Per qualsiasi controversia è competente il Foro di Vercelli, salvo diversa disposizione di legge applicabile ai consumatori.</p>
+            </div>
+            <div className="border-t border-border/40 pt-8">
+              <p className="text-sm">Per qualsiasi domanda contattaci a <a href="mailto:vaultcrafted@gmail.com" className="text-gold hover:underline">vaultcrafted@gmail.com</a>.</p>
+            </div>
+          </div>
         </motion.div>
       </section>
-
     </main>
   );
 }
