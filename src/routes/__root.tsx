@@ -38,6 +38,7 @@ export const Route = createRootRoute({
       { name: "twitter:site", content: "@VaultCrafted" },
       { name: "twitter:title", content: "Vault Crafted | Carte da collezione personalizzate" },
       { name: "twitter:description", content: "Crea la tua carta da collezione unica e personalizzata. Vault Crafted realizza carte esclusive partendo da zero, senza template anonimi." },
+      { name: "google-site-verification", content: "cBR2V56c8GK0VvVyq4tum_EXfRUmpAaUOSKg9w1NRAY" },
     ],
     links: [
       {
