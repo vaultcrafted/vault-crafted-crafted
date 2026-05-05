@@ -125,8 +125,38 @@ function OrdinaPage() {
     );
   }
 
+  const RiepilogoContent = () => (
+    <>
+      <p className="mb-3 text-[11px] uppercase tracking-[0.4em] text-gold">Riepilogo ordine</p>
+      <div className="flex items-center gap-6 lg:flex-col lg:items-stretch lg:gap-3 text-sm">
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-muted-foreground">Carta</span>
+          <span className="font-semibold">{selectedTipologia ? `€${selectedTipologia.price}` : <span className="text-muted-foreground/50">—</span>}</span>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-muted-foreground">Olografica</span>
+          <span className="font-semibold">{olografica ? `+ €${PREZZO_OLOGRAFICA.toFixed(2)}` : <span className="text-muted-foreground/50">—</span>}</span>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-muted-foreground">Custodia</span>
+          <span className="font-semibold">{selectedCustodia ? `+ €${selectedCustodia.price}` : <span className="text-muted-foreground/50">—</span>}</span>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-muted-foreground">Spedizione</span>
+          <span className="font-semibold">€{SPEDIZIONE.toFixed(2)}</span>
+        </div>
+        <div className="flex items-center justify-between gap-4 lg:border-t lg:border-gold/20 lg:pt-4 lg:mt-2">
+          <span className="font-display text-base lg:text-lg">Totale</span>
+          <span className="font-display text-xl lg:text-2xl text-gold">
+            {selectedTipologia && selectedCustodia ? `€${totale.toFixed(2)}` : <span className="text-sm text-muted-foreground">—</span>}
+          </span>
+        </div>
+      </div>
+    </>
+  );
+
   return (
-    <main className="bg-background text-foreground vault-grain">
+    <main className="bg-background text-foreground vault-grain pb-24 lg:pb-0">
       {/* Header */}
       <header className="border-b border-border/40 bg-surface-2/60 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
@@ -163,7 +193,7 @@ function OrdinaPage() {
         <div className="relative flex gap-8">
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="flex-1 min-w-0 space-y-6 pr-80">
+          <form onSubmit={handleSubmit} className="flex-1 min-w-0 space-y-6 lg:pr-80">
 
             <FormSection title="Possiamo finalmente iniziare">
               <p className="text-sm text-muted-foreground">
@@ -209,8 +239,7 @@ function OrdinaPage() {
               </p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <label className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
-                  <input type="radio" name="olografica" value="Sì — Pellicola olografica +€9.99" required className="sr-only"
-                    onChange={() => setOlografica(true)} />
+                  <input type="radio" name="olografica" value="Sì — Pellicola olografica +€9.99" required className="sr-only" onChange={() => setOlografica(true)} />
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-wide">✨ Sì, la voglio!</p>
                     <p className="text-xs text-muted-foreground mt-1">Effetto olografico cangiante</p>
@@ -218,8 +247,7 @@ function OrdinaPage() {
                   <span className="whitespace-nowrap text-sm font-semibold text-gold">+ €9.99</span>
                 </label>
                 <label className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-border bg-background px-4 py-4 transition-colors hover:border-gold has-[:checked]:border-gold has-[:checked]:shadow-[0_0_0_1px_var(--gold)]">
-                  <input type="radio" name="olografica" value="No — Senza pellicola olografica" required className="sr-only"
-                    onChange={() => setOlografica(false)} />
+                  <input type="radio" name="olografica" value="No — Senza pellicola olografica" required className="sr-only" onChange={() => setOlografica(false)} />
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-wide">No, grazie</p>
                     <p className="text-xs text-muted-foreground mt-1">Carta standard senza pellicola</p>
@@ -358,68 +386,51 @@ function OrdinaPage() {
             </div>
           </form>
 
-          {/* Riquadro prezzo FIXED */}
+          {/* Riquadro prezzo DESKTOP - fixed a destra */}
           <div className="hidden lg:block w-72 fixed right-8 top-24">
             <div className="rounded-xl border border-gold/30 bg-surface-2/60 p-6 backdrop-blur-sm shadow-[0_0_40px_-10px_var(--gold)]">
-              <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-gold">Riepilogo ordine</p>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Carta</span>
-                  <span className="font-semibold">
-                    {selectedTipologia ? `€${selectedTipologia.price}` : <span className="text-muted-foreground/50">—</span>}
-                  </span>
-                </div>
-                {selectedTipologia && (
-                  <p className="text-xs text-muted-foreground">{selectedTipologia.label}</p>
-                )}
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Olografica</span>
-                  <span className="font-semibold">
-                    {olografica ? `+ €${PREZZO_OLOGRAFICA.toFixed(2)}` : <span className="text-muted-foreground/50">—</span>}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Custodia</span>
-                  <span className="font-semibold">
-                    {selectedCustodia ? `+ €${selectedCustodia.price}` : <span className="text-muted-foreground/50">—</span>}
-                  </span>
-                </div>
-                {selectedCustodia && (
-                  <p className="text-xs text-muted-foreground">{selectedCustodia.label}</p>
-                )}
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Spedizione</span>
-                  <span className="font-semibold">€{SPEDIZIONE.toFixed(2)}</span>
-                </div>
-              </div>
-              <div className="mt-5 border-t border-gold/20 pt-5">
-                <div className="flex items-center justify-between">
-                  <span className="font-display text-lg">Totale</span>
-                  <span className="font-display text-2xl text-gold">
-                    {selectedTipologia && selectedCustodia
-                      ? `€${totale.toFixed(2)}`
-                      : <span className="text-base text-muted-foreground">—</span>}
-                  </span>
-                </div>
-              </div>
-              {(!selectedTipologia || !selectedCustodia) && (
-                <p className="mt-3 text-xs text-muted-foreground text-center">
-                  {!selectedTipologia && !selectedCustodia ? "Seleziona tipologia e custodia" : !selectedTipologia ? "Seleziona la tipologia" : "Seleziona la custodia"}
-                </p>
-              )}
+              <RiepilogoContent />
               {selectedTipologia && selectedCustodia && (
-                <button
-                  type="submit"
-                  form="ordine-form"
-                  disabled={submitting}
-                  className="mt-5 w-full btn-gold inline-flex items-center justify-center gap-3 rounded-full py-4 text-sm font-semibold uppercase tracking-[0.25em] disabled:cursor-not-allowed disabled:opacity-60"
-                >
+                <button type="submit" form="ordine-form" disabled={submitting}
+                  className="mt-5 w-full btn-gold inline-flex items-center justify-center gap-3 rounded-full py-4 text-sm font-semibold uppercase tracking-[0.25em] disabled:cursor-not-allowed disabled:opacity-60">
                   {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Invia ordine"}
                 </button>
               )}
             </div>
           </div>
 
+        </div>
+      </div>
+
+      {/* Barra prezzo MOBILE - fissa in basso */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden border-t border-gold/30 bg-background/95 backdrop-blur-sm px-4 py-3 shadow-[0_-4px_30px_-8px_var(--gold)]">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4 text-sm overflow-x-auto">
+            <div className="flex items-center gap-1 shrink-0">
+              <span className="text-muted-foreground text-xs">Carta</span>
+              <span className="font-semibold">{selectedTipologia ? `€${selectedTipologia.price}` : "—"}</span>
+            </div>
+            {olografica && (
+              <div className="flex items-center gap-1 shrink-0">
+                <span className="text-muted-foreground text-xs">Holo</span>
+                <span className="font-semibold">+€9.99</span>
+              </div>
+            )}
+            <div className="flex items-center gap-1 shrink-0">
+              <span className="text-muted-foreground text-xs">Custodia</span>
+              <span className="font-semibold">{selectedCustodia ? `+€${selectedCustodia.price}` : "—"}</span>
+            </div>
+            <div className="flex items-center gap-1 shrink-0">
+              <span className="text-muted-foreground text-xs">Sped.</span>
+              <span className="font-semibold">€4.99</span>
+            </div>
+          </div>
+          <div className="shrink-0 text-right">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Totale</p>
+            <p className="font-display text-xl text-gold">
+              {selectedTipologia && selectedCustodia ? `€${totale.toFixed(2)}` : "—"}
+            </p>
+          </div>
         </div>
       </div>
 
