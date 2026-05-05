@@ -40,7 +40,7 @@ export function Footer() {
 
           <div className="flex items-center gap-3">
             {socials.map(({ name, href, Icon }) => (
-              
+              <a
                 key={name}
                 href={href}
                 target="_blank"
@@ -51,7 +51,7 @@ export function Footer() {
                 <Icon className="h-4 w-4" strokeWidth={1.5} />
               </a>
             ))}
-            
+            <a
               href={TIKTOK_URL}
               target="_blank"
               rel="noopener noreferrer"
