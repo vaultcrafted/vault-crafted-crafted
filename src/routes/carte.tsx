@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Particles } from "@/components/vault/Particles";
+import { Header } from "@/components/vault/Header";
 
 export const Route = createFileRoute("/carte")({
   component: CartePage,
@@ -27,27 +28,7 @@ const CARTE = Object.entries(imageModules).map(([path, mod], i) => ({
 function CartePage() {
   return (
     <main className="min-h-screen bg-background text-foreground vault-grain">
-
-      {/* Header */}
-      <header className="border-b border-border/40 bg-surface-2/60 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-5">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Indietro
-          </Link>
-          <Link
-            to="/"
-            aria-label="Vault Crafted home"
-            className="inline-flex items-center"
-          >
-            <img src="/LOGO.png" alt="Vault Crafted" className="h-10 w-auto" />
-          </Link>
-          <div className="w-16" />
-        </div>
-      </header>
+      <Header />
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-surface-1 px-6 py-24 text-center md:py-32">
@@ -101,16 +82,13 @@ function CartePage() {
                   className="h-full w-full object-cover transition-transform duration-500 ease-out scale-125 group-hover:scale-[1.28]"
                   style={{ minHeight: i === 0 ? "400px" : "auto" }}
                 />
-                {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                {/* Label */}
                 <div className="absolute bottom-0 left-0 right-0 translate-y-4 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                   <div className="flex items-center justify-between">
                     <span className="text-xs uppercase tracking-[0.3em] text-gold">{carta.label}</span>
                     <span className="text-xs uppercase tracking-[0.3em] text-white/60">Pezzo unico</span>
                   </div>
                 </div>
-                {/* Gold glow on hover */}
                 <div className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   style={{ boxShadow: "inset 0 0 0 1px rgba(201,168,76,0.4)" }}
                 />
@@ -144,7 +122,6 @@ function CartePage() {
           </Link>
         </motion.div>
       </section>
-
     </main>
   );
 }
