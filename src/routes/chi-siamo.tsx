@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Particles } from "@/components/vault/Particles";
+import { Header } from "@/components/vault/Header";
 
 export const Route = createFileRoute("/chi-siamo")({
   component: ChiSiamoPage,
@@ -20,23 +21,7 @@ export const Route = createFileRoute("/chi-siamo")({
 function ChiSiamoPage() {
   return (
     <main className="min-h-screen bg-background text-foreground vault-grain">
-
-      {/* Header */}
-      <header className="border-b border-border/40 bg-surface-2/60 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-5">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Indietro
-          </Link>
-          <Link to="/">
-            <img src="/LOGO.png" alt="Vault Crafted" className="h-10 w-auto" />
-          </Link>
-          <div className="w-16" />
-        </div>
-      </header>
+      <Header />
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-surface-1 px-6 py-28 text-center md:py-40">
@@ -73,18 +58,10 @@ function ChiSiamoPage() {
           transition={{ duration: 0.8 }}
           className="space-y-6 text-lg text-muted-foreground leading-relaxed"
         >
-          <p>
-            Tutto è nato da una passione viscerale per le <strong className="text-foreground">carte Pokémon</strong> — quella stessa passione che mi ha accompagnato sin da bambino, quando aprire un pacchetto era un momento magico, irripetibile.
-          </p>
-          <p>
-            Con il tempo quella passione non è mai svanita. Anzi, si è trasformata in una domanda: <strong className="text-foreground">e se potessi creare una carta che parla solo di te?</strong>
-          </p>
-          <p>
-            A novembre 2024 quella domanda è diventata realtà. È nato <strong className="text-foreground">Vault Crafted</strong> — un progetto personale, costruito da zero, con una missione precisa: offrire carte da collezione completamente personalizzate, dove ogni dettaglio racconta la tua storia.
-          </p>
-          <p>
-            Non usiamo template. Non facciamo copie. <strong className="text-foreground">Ogni carta nasce da zero</strong>, su misura per chi la ordina. Un pezzo unico, numerato, che non esisterà mai in un secondo esemplare.
-          </p>
+          <p>Tutto è nato da una passione viscerale per le <strong className="text-foreground">carte Pokémon</strong> — quella stessa passione che mi ha accompagnato sin da bambino, quando aprire un pacchetto era un momento magico, irripetibile.</p>
+          <p>Con il tempo quella passione non è mai svanita. Anzi, si è trasformata in una domanda: <strong className="text-foreground">e se potessi creare una carta che parla solo di te?</strong></p>
+          <p>A novembre 2024 quella domanda è diventata realtà. È nato <strong className="text-foreground">Vault Crafted</strong> — un progetto personale, costruito da zero, con una missione precisa: offrire carte da collezione completamente personalizzate, dove ogni dettaglio racconta la tua storia.</p>
+          <p>Non usiamo template. Non facciamo copie. <strong className="text-foreground">Ogni carta nasce da zero</strong>, su misura per chi la ordina. Un pezzo unico, numerato, che non esisterà mai in un secondo esemplare.</p>
         </motion.div>
       </section>
 
@@ -159,19 +136,13 @@ function ChiSiamoPage() {
           <h2 className="font-display text-3xl md:text-5xl">
             Pronto a creare la <em className="shimmer-text">tua carta?</em>
           </h2>
-          <p className="mt-6 text-muted-foreground">
-            Pochi minuti. Un'idea. Una carta che nessun altro avrà mai.
-          </p>
-          <Link
-            to="/ordina"
-            className="btn-gold group mt-10 inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]"
-          >
+          <p className="mt-6 text-muted-foreground">Pochi minuti. Un'idea. Una carta che nessun altro avrà mai.</p>
+          <Link to="/ordina" className="btn-gold group mt-10 inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]">
             Crea ora la tua carta
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </motion.div>
       </section>
-
     </main>
   );
 }
