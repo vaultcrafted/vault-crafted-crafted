@@ -3,7 +3,6 @@ import { ArrowRight, Menu, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Particles } from "./Particles";
 import { useState } from "react";
-import logo from "/LOGO.png";
 
 export function Hero() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,16 +11,12 @@ export function Hero() {
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background vault-grain">
       <Particles count={50} />
 
-      {/* Radial gold glow */}
       <div
         aria-hidden
         className="absolute left-1/2 top-1/2 -z-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-3xl"
-        style={{
-          background: "radial-gradient(circle, oklch(0.76 0.13 82 / 0.4) 0%, transparent 60%)",
-        }}
+        style={{ background: "radial-gradient(circle, oklch(0.76 0.13 82 / 0.4) 0%, transparent 60%)" }}
       />
 
-      {/* Top brand */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -29,23 +24,16 @@ export function Hero() {
         className="absolute left-0 right-0 top-0 z-20 flex items-center justify-between px-6 py-6 md:px-12"
       >
         <Link to="/">
-          <img src={logo} alt="Vault Crafted" className="h-10 w-auto" />
+          <img src="/LOGO.png" alt="Vault Crafted" className="h-10 w-auto" />
         </Link>
-
-        {/* Hamburger button */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="z-30 text-gold"
-        >
+        <button onClick={() => setMenuOpen(!menuOpen)} className="z-30 text-gold">
           {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </motion.div>
 
-      {/* Side menu */}
       <AnimatePresence>
         {menuOpen && (
           <>
-            {/* Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -54,7 +42,6 @@ export function Hero() {
               className="fixed inset-0 z-20 bg-black/40 backdrop-blur-sm"
               onClick={() => setMenuOpen(false)}
             />
-            {/* Panel */}
             <motion.div
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
@@ -62,32 +49,19 @@ export function Hero() {
               transition={{ duration: 0.3 }}
               className="fixed right-0 top-0 z-30 flex h-full w-64 flex-col gap-8 border-l border-gold/20 bg-background/95 px-8 py-24 backdrop-blur-sm"
             >
-              <Link
-                to="/ordina"
-                onClick={() => setMenuOpen(false)}
-                className="text-sm uppercase tracking-[0.3em] text-gold transition-colors hover:text-gold/70"
-              >
+              <Link to="/" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold">
+                Home
+              </Link>
+              <Link to="/ordina" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-gold transition-colors hover:text-gold/70">
                 Ordina ora
               </Link>
-              <Link
-                to="/chi-siamo"
-                onClick={() => setMenuOpen(false)}
-                className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
-              >
-                Chi siamo
-              </Link>
-              <Link
-                to="/carte"
-                onClick={() => setMenuOpen(false)}
-                className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
-              >
+              <Link to="/carte" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold">
                 Tutte le carte
               </Link>
-              <Link
-                to="/regalo"
-                onClick={() => setMenuOpen(false)}
-                className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold"
-              >
+              <Link to="/chi-siamo" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold">
+                Chi siamo
+              </Link>
+              <Link to="/regalo" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold">
                 Regalo perfetto
               </Link>
             </motion.div>
@@ -134,19 +108,16 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.9 }}
           className="mt-12"
         >
-          <div className="flex flex-col items-center gap-4 sm:flex-row">
-            <Link
-              to="/ordina"
-              className="btn-gold group inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]"
-            >
-              Ordina ora
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
+          <Link
+            to="/ordina"
+            className="btn-gold group inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]"
+          >
+            Ordina ora
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
         </motion.div>
       </div>
 
-      {/* Bottom scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
