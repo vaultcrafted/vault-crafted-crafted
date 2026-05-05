@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Upload, CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, Upload, ArrowLeft } from "lucide-react";
+import { Header } from "@/components/vault/Header";
 
 export const Route = createFileRoute("/ordina")({
   component: OrdinaPage,
@@ -125,51 +126,9 @@ function OrdinaPage() {
     );
   }
 
-  const RiepilogoContent = () => (
-    <>
-      <p className="mb-3 text-[11px] uppercase tracking-[0.4em] text-gold">Riepilogo ordine</p>
-      <div className="flex items-center gap-6 lg:flex-col lg:items-stretch lg:gap-3 text-sm">
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-muted-foreground">Carta</span>
-          <span className="font-semibold">{selectedTipologia ? `€${selectedTipologia.price}` : <span className="text-muted-foreground/50">—</span>}</span>
-        </div>
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-muted-foreground">Olografica</span>
-          <span className="font-semibold">{olografica ? `+ €${PREZZO_OLOGRAFICA.toFixed(2)}` : <span className="text-muted-foreground/50">—</span>}</span>
-        </div>
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-muted-foreground">Custodia</span>
-          <span className="font-semibold">{selectedCustodia ? `+ €${selectedCustodia.price}` : <span className="text-muted-foreground/50">—</span>}</span>
-        </div>
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-muted-foreground">Spedizione</span>
-          <span className="font-semibold">€{SPEDIZIONE.toFixed(2)}</span>
-        </div>
-        <div className="flex items-center justify-between gap-4 lg:border-t lg:border-gold/20 lg:pt-4 lg:mt-2">
-          <span className="font-display text-base lg:text-lg">Totale</span>
-          <span className="font-display text-xl lg:text-2xl text-gold">
-            {selectedTipologia && selectedCustodia ? `€${totale.toFixed(2)}` : <span className="text-sm text-muted-foreground">—</span>}
-          </span>
-        </div>
-      </div>
-    </>
-  );
-
   return (
     <main className="bg-background text-foreground vault-grain pb-24 lg:pb-0">
-      {/* Header */}
-      <header className="border-b border-border/40 bg-surface-2/60 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-          <Link to="/" className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold">
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Indietro
-          </Link>
-          <Link to="/" aria-label="Vault Crafted home">
-            <img src="/LOGO.png" alt="Vault Crafted" className="h-10 w-auto" />
-          </Link>
-          <div className="w-16" />
-        </div>
-      </header>
+      <Header />
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border/40 bg-surface-1 px-6 py-20 text-center md:py-28">
@@ -192,7 +151,6 @@ function OrdinaPage() {
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="relative flex gap-8">
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="flex-1 min-w-0 space-y-6 lg:pr-80">
 
             <FormSection title="Possiamo finalmente iniziare">
@@ -386,23 +344,49 @@ function OrdinaPage() {
             </div>
           </form>
 
-          {/* Riquadro prezzo DESKTOP - fixed a destra */}
+          {/* Riquadro prezzo DESKTOP */}
           <div className="hidden lg:block w-72 fixed right-8 top-24">
             <div className="rounded-xl border border-gold/30 bg-surface-2/60 p-6 backdrop-blur-sm shadow-[0_0_40px_-10px_var(--gold)]">
-              <RiepilogoContent />
-              {selectedTipologia && selectedCustodia && (
-                <button type="submit" form="ordine-form" disabled={submitting}
-                  className="mt-5 w-full btn-gold inline-flex items-center justify-center gap-3 rounded-full py-4 text-sm font-semibold uppercase tracking-[0.25em] disabled:cursor-not-allowed disabled:opacity-60">
-                  {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Invia ordine"}
-                </button>
+              <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-gold">Riepilogo ordine</p>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Carta</span>
+                  <span className="font-semibold">{selectedTipologia ? `€${selectedTipologia.price}` : <span className="text-muted-foreground/50">—</span>}</span>
+                </div>
+                {selectedTipologia && <p className="text-xs text-muted-foreground">{selectedTipologia.label}</p>}
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Olografica</span>
+                  <span className="font-semibold">{olografica ? `+ €${PREZZO_OLOGRAFICA.toFixed(2)}` : <span className="text-muted-foreground/50">—</span>}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Custodia</span>
+                  <span className="font-semibold">{selectedCustodia ? `+ €${selectedCustodia.price}` : <span className="text-muted-foreground/50">—</span>}</span>
+                </div>
+                {selectedCustodia && <p className="text-xs text-muted-foreground">{selectedCustodia.label}</p>}
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Spedizione</span>
+                  <span className="font-semibold">€{SPEDIZIONE.toFixed(2)}</span>
+                </div>
+              </div>
+              <div className="mt-5 border-t border-gold/20 pt-5">
+                <div className="flex items-center justify-between">
+                  <span className="font-display text-lg">Totale</span>
+                  <span className="font-display text-2xl text-gold">
+                    {selectedTipologia && selectedCustodia ? `€${totale.toFixed(2)}` : <span className="text-base text-muted-foreground">—</span>}
+                  </span>
+                </div>
+              </div>
+              {(!selectedTipologia || !selectedCustodia) && (
+                <p className="mt-3 text-xs text-muted-foreground text-center">
+                  {!selectedTipologia && !selectedCustodia ? "Seleziona tipologia e custodia" : !selectedTipologia ? "Seleziona la tipologia" : "Seleziona la custodia"}
+                </p>
               )}
             </div>
           </div>
-
         </div>
       </div>
 
-      {/* Barra prezzo MOBILE - fissa in basso */}
+      {/* Barra prezzo MOBILE */}
       <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden border-t border-gold/30 bg-background/95 backdrop-blur-sm px-4 py-3 shadow-[0_-4px_30px_-8px_var(--gold)]">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4 text-sm overflow-x-auto">
