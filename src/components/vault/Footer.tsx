@@ -2,12 +2,9 @@ import { Facebook, Instagram } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 const TIKTOK_URL = "https://www.tiktok.com/@vault_crftd";
+
 const socials = [
-  {
-    name: "Facebook",
-    href: "https://www.facebook.com/profile.php?id=61570154034763",
-    Icon: Facebook,
-  },
+  { name: "Facebook", href: "https://www.facebook.com/profile.php?id=61570154034763", Icon: Facebook },
   { name: "Instagram", href: "https://www.instagram.com/vault_crafted", Icon: Instagram },
 ];
 
@@ -23,6 +20,16 @@ export function Footer() {
   return (
     <footer className="bg-background py-16">
       <div className="mx-auto max-w-7xl px-6">
+
+        {/* Link navigazione */}
+        <div className="mb-12 flex flex-wrap justify-center gap-8 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+          <Link to="/" className="transition-colors hover:text-gold">Home</Link>
+          <Link to="/ordina" className="transition-colors hover:text-gold">Ordina ora</Link>
+          <Link to="/carte" className="transition-colors hover:text-gold">Tutte le carte</Link>
+          <Link to="/chi-siamo" className="transition-colors hover:text-gold">Chi siamo</Link>
+          <Link to="/regalo" className="transition-colors hover:text-gold">Regalo perfetto</Link>
+        </div>
+
         <div className="flex flex-col items-center gap-10 border-t border-border/60 pt-12 md:flex-row md:justify-between">
           <div className="text-center md:text-left">
             <div className="font-display text-2xl tracking-[0.3em] text-gold">VAULT</div>
@@ -30,9 +37,10 @@ export function Footer() {
               Crafted · Italy
             </p>
           </div>
+
           <div className="flex items-center gap-3">
             {socials.map(({ name, href, Icon }) => (
-              <a
+              
                 key={name}
                 href={href}
                 target="_blank"
@@ -43,7 +51,7 @@ export function Footer() {
                 <Icon className="h-4 w-4" strokeWidth={1.5} />
               </a>
             ))}
-            <a
+            
               href={TIKTOK_URL}
               target="_blank"
               rel="noopener noreferrer"
@@ -53,6 +61,7 @@ export function Footer() {
               <TikTokIcon className="h-4 w-4" />
             </a>
           </div>
+
           <div className="text-center md:text-right">
             <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
               © {new Date().getFullYear()} Vault Crafted
