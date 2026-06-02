@@ -280,9 +280,9 @@ function CardPreview({ state }: { state: FormState }) {
   const W = 320, H = 448;
   const scale = W / 178;
 
-  function EnergyDot({ id, size = 10 }: { id?: string; size?: number }) {
-    const c = id ? getEnergiaById(id).color : energia.color;
-    return <span style={{ width: size, height: size, borderRadius: "50%", background: c, display: "inline-block", flexShrink: 0 }} />;
+  function EnergyImg({ id, size = 14 }: { id?: string; size?: number }) {
+    const e = id ? getEnergiaById(id) : energia;
+    return <img src={e.img} alt={e.label} style={{ width: size, height: size, objectFit: "contain", flexShrink: 0, display: "inline-block" }} />;
   }
 
   return (
@@ -311,7 +311,7 @@ function CardPreview({ state }: { state: FormState }) {
         <div style={{ display: "flex", alignItems: "baseline", gap: 2, whiteSpace: "nowrap" }}>
           <span style={{ color: "#aaa", fontSize: 10, fontWeight: 700 }}>HP</span>
           <span style={{ color: "#fff", fontSize: 19, fontWeight: 900 }}>{state.hp}</span>
-          <span style={{ marginLeft: 3, marginBottom: 1 }}><EnergyDot size={17} /></span>
+          <span style={{ marginLeft: 3, marginBottom: 1 }}><EnergyImg size={20} /></span>
         </div>
       </div>
 
@@ -322,7 +322,7 @@ function CardPreview({ state }: { state: FormState }) {
           <div style={{ display: "flex", alignItems: "flex-start", gap: 5 }}>
             <div style={{ display: "flex", gap: 2, marginTop: 1, flexShrink: 0 }}>
               {(state.atk1_energie.length ? state.atk1_energie : ["acqua","acqua"]).map((id, i) => (
-                <EnergyDot key={i} id={id} size={12} />
+                <EnergyImg key={i} id={id} size={15} />
               ))}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -338,7 +338,7 @@ function CardPreview({ state }: { state: FormState }) {
             <div style={{ display: "flex", alignItems: "flex-start", gap: 5 }}>
               <div style={{ display: "flex", gap: 2, marginTop: 1, flexShrink: 0 }}>
                 {(state.atk2_energie.length ? state.atk2_energie : ["acqua"]).map((id, i) => (
-                  <EnergyDot key={i} id={id} size={12} />
+                  <EnergyImg key={i} id={id} size={15} />
                 ))}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -366,7 +366,7 @@ function CardPreview({ state }: { state: FormState }) {
                 s.val ? (
                   s.val.isEmoji
                     ? <span style={{ fontSize: 11 }}>{s.val.label}</span>
-                    : <span style={{ width: 10, height: 10, borderRadius: "50%", background: s.val.color, display: "inline-block" }} />
+                    : <EnergyImg id={ENERGIE.find(e => e.label === s.val!.label)?.id} size={12} />
                 ) : <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 9 }}>—</span>
               ) : (
                 <span style={{ fontSize: 10, color: "#fff" }}>{"⬛".repeat(Math.min(state.ritirata || 2, 4))}</span>
@@ -457,7 +457,17 @@ function StepNomeHP({ state, setState }: StepProps) {
         </div>
         <div className="flex items-center gap-4">
           <input type="range" min={30} max={999} step={10} value={state.hp} onChange={(e) => setState({ hp: Number(e.target.value) })} className="flex-1 accent-gold" />
-          <span className="font-display text-3xl text-gold w-20 text-right">{state.hp}</span>
+          <input
+            type="number"
+            min={1}
+            max={9999}
+            value={state.hp}
+            onChange={(e) => {
+              const v = Math.max(1, Math.min(9999, Number(e.target.value) || 1));
+              setState({ hp: v });
+            }}
+            className="font-display text-3xl text-gold bg-transparent border-b border-gold/40 outline-none w-24 text-right focus:border-gold transition-colors"
+          />
         </div>
       </div>
     </div>
