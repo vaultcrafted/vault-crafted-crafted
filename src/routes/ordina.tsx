@@ -4,16 +4,159 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Loader2, Upload, Send, HelpCircle, Plus, Minus, ChevronDown, ChevronUp } from "lucide-react";
 import { Header } from "@/components/vault/Header";
 
+const SCHEMA_PRODUCTS = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Tipi di carte personalizzate Vault Crafted",
+  "description": "Scegli il tipo di carta da collezione personalizzata. Ogni carta è realizzata da zero, numerata 1/1 e spedita in packaging premium.",
+  "url": "https://vaultcrafted.com/ordina",
+  "numberOfItems": 5,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "Product",
+        "name": "Carta Normale Personalizzata",
+        "description": "Carta da collezione personalizzata stile Pokémon, formato base. Design unico creato da zero, numerata 1/1, con packaging premium incluso.",
+        "brand": { "@type": "Brand", "name": "Vault Crafted" },
+        "image": "https://vaultcrafted.com/tipologie/CARTA-NORMALE.png",
+        "url": "https://vaultcrafted.com/ordina",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "price": "25.99",
+          "priceValidUntil": "2026-12-31",
+          "availability": "https://schema.org/InStock",
+          "seller": { "@type": "Organization", "name": "Vault Crafted" },
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingRate": { "@type": "MonetaryAmount", "value": "4.99", "currency": "EUR" },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "handlingTime": { "@type": "QuantitativeValue", "minValue": 3, "maxValue": 5, "unitCode": "DAY" },
+              "transitTime": { "@type": "QuantitativeValue", "minValue": 2, "maxValue": 5, "unitCode": "DAY" }
+            },
+            "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "IT" }
+          }
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@type": "Product",
+        "name": "Carta Normale EX Personalizzata",
+        "description": "Carta da collezione personalizzata formato EX. Design esclusivo, numerata 1/1, packaging premium.",
+        "brand": { "@type": "Brand", "name": "Vault Crafted" },
+        "image": "https://vaultcrafted.com/tipologie/CARTA-NORMALE-EX.png",
+        "url": "https://vaultcrafted.com/ordina",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "price": "25.99",
+          "priceValidUntil": "2026-12-31",
+          "availability": "https://schema.org/InStock",
+          "seller": { "@type": "Organization", "name": "Vault Crafted" }
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@type": "Product",
+        "name": "Carta Full-Art EX Personalizzata",
+        "description": "Carta da collezione personalizzata formato Full-Art EX. Illustrazione a piena pagina, numerata 1/1, packaging premium.",
+        "brand": { "@type": "Brand", "name": "Vault Crafted" },
+        "image": "https://vaultcrafted.com/tipologie/CARTA-FULL-ART-EX.png",
+        "url": "https://vaultcrafted.com/ordina",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "price": "27.99",
+          "priceValidUntil": "2026-12-31",
+          "availability": "https://schema.org/InStock",
+          "seller": { "@type": "Organization", "name": "Vault Crafted" }
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "item": {
+        "@type": "Product",
+        "name": "Carta V Personalizzata",
+        "description": "Carta da collezione personalizzata formato V. Design premium, numerata 1/1, packaging esclusivo incluso.",
+        "brand": { "@type": "Brand", "name": "Vault Crafted" },
+        "image": "https://vaultcrafted.com/tipologie/CARTA-V.png",
+        "url": "https://vaultcrafted.com/ordina",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "price": "28.99",
+          "priceValidUntil": "2026-12-31",
+          "availability": "https://schema.org/InStock",
+          "seller": { "@type": "Organization", "name": "Vault Crafted" }
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "item": {
+        "@type": "Product",
+        "name": "Carta V-MAX Personalizzata",
+        "description": "Carta da collezione personalizzata formato V-MAX, il top della gamma. Design monumentale, numerata 1/1, packaging premium.",
+        "brand": { "@type": "Brand", "name": "Vault Crafted" },
+        "image": "https://vaultcrafted.com/tipologie/CARTA-V-MAX.png",
+        "url": "https://vaultcrafted.com/ordina",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "price": "30.99",
+          "priceValidUntil": "2026-12-31",
+          "availability": "https://schema.org/InStock",
+          "seller": { "@type": "Organization", "name": "Vault Crafted" }
+        }
+      }
+    }
+  ]
+};
+
+const SCHEMA_BREADCRUMB_ORDINA = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://vaultcrafted.com" },
+    { "@type": "ListItem", "position": 2, "name": "Ordina", "item": "https://vaultcrafted.com/ordina" }
+  ]
+};
+
 export const Route = createFileRoute("/ordina")({
   component: OrdinaPage,
   head: () => ({
     meta: [
-      { title: "Ordina la tua carta — Vault Crafted" },
-      { name: "description", content: "Compila il modulo e crea la tua carta da collezione personalizzata. Scegli energia, tipologia, attacchi e design. Pezzo unico, consegna in 7-10 giorni." },
+      { title: "Ordina la tua carta personalizzata — Vault Crafted | Da €25.99" },
+      { name: "description", content: "Crea la tua carta da collezione personalizzata stile Pokémon. Scegli tipo, energia, attacchi e carica la tua foto. Pezzo unico numerato 1/1, packaging premium, consegna in 7-10 giorni. Da €25.99." },
+      { name: "keywords", content: "ordina carta personalizzata, carta pokemon personalizzata ordine, carta da collezione su misura, regalo personalizzato carta, vault crafted ordina" },
       { name: "robots", content: "index, follow" },
       { property: "og:url", content: "https://vaultcrafted.com/ordina" },
-      { property: "og:title", content: "Ordina la tua carta — Vault Crafted" },
-      { property: "og:description", content: "Crea la tua carta personalizzata in pochi minuti. Zero template, design unico, packaging premium." },
+      { property: "og:title", content: "Ordina la tua carta personalizzata — Vault Crafted" },
+      { property: "og:description", content: "Crea la tua carta personalizzata in pochi minuti. Zero template, design unico, packaging premium. Da €25.99 spedizione inclusa." },
+      { property: "og:image", content: "https://vaultcrafted.com/og-image.jpg" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Ordina la tua carta — Vault Crafted" },
+      { name: "twitter:description", content: "Crea la tua carta personalizzata. Da €25.99 tutto incluso." },
+    ],
+    links: [
+      { rel: "canonical", href: "https://vaultcrafted.com/ordina" },
+    ],
+    scripts: [
+      { type: "application/ld+json", children: JSON.stringify(SCHEMA_PRODUCTS) },
+      { type: "application/ld+json", children: JSON.stringify(SCHEMA_BREADCRUMB_ORDINA) },
     ],
   }),
 });
