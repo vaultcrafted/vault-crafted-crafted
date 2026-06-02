@@ -311,7 +311,7 @@ function CardPreview({ state }: { state: FormState }) {
         <div style={{ display: "flex", alignItems: "baseline", gap: 2, whiteSpace: "nowrap" }}>
           <span style={{ color: "#aaa", fontSize: 10, fontWeight: 700 }}>HP</span>
           <span style={{ color: "#fff", fontSize: 19, fontWeight: 900 }}>{state.hp}</span>
-          <span style={{ marginLeft: 3, marginBottom: 1 }}><EnergyImg size={20} /></span>
+          <span style={{ marginLeft: 3, marginBottom: 1 }}><EnergyImg size={26} /></span>
         </div>
       </div>
 
