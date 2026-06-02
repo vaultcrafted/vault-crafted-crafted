@@ -53,16 +53,7 @@ const CUSTODIE = [
 ];
 
 // Emoji aggiuntive per debolezza/resistenza
-const EMOJI_EXTRA = [
-  { id: "emoji-fuoco2",  label: "🔥", color: "#e24b4a" },
-  { id: "emoji-fulmine", label: "⚡", color: "#ef9f27" },
-  { id: "emoji-ghiaccio",label: "❄️", color: "#7ec8e3" },
-  { id: "emoji-vento",   label: "🌀", color: "#5bc0de" },
-  { id: "emoji-roccia",  label: "🪨", color: "#a08060" },
-  { id: "emoji-veleno",  label: "☠️", color: "#8b4f8b" },
-  { id: "emoji-magia",   label: "✨", color: "#d4af37" },
-  { id: "emoji-nessuna", label: "—",  color: "#888780" },
-];
+
 
 const HP_PRESETS   = [60, 100, 150, 200, 250, 300, 999];
 const DMG_PRESETS_1 = [30, 60, 90, 120, 150, 200, 300];
@@ -144,9 +135,8 @@ function getStatLabel(id: string) {
   if (!id) return null;
   const e = ENERGIE.find((x) => x.id === id);
   if (e) return { label: e.label, color: e.color, isEmoji: false };
-  const em = EMOJI_EXTRA.find((x) => x.id === id);
-  if (em) return { label: em.label, color: em.color, isEmoji: true };
-  return null;
+  // testo libero (emoji o altro)
+  return { label: id, color: "#888780", isEmoji: true };
 }
 
 // ─── Selettore Energie Attacco ────────────────────────────────────────────────
@@ -238,13 +228,16 @@ function StatSelector({
   label: string;
   required?: boolean;
 }) {
+  const isEnergia = ENERGIE.some((e) => e.id === value);
+  const emojiValue = isEnergia || value === "" ? "" : value;
+
   return (
     <div>
       <label className="block text-xs uppercase tracking-wider text-muted-foreground mb-3">
         {label} {required && <span className="text-destructive">*</span>}
       </label>
       {/* Energie */}
-      <div className="grid grid-cols-6 gap-2 mb-3 sm:grid-cols-11">
+      <div className="grid grid-cols-6 gap-2 mb-4 sm:grid-cols-11">
         {ENERGIE.map((e) => (
           <button key={e.id} type="button" onClick={() => onChange(e.id)}
             title={e.label}
@@ -254,14 +247,18 @@ function StatSelector({
           </button>
         ))}
       </div>
-      {/* Emoji extra */}
-      <div className="flex flex-wrap gap-2">
-        {EMOJI_EXTRA.map((em) => (
-          <button key={em.id} type="button" onClick={() => onChange(em.id)}
-            className={`rounded-lg border px-3 py-2 text-lg transition-all ${value === em.id ? "border-gold shadow-[0_0_0_1px_var(--gold)] bg-gold/5" : "border-border hover:border-gold/60"}`}>
-            {em.label}
-          </button>
-        ))}
+      {/* Oppure emoji libera */}
+      <div className="flex items-center gap-3">
+        <span className="text-xs text-muted-foreground shrink-0">Oppure scrivi un'emoji:</span>
+        <input
+          type="text"
+          maxLength={4}
+          placeholder="😎 🔥 ⚡ 💀 ❄️ ..."
+          value={emojiValue}
+          onChange={(e) => { if (e.target.value) onChange(e.target.value); }}
+          className="vault-input"
+          style={{ maxWidth: 140 }}
+        />
       </div>
       {/* Selezione attuale */}
       {value && (
@@ -280,7 +277,7 @@ function CardPreview({ state }: { state: FormState }) {
   const energia = getEnergiaById(state.energia);
   const tipologia = TIPOLOGIE.find((t) => t.id === state.tipologia) ?? TIPOLOGIE[3];
 
-  const W = 260, H = 364;
+  const W = 320, H = 448;
   const scale = W / 178;
 
   function EnergyDot({ id, size = 10 }: { id?: string; size?: number }) {
@@ -304,15 +301,10 @@ function CardPreview({ state }: { state: FormState }) {
       <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 42%,rgba(0,0,0,0.72) 65%,rgba(0,0,0,0.92) 100%)" }} />
       <div style={{ position: "absolute", inset: 0, zIndex: 2, borderRadius: 8 * scale, border: `${1.5 * scale}px solid rgba(200,168,75,0.55)`, pointerEvents: "none" }} />
 
-      {/* Tipo badge */}
-      <div style={{ position: "absolute", top: 8, right: 10, zIndex: 4, background: "rgba(0,0,0,0.72)", border: "0.5px solid rgba(200,168,75,0.6)", borderRadius: 4, padding: `${1 * scale}px ${5 * scale}px`, fontSize: 10, color: "#e8d48b", fontWeight: 700 }}>
-        {tipologia.short}
-      </div>
-
       {/* Header */}
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 3, padding: `${7 * scale}px ${10 * scale}px ${4 * scale}px`,
         background: "linear-gradient(to bottom,rgba(0,0,0,0.7) 0%,transparent 100%)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ background: "#e8d48b", color: "#000", fontSize: 10, fontWeight: 900, padding: `${1 * scale}px ${5 * scale}px`, borderRadius: 3, letterSpacing: "0.05em", textTransform: "uppercase" }}>Base</div>
+        <div style={{ background: "#e8d48b", color: "#000", fontSize: 10, fontWeight: 900, padding: `${1 * scale}px ${5 * scale}px`, borderRadius: 3, letterSpacing: "0.05em", textTransform: "uppercase" }}>{tipologia.short}</div>
         <div style={{ color: "#fff", fontSize: 14, fontWeight: 900, textShadow: "1px 1px 3px #000", flex: 1, margin: `0 ${5 * scale}px`, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
           {state.nome || "Il tuo nome"}
         </div>
@@ -901,7 +893,7 @@ function OrdinaPage() {
           </div>
 
           {/* Preview desktop */}
-          <div className="hidden xl:flex flex-col items-center gap-4 shrink-0 sticky top-8" style={{ width: 280 }}>
+          <div className="hidden xl:flex flex-col items-center gap-4 shrink-0 sticky top-8" style={{ width: 345 }}>
             <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Anteprima live</p>
             <CardPreview state={state} />
             <p className="text-[10px] text-muted-foreground text-center leading-relaxed">Si aggiorna mentre compili</p>
