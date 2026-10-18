@@ -403,6 +403,18 @@ export const EDITOR_CSS = `
 .vc-case-card{position:absolute;border-radius:4.7%/3.37%;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.25)}
 .vc-case-card img{width:100%;height:100%;display:block;object-fit:fill;aspect-ratio:auto;border-radius:0}
 .vc-case-card::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.32) 0,rgba(255,255,255,.06) 30%,rgba(255,255,255,0) 55%,rgba(255,255,255,.14) 100%);pointer-events:none}
+.vc-case-wrap{position:relative;display:flex}
+.vc-case-wrap>button:first-child{flex:1}
+.vc-cases .vc-zoom{padding:0;position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;border:0;display:grid;place-items:center;background:rgba(20,26,58,.72);color:#fff;cursor:pointer;backdrop-filter:blur(4px);transition:transform .15s,background .15s}
+.vc-cases .vc-zoom:hover{transform:scale(1.08);background:#141A3A}
+.vc-lightbox{position:fixed;inset:0;z-index:60;background:rgba(8,10,24,.78);display:grid;place-items:center;padding:16px;animation:vcfade .18s ease-out}
+@keyframes vcfade{from{opacity:0}}
+.vc-lightbox-box{position:relative;width:min(92vw,82vh,680px);background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -20px rgba(0,0,0,.6)}
+.vc-lightbox-box .vc-case-img{border-radius:0}
+.vc-lightbox-x{position:absolute;top:10px;right:10px;z-index:2;width:38px;height:38px;border-radius:50%;border:0;background:rgba(20,26,58,.75);color:#fff;font-size:24px;line-height:1;cursor:pointer}
+.vc-lightbox-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px}
+.vc-lightbox-foot b{display:block;font-family:'Saira Condensed',sans-serif;font-size:22px}
+.vc-lightbox-foot span{font-size:13px;color:var(--muted)}
 .vc-case-name{font-size:13px;font-weight:600;line-height:1.25;margin-top:4px}
 .vc-cases b{font-family:'Saira Condensed',sans-serif;font-size:18px}
 .vc-list{display:flex;flex-direction:column;gap:6px}

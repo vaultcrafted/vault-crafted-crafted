@@ -90,6 +90,7 @@ function CreaPage() {
   const [photo, setPhoto] = useState<{ dataUrl: string; name: string; type: string } | null>(null);
   const [zoom, setZoom] = useState(1);
   const [custodia, setCustodia] = useState("nessuna");
+  const [zoomCase, setZoomCase] = useState<string | null>(null);
   const [contacts, setContacts] = useState<Contacts>({
     nome_cognome: "",
     email: "",
@@ -123,10 +124,10 @@ function CreaPage() {
       void renderCard(full.getContext("2d")!, JSON.parse(shownKey) as CardData, art.current).then(
         () => {
           const out = document.createElement("canvas");
-          out.width = 372;
-          out.height = 520;
+          out.width = TRIM.w;
+          out.height = TRIM.h;
           const g = out.getContext("2d")!;
-          g.drawImage(full, TRIM.x, TRIM.y, TRIM.w, TRIM.h, 0, 0, 372, 520);
+          g.drawImage(full, TRIM.x, TRIM.y, TRIM.w, TRIM.h, 0, 0, TRIM.w, TRIM.h);
           setCardThumb(out.toDataURL("image/jpeg", 0.85));
         },
       );
@@ -327,35 +328,43 @@ function CreaPage() {
             </p>
             <div className="vc-cases">
               {CUSTODIE.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  aria-pressed={custodia === c.id}
-                  onClick={() => setCustodia(c.id)}
-                >
-                  {c.img ? (
-                    <span className="vc-case-img">
-                      <img src={c.img} alt="" loading="lazy" width={300} height={300} />
-                      {c.win && cardThumb && (
-                        <span
-                          className="vc-case-card"
-                          style={{
-                            left: `${c.win[0]}%`,
-                            top: `${c.win[1]}%`,
-                            width: `${c.win[2]}%`,
-                            height: `${c.win[3]}%`,
-                          }}
-                        >
-                          <img src={cardThumb} alt="" />
-                        </span>
-                      )}
-                    </span>
-                  ) : (
-                    <span className="vc-case-none">Solo la carta</span>
+                <div className="vc-case-wrap" key={c.id}>
+                  <button
+                    type="button"
+                    aria-pressed={custodia === c.id}
+                    onClick={() => setCustodia(c.id)}
+                  >
+                    {c.img ? (
+                      <CaseImg c={c} card={cardThumb} />
+                    ) : (
+                      <span className="vc-case-none">Solo la carta</span>
+                    )}
+                    <span className="vc-case-name">{c.label}</span>
+                    <b>{c.price ? `+€${c.price}` : "—"}</b>
+                  </button>
+                  {c.img && (
+                    <button
+                      type="button"
+                      className="vc-zoom"
+                      aria-label={`Ingrandisci ${c.label}`}
+                      onClick={() => setZoomCase(c.id)}
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="18"
+                        height="18"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        aria-hidden="true"
+                      >
+                        <circle cx="10.5" cy="10.5" r="6.5" />
+                        <path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" />
+                      </svg>
+                    </button>
                   )}
-                  <span className="vc-case-name">{c.label}</span>
-                  <b>{c.price ? `+€${c.price}` : "—"}</b>
-                </button>
+                </div>
               ))}
             </div>
           </Step>
@@ -445,6 +454,19 @@ function CreaPage() {
         </form>
       </div>
 
+      {zoomCase && (
+        <CaseLightbox
+          c={custodiaOf(zoomCase)}
+          card={cardThumb}
+          chosen={custodia === zoomCase}
+          onClose={() => setZoomCase(null)}
+          onChoose={() => {
+            setCustodia(zoomCase);
+            setZoomCase(null);
+          }}
+        />
+      )}
+
       {compact && (
         <div className="vc-bottombar">
           <span>
@@ -456,6 +478,79 @@ function CreaPage() {
         </div>
       )}
     </main>
+  );
+}
+
+type Custodia = (typeof CUSTODIE)[number];
+
+function CaseImg({ c, card, big = false }: { c: Custodia; card: string; big?: boolean }) {
+  return (
+    <span className={`vc-case-img${big ? " big" : ""}`}>
+      <img src={c.img} alt="" loading={big ? "eager" : "lazy"} width={600} height={600} />
+      {c.win && card && (
+        <span
+          className="vc-case-card"
+          style={{
+            left: `${c.win[0]}%`,
+            top: `${c.win[1]}%`,
+            width: `${c.win[2]}%`,
+            height: `${c.win[3]}%`,
+          }}
+        >
+          <img src={card} alt="" />
+        </span>
+      )}
+    </span>
+  );
+}
+
+function CaseLightbox({
+  c,
+  card,
+  chosen,
+  onClose,
+  onChoose,
+}: {
+  c: Custodia;
+  card: string;
+  chosen: boolean;
+  onClose: () => void;
+  onChoose: () => void;
+}) {
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", k);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", k);
+      document.body.style.overflow = prev;
+    };
+  }, [onClose]);
+  return (
+    <div
+      className="vc-lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label={c.label}
+      onClick={onClose}
+    >
+      <div className="vc-lightbox-box" onClick={(e) => e.stopPropagation()}>
+        <button type="button" className="vc-lightbox-x" aria-label="Chiudi" onClick={onClose}>
+          ×
+        </button>
+        <CaseImg c={c} card={card} big />
+        <div className="vc-lightbox-foot">
+          <div>
+            <b>{c.label}</b>
+            <span>{c.price ? `+€${c.price}` : "Nessun costo"}</span>
+          </div>
+          <button type="button" className="vc-btn" onClick={onChoose} disabled={chosen}>
+            {chosen ? "Già scelta" : "Scegli questa"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
