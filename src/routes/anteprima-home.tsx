@@ -42,7 +42,6 @@ const CARDS = FILES.map((f) => ({
 const byName = (f: string) => CARDS[FILES.indexOf(f)] ?? CARDS[0];
 const HERO = ["jaz-e-bobo", "etr", "kurolily", "grime-spitterz", "ikb", "diego-vallino"].map(byName);
 const HERO_GLOW = ["#E8462A", "#F5C518", "#E2A917", "#3FB58A", "#D7262E", "#1F86D6"];
-const DECK = ["ric-de-large", "epcoraw", "gino", "kurolily", "jaz-e-bobo", "etr", "grime-spitterz", "ikb", "warcard"].map(byName);
 
 const euro = (n: number) => `€${n.toFixed(2).replace(".", ",").replace(",00", "")}`;
 
@@ -131,18 +130,8 @@ function HomePreview() {
   const [auto, setAuto] = useState(true);
   const [open, setOpen] = useState<number | null>(0);
   const [lb, setLb] = useState<number | null>(null);
-  const deckRef = useRef<HTMLElement>(null);
-  const deckP = useScrollProgress(deckRef);
   const stepsRef = useRef<HTMLElement>(null);
   const stepsP = useScrollProgress(stepsRef);
-  const [vw, setVw] = useState(1400);
-  useEffect(() => {
-    const f = () => setVw(innerWidth);
-    f();
-    addEventListener("resize", f);
-    return () => removeEventListener("resize", f);
-  }, []);
-  const gapX = Math.min(118, vw / 10.5);
 
   useEffect(() => {
     void loadFonts().then(() => setFonts((x) => x + 1));
@@ -208,10 +197,6 @@ function HomePreview() {
   const heroAcc = HERO_GLOW[heroI];
   const cases = CUSTODIE.filter((c) => c.img);
 
-  // ventaglio del mazzo: da pila a arco mentre scorri
-  const ease = (x: number) => 1 - Math.pow(1 - x, 3);
-  const spread = ease(Math.min(1, deckP * 1.35));
-  const lift = ease(Math.max(0, Math.min(1, (deckP - 0.6) / 0.4)));
 
   return (
     <main className="hx">
@@ -233,13 +218,8 @@ function HomePreview() {
 
       {/* ========== APERTURA ========== */}
       <section className="hx-hero">
-        <Nebula accent={heroAcc} />
-        <Sparks accent={heroAcc} count={170} />
-        <div className="hx-ring" aria-hidden style={{ ["--c" as string]: heroAcc }}>
-          <i />
-          <i />
-          <i />
-        </div>
+        <Nebula accent={heroAcc} rays={0.5} />
+        <Sparks accent={heroAcc} count={90} />
         <div className="hx-hero-in">
           <div className="hx-hero-txt">
             <p className="hx-kick">
@@ -277,57 +257,6 @@ function HomePreview() {
         </div>
         <div className="hx-scroll" aria-hidden>
           <span />
-        </div>
-      </section>
-
-      {/* ========== NASTRO ========== */}
-      <div className="hx-ticker" aria-hidden>
-        <div>
-          {Array.from({ length: 2 }).map((_, k) => (
-            <span key={k}>
-              PEZZO UNICO ✦ DISEGNATA A MANO ✦ NUMERATA /420 ✦ ZERO TEMPLATE ✦ MODIFICHE GRATIS ✦
-              PAGHI DOPO LA BOZZA ✦&nbsp;
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* ========== IL MAZZO ========== */}
-      <section className="hx-deck" ref={deckRef}>
-        <div className="hx-deck-sticky">
-          <Nebula accent="#6C4DB3" rays={0.4} className="dim" />
-          <div className="hx-deck-title" style={{ opacity: 1 - lift * 0.15 }}>
-            <p className="hx-kick">
-              <span /> Dal Vault
-            </p>
-            <h2>
-              Ogni carta è <em>una persona.</em>
-            </h2>
-          </div>
-          <div className="hx-fan">
-            {DECK.map((c, i) => {
-              const k = i - (DECK.length - 1) / 2;
-              const x = k * gapX * spread;
-              const y = Math.abs(k) * Math.abs(k) * 9 * (gapX / 118) * spread - lift * 20;
-              const rot = k * 7 * spread;
-              const s = 0.92 + spread * 0.08;
-              return (
-                <div
-                  key={c.src}
-                  className="hx-fan-c"
-                  style={{
-                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${rot}deg) scale(${s})`,
-                    zIndex: 10 - Math.abs(Math.round(k)),
-                  }}
-                >
-                  <HoloCard src={c.src} alt={`Carta ${c.name}`} onClick={() => setLb(CARDS.indexOf(c))} />
-                </div>
-              );
-            })}
-          </div>
-          <p className="hx-deck-cap" style={{ opacity: lift }}>
-            Tutte disegnate a mano, tutte diverse. <Link to="/carte">Guarda la collezione →</Link>
-          </p>
         </div>
       </section>
 
@@ -483,8 +412,8 @@ function HomePreview() {
 
       {/* ========== FINALE ========== */}
       <section className="hx-final">
-        <Nebula accent="#E2A917" rays={1.6} />
-        <Sparks accent="#E2A917" count={120} />
+        <Nebula accent="#6C4DB3" rays={0.8} />
+        <Sparks accent="#C9CEE3" count={90} />
         <div className="hx-final-in rv">
           <h2>
             Entra nel <em className="hx-shine">Vault.</em>
@@ -520,22 +449,19 @@ function HomePreview() {
 }
 
 const HX_CSS = `
-.hx{--ink:#F4F1E8;--muted:#A7AEC9;--gold:#E2A917;--bg:#070A1F;background:var(--bg);color:var(--ink);font-family:Archivo,system-ui,sans-serif;overflow-x:clip}
+.hx{--ink:#F4F1E8;--muted:#A7AEC9;--gold:#E2A917;--acc:#C9CEE3;--bg:#070A1F;background:var(--bg);color:var(--ink);font-family:Archivo,system-ui,sans-serif;overflow-x:clip}
 .hx h2{margin:6px 0 18px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(40px,6vw,84px);line-height:.92;letter-spacing:-.01em}
-.hx h2 em,.hx h1 em{font-style:normal;color:var(--gold)}
+.hx h2 em,.hx h1 em{font-style:normal;color:var(--muted)}
 .hx-wrap{max-width:1360px;margin:0 auto;padding:0 28px}
-.hx-kick{display:flex;align-items:center;gap:10px;margin:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
-.hx-kick span{width:26px;height:2px;background:currentColor;box-shadow:0 0 12px currentColor}
+.hx-kick{display:flex;align-items:center;gap:10px;margin:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.hx-kick span{width:26px;height:1px;background:currentColor}
 .hx-lead{font-size:clamp(16px,1.4vw,19px);line-height:1.55;color:var(--muted);max-width:560px;margin:0 0 24px}
 .hx-lead b{color:var(--ink)}
-.hx-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:12px;background:linear-gradient(180deg,#FFD25A,#E2A917 55%,#C98D06);color:#231800;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:22px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;padding:16px 30px;border-radius:999px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.25) inset,0 14px 40px -10px rgba(226,169,23,.7),0 0 70px -20px rgba(226,169,23,.9);transition:transform .2s,box-shadow .2s}
-.hx-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 0 1px rgba(255,255,255,.35) inset,0 18px 50px -10px rgba(226,169,23,.85),0 0 90px -10px rgba(226,169,23,1)}
-.hx-btn::after{content:"";position:absolute;inset:-40% auto -40% -60%;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-20deg);animation:hxsweep 3.2s ease-in-out infinite}
+.hx-btn{display:inline-flex;align-items:center;gap:12px;background:#F4F1E8;color:#0B0F2A;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:21px;letter-spacing:.03em;text-transform:uppercase;text-decoration:none;padding:15px 28px;border-radius:999px;box-shadow:0 10px 30px -12px rgba(0,0,0,.6);transition:transform .2s,background .2s}
+.hx-btn:hover{transform:translateY(-2px);background:#fff}
 .hx-btn b{transition:transform .2s}.hx-btn:hover b{transform:translateX(4px)}
 .hx-btn.sm{font-size:16px;padding:10px 18px}
 .hx-btn.big{font-size:clamp(22px,2.4vw,30px);padding:20px 40px}
-@keyframes hxsweep{0%,55%{left:-60%}100%{left:130%}}
 .hx-nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:linear-gradient(180deg,rgba(7,10,31,.85),rgba(7,10,31,0));backdrop-filter:blur(2px)}
 .hx-nav img{height:36px;display:block}
 .hx-links{display:flex;align-items:center;gap:24px}
@@ -550,50 +476,29 @@ const HX_CSS = `
 .hx-hero h1{margin:16px 0 22px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(58px,8.6vw,138px);line-height:.86;letter-spacing:-.015em;text-transform:uppercase;text-shadow:0 10px 50px rgba(0,0,0,.5)}
 .hx .w{display:inline-block;opacity:0;transform:translateY(40px) rotate(2deg);filter:blur(10px);animation:hxin .9s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes hxin{to{opacity:1;transform:none;filter:none}}
-.hx-shine{background:linear-gradient(100deg,#FFE9A8 0%,#E2A917 22%,#fff 32%,#E2A917 42%,#FF8A3D 62%,#E2A917 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent !important;animation:hxin .9s cubic-bezier(.2,.8,.2,1) forwards,hxshine 4s linear 1.2s infinite}
+.hx-shine{background:linear-gradient(100deg,#9AA3C7 0%,#F4F1E8 30%,#fff 40%,#C9CEE3 55%,#9AA3C7 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent !important;animation:hxin .9s cubic-bezier(.2,.8,.2,1) forwards,hxshine 4s linear 1.2s infinite}
 @keyframes hxshine{to{background-position:-250% 0}}
 .hx-cta{display:flex;flex-wrap:wrap;align-items:center;gap:20px}
 .hx-cta span{color:var(--muted)}
 .hx-cta span b{color:var(--ink);font-family:'Saira Condensed',sans-serif;font-size:24px}
 .hx-hero-card{position:relative;justify-self:center;width:min(100%,430px);animation:hxfloat 6s ease-in-out infinite}
-.hx-hero-card .hx-holo-in{box-shadow:0 50px 100px -30px rgba(0,0,0,.9),0 0 90px -20px var(--glow)}
+.hx-hero-card .hx-holo-in{box-shadow:0 50px 100px -30px rgba(0,0,0,.9)}
 .hx-flip{transition:transform .42s cubic-bezier(.5,0,.5,1),opacity .42s,filter .42s}
 .hx-flip.out{transform:rotateY(90deg) scale(.92);opacity:.2;filter:brightness(2)}
 .hx-shadow{position:absolute;left:12%;right:12%;bottom:-46px;height:30px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent);filter:blur(6px)}
 @keyframes hxfloat{50%{transform:translateY(-16px)}}
-.hx-ring{position:absolute;z-index:1;right:max(2vw,calc(50% - 700px + 60px));top:50%;width:min(62vw,780px);aspect-ratio:1;transform:translateY(-50%);pointer-events:none;opacity:.6}
-.hx-ring i{position:absolute;inset:0;border-radius:50%;border:2px dashed color-mix(in srgb,var(--c) 70%,transparent);animation:hxspin 60s linear infinite;transition:border-color 1s}
-.hx-ring i:nth-child(2){inset:9%;border:1px solid color-mix(in srgb,var(--c) 45%,transparent);border-top-color:var(--c);border-bottom-color:var(--c);animation-duration:24s;animation-direction:reverse;box-shadow:0 0 40px -6px var(--c) inset}
-.hx-ring i:nth-child(3){inset:20%;border:6px dotted color-mix(in srgb,var(--c) 35%,transparent);animation-duration:90s}
-@keyframes hxspin{to{transform:rotate(360deg)}}
 .hx-scroll{position:absolute;z-index:3;left:50%;bottom:24px;width:26px;height:42px;border:2px solid rgba(255,255,255,.4);border-radius:14px;transform:translateX(-50%)}
 .hx-scroll span{position:absolute;left:50%;top:8px;width:4px;height:8px;margin-left:-2px;border-radius:2px;background:#fff;animation:hxdot 1.6s ease-in-out infinite}
 @keyframes hxdot{60%{transform:translateY(14px);opacity:0}}
-/* nastro */
-.hx-ticker{position:relative;z-index:4;background:var(--gold);color:#231800;transform:rotate(-1.5deg);margin:-26px -10px 0;padding:14px 0;overflow:hidden;box-shadow:0 20px 50px -20px rgba(226,169,23,.6)}
-.hx-ticker div{display:flex;width:max-content;animation:hxmarq 28s linear infinite}
-.hx-ticker span{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:24px;letter-spacing:.06em;white-space:nowrap}
 @keyframes hxmarq{to{transform:translateX(-50%)}}
-/* mazzo */
-.hx-deck{position:relative;height:280vh}
-.hx-deck-sticky{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center}
-.hx-deck-title{position:relative;z-index:2;text-align:center;padding-top:13vh}
-.hx-deck-title .hx-kick{justify-content:center}
-.hx-fan{position:absolute;z-index:3;left:50%;top:60%;width:0;height:0}
-.hx-fan-c{position:absolute;left:0;top:0;width:clamp(150px,15vw,230px);will-change:transform;transition:transform .12s linear}
-.hx-fan-c .hx-holo{cursor:zoom-in}
-.hx-fan-c:hover{z-index:20 !important}
-.hx-fan-c:hover .hx-holo-in{transform:translateY(-24px) scale(1.08) rotateX(var(--rx)) rotateY(var(--ry))}
-.hx-deck-cap{position:absolute;z-index:2;bottom:6vh;left:0;right:0;text-align:center;color:var(--muted);font-size:17px}
-.hx-deck-cap a{color:var(--gold);font-weight:700}
 /* passi */
 .hx-steps{position:relative;padding:120px 0 80px;background:radial-gradient(80% 60% at 50% 0%,rgba(108,77,179,.25),transparent 70%)}
 .hx-steps-row{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:40px}
 .hx-line{position:absolute;left:40px;right:40px;top:44px;height:2px;background:rgba(255,255,255,.1)}
-.hx-line i{position:absolute;inset:0;transform-origin:left;background:linear-gradient(90deg,var(--gold),#FF8A3D,#b25cff);box-shadow:0 0 18px var(--gold)}
+.hx-line i{position:absolute;inset:0;transform-origin:left;background:linear-gradient(90deg,#F4F1E8,#9AA3C7)}
 .hx-step{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:24px 26px 28px;backdrop-filter:blur(6px)}
 .hx-step span{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#0D1233;border:2px solid rgba(255,255,255,.2);font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--muted);transition:all .4s}
-.hx-step span.lit{border-color:var(--gold);color:#231800;background:var(--gold);box-shadow:0 0 30px var(--gold)}
+.hx-step span.lit{border-color:#F4F1E8;color:#0B0F2A;background:#F4F1E8}
 .hx-step h3{margin:18px 0 8px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:38px;text-transform:uppercase}
 .hx-step p{margin:0;color:var(--muted);line-height:1.55}
 /* formato */
@@ -606,8 +511,8 @@ const HX_CSS = `
 .hx-cats button:hover{border-color:rgba(255,255,255,.4)}
 .hx-cats b{font-family:'Saira Condensed',sans-serif;font-size:21px}
 .hx-cats span{font-size:13px;color:var(--muted)}
-.hx-cats button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#231800;box-shadow:0 0 30px -6px var(--gold)}
-.hx-cats button[aria-pressed=true] span{color:#3a2a00}
+.hx-cats button[aria-pressed=true]{background:#F4F1E8;border-color:#F4F1E8;color:#0B0F2A}
+.hx-cats button[aria-pressed=true] span{color:#5A5D6B}
 .hx-els{display:flex;flex-wrap:wrap;align-items:center;gap:9px}
 .hx-els button{width:34px;height:34px;border-radius:50%;cursor:pointer;background:var(--c);border:3px solid #0D1233;box-shadow:0 0 0 1.5px rgba(255,255,255,.2);transition:transform .2s,box-shadow .2s}
 .hx-els button:hover{transform:scale(1.15)}
@@ -622,22 +527,22 @@ const HX_CSS = `
 .hx-cases figure{margin:0;border-radius:16px;overflow:hidden;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
 .hx-cases img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
 .hx-cases figcaption{display:flex;justify-content:space-between;gap:6px;padding:8px 10px;font-size:13px;font-weight:600}
-.hx-cases figcaption b{color:var(--gold)}
+.hx-cases figcaption b{color:var(--ink)}
 .hx-note{color:var(--muted);font-size:14px;margin:14px 0 0}
 /* marquee */
-.hx-marq{padding:40px 0 90px;display:flex;flex-direction:column;gap:18px;transform:rotate(-3deg);margin:0 -40px}
+.hx-marq{padding:40px 0 90px;display:flex;flex-direction:column;gap:18px}
 .hx-marq-row{overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .hx-marq-row>div{display:flex;gap:18px;width:max-content;animation:hxmarq 70s linear infinite}
 .hx-marq-row.rev>div{animation-direction:reverse;animation-duration:80s}
 .hx-marq-row:hover>div{animation-play-state:paused}
 .hx-marq button{padding:0;border:0;background:none;cursor:zoom-in;border-radius:12px;overflow:hidden;transition:transform .3s,box-shadow .3s}
-.hx-marq button:hover{transform:translateY(-10px) scale(1.06) rotate(2deg);box-shadow:0 0 50px -8px var(--gold)}
+.hx-marq button:hover{transform:translateY(-8px) scale(1.04);box-shadow:0 24px 50px -20px rgba(0,0,0,.8)}
 .hx-marq img{display:block;height:clamp(200px,22vw,300px);width:auto}
 /* faq */
 .hx-faq{padding:40px 0 100px}
 .hx-q{border-bottom:1px solid rgba(255,255,255,.12)}
 .hx-q button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;font:inherit;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:26px;background:none;border:0;color:var(--ink);padding:20px 0;cursor:pointer;text-align:left}
-.hx-q button span{font-size:30px;color:var(--gold);transition:transform .3s}
+.hx-q button span{font-size:30px;color:var(--muted);transition:transform .3s}
 .hx-q.open button span{transform:rotate(45deg)}
 .hx-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s}
 .hx-q.open .hx-a{grid-template-rows:1fr}
@@ -666,9 +571,6 @@ const HX_CSS = `
   .hx-hero-in{grid-template-columns:1fr;padding:96px 18px 70px;text-align:left}
   .hx-hero-card{width:min(58vw,250px);grid-row:1;margin-top:6px}
   .hx-hero h1{font-size:clamp(50px,14vw,70px)}
-  .hx-ring{width:130vw;right:-40vw;top:32%}
-  .hx-deck{height:220vh}
-  .hx-fan-c{width:34vw}
   .hx-steps-row,.hx-format-in,.hx-holo-in2{grid-template-columns:1fr}
   .hx-line{display:none}
   .hx-format-stage .vc-stage{height:560px;min-height:0}
