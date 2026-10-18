@@ -4,14 +4,29 @@ import { CATS, ELEMENTS, MAX_EDITION, type CardData } from "./vaultCard";
 export const SPEDIZIONE = 4.99;
 export const MAX_PHOTO = 10 * 1024 * 1024;
 
-export const CUSTODIE = [
+export const CUSTODIE: { id: string; label: string; price: number; img?: string }[] = [
   { id: "nessuna", label: "Nessuna custodia", price: 0 },
-  { id: "one-touch-35pt", label: "One Touch 35pt", price: 1 },
-  { id: "one-touch-bordo-nero", label: "One Touch 35pt bordo nero", price: 2 },
-  { id: "recessed-snap", label: "Recessed Snap", price: 2 },
-  { id: "mini-snap", label: "Mini Snap", price: 2 },
-  { id: "screwdown-recessed", label: "Screwdown Recessed", price: 3 },
-  { id: "screwdown-bordo-nero", label: "Screwdown bordo nero", price: 5 },
+  { id: "one-touch-35pt", label: "One Touch 35pt", price: 1, img: "/custodie/one-touch-35pt.webp" },
+  {
+    id: "one-touch-bordo-nero",
+    label: "One Touch 35pt bordo nero",
+    price: 2,
+    img: "/custodie/one-touch-bordo-nero.webp",
+  },
+  { id: "recessed-snap", label: "Recessed Snap", price: 2, img: "/custodie/recessed-snap.webp" },
+  { id: "mini-snap", label: "Mini Snap", price: 2, img: "/custodie/mini-snap.webp" },
+  {
+    id: "screwdown-recessed",
+    label: "Screwdown Recessed",
+    price: 3,
+    img: "/custodie/screwdown-recessed.webp",
+  },
+  {
+    id: "screwdown-bordo-nero",
+    label: "Screwdown bordo nero",
+    price: 5,
+    img: "/custodie/screwdown-bordo-nero.webp",
+  },
 ];
 export const custodiaOf = (id: string) => CUSTODIE.find((c) => c.id === id) ?? CUSTODIE[0];
 

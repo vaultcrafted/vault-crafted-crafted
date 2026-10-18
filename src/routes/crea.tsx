@@ -290,7 +290,10 @@ function CreaPage() {
           />
 
           <Step n={8} title="Custodia">
-            <div className="vc-list">
+            <p className="vc-hint" style={{ margin: "0 0 12px" }}>
+              Per proteggerla e metterla in mostra. La carta arriva comunque nella sua scatola.
+            </p>
+            <div className="vc-cases">
               {CUSTODIE.map((c) => (
                 <button
                   key={c.id}
@@ -298,7 +301,12 @@ function CreaPage() {
                   aria-pressed={custodia === c.id}
                   onClick={() => setCustodia(c.id)}
                 >
-                  <span>{c.label}</span>
+                  {c.img ? (
+                    <img src={c.img} alt="" loading="lazy" width={300} height={300} />
+                  ) : (
+                    <span className="vc-case-none">Solo la carta</span>
+                  )}
+                  <span className="vc-case-name">{c.label}</span>
                   <b>{c.price ? `+€${c.price}` : "—"}</b>
                 </button>
               ))}

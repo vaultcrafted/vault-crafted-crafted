@@ -393,6 +393,13 @@ export const EDITOR_CSS = `
 .vc-picks button.none{width:auto;padding:0 10px;border-radius:18px;background:var(--field);border-color:var(--line);font-size:12px;font-weight:700;color:var(--muted)}
 .vc-picks button[aria-pressed=true]{border-color:var(--ink)}
 .vc-small{width:76px!important;text-align:center}
+.vc-cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.vc-cases button{font:inherit;color:var(--ink);cursor:pointer;background:var(--field);border:1.5px solid var(--line);border-radius:14px;padding:6px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;transition:transform .15s,border-color .15s}
+.vc-cases button:hover{transform:translateY(-2px)}
+.vc-cases button[aria-pressed=true]{border-color:var(--ink);background:#fff;box-shadow:0 0 0 1.5px var(--ink)}
+.vc-cases img,.vc-case-none{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#AEB8D6,#737EA6);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:20px}
+.vc-case-name{font-size:13px;font-weight:600;line-height:1.25;margin-top:4px}
+.vc-cases b{font-family:'Saira Condensed',sans-serif;font-size:18px}
 .vc-list{display:flex;flex-direction:column;gap:6px}
 .vc-list button{display:flex;justify-content:space-between;border-radius:10px;padding:10px 14px;text-align:left}
 .vc-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--gold);color:var(--gold-ink);border:0;border-radius:12px;padding:10px 18px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:.04em;text-decoration:none;cursor:pointer}
@@ -407,6 +414,7 @@ export const EDITOR_CSS = `
   .vc-trait{grid-template-columns:1fr auto}
   .vc-picks{grid-column:1/-1;grid-row:2}
   .vc-r2{grid-template-columns:1fr}
+  .vc-cases{grid-template-columns:repeat(2,1fr)}
 }
 `;
 
