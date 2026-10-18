@@ -264,6 +264,15 @@ function CreaPage() {
             fontsVersion={fontsVersion}
             compact={compact}
           />
+        </aside>
+
+        <form
+          className="vc-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void submit();
+          }}
+        >
           {!compact && (
             <div className="vc-price">
               <span>
@@ -274,15 +283,6 @@ function CreaPage() {
               <b>€{total.toFixed(2)}</b>
             </div>
           )}
-        </aside>
-
-        <form
-          className="vc-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            void submit();
-          }}
-        >
           <CardEditor
             d={d}
             set={set}
@@ -589,13 +589,14 @@ function TopBar() {
 }
 
 const PAGE_CSS = `
-.vc-head{padding:30px 24px 18px;max-width:1280px;margin:0 auto}
+.vc-head{padding:22px 24px 14px;max-width:1640px;margin:0 auto}
 .vc-head h1,.vc-done h1{margin:4px 0 6px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,6vw,64px);line-height:.95}
 .vc-head p:last-child{margin:0;color:var(--muted);max-width:560px}
-.vc-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;max-width:1280px;margin:0 auto;padding:0 24px;align-items:start}
+.vc-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(380px,1fr);gap:28px;max-width:1640px;margin:0 auto;padding:0 24px;align-items:start}
 .vc-preview{position:sticky;top:16px;display:flex;flex-direction:column;gap:12px}
-.vc-preview .vc-stage{min-height:min(84vh,760px)}
-.vc-price{display:flex;justify-content:space-between;align-items:baseline;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 18px;color:var(--muted);font-size:14px}
+.vc-preview .vc-stage{height:calc(100vh - 32px);min-height:600px;padding:16px}
+.vc-preview .vc-card{width:min(100%,calc((100vh - 64px) * 744 / 1040),820px)}
+.vc-price{position:sticky;top:12px;z-index:6;box-shadow:0 8px 24px -14px rgba(20,26,58,.35);display:flex;justify-content:space-between;align-items:baseline;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 18px;color:var(--muted);font-size:14px}
 .vc-price b{font-family:'Saira Condensed',sans-serif;font-size:28px;color:var(--ink)}
 .vc-form{display:flex;flex-direction:column;gap:14px;min-width:0}
 .vc-summary{background:#141A3A;color:#fff;border-radius:16px;padding:20px}
@@ -617,7 +618,8 @@ const PAGE_CSS = `
   .vc-head{padding:20px 16px 12px}
   .vc-layout{grid-template-columns:1fr;padding:0;gap:0}
   .vc-preview{top:0;z-index:10}
-  .vc-preview .vc-stage{min-height:0}
+  .vc-preview .vc-stage{min-height:0;height:auto;padding:14px}
+  .vc-preview .vc-compact .vc-card{width:auto;height:min(36vh,330px)}
   .vc-form{padding:14px 16px 80px}
   .vc-done{grid-template-columns:1fr;padding:0 16px}
   .vc-done .vc-stage{min-height:480px}

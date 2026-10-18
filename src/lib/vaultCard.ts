@@ -607,11 +607,15 @@ function drawTexts(c: Ctx, d: CardData, chip: { ink: string; label: string }) {
   const motto = d.motto.trim();
   fit(c, motto, (s) => `italic 400 ${s}px Archivo`, 14, 690 - 110 - sw - 16, 10);
   c.fillText(motto, 110 + sw + 16, 1031);
-  // sigillo
-  c.fillStyle = "#FFC83D";
-  c.textAlign = "center";
-  c.font = F.name(26);
-  c.fillText("V", 726, 1032);
+  // sigillo: l'energia scelta (la V se l'icona non è ancora caricata)
+  const seal = BADGES[d.el];
+  if (seal) c.drawImage(seal, 726 - 21, 1031 - 21, 42, 42);
+  else {
+    c.fillStyle = "#FFC83D";
+    c.textAlign = "center";
+    c.font = F.name(26);
+    c.fillText("V", 726, 1032);
+  }
 }
 
 /** Disegna la carta completa (con abbondanza) sul contesto. */
