@@ -18,6 +18,7 @@ import { Route as CarteRouteImport } from './routes/carte'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ApiOrdiniRouteImport } from './routes/api/ordini'
+import { Route as AdminStampaRouteImport } from './routes/admin.stampa'
 import { Route as AdminImpostazioniRouteImport } from './routes/admin.impostazioni'
 import { Route as ApiAdminOrdiniRouteImport } from './routes/api/admin/ordini'
 import { Route as ApiAdminLoginRouteImport } from './routes/api/admin/login'
@@ -72,6 +73,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const ApiOrdiniRoute = ApiOrdiniRouteImport.update({
   id: '/api/ordini',
   path: '/api/ordini',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminStampaRoute = AdminStampaRouteImport.update({
+  id: '/admin/stampa',
+  path: '/admin/stampa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminImpostazioniRoute = AdminImpostazioniRouteImport.update({
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
   '/admin/impostazioni': typeof AdminImpostazioniRoute
+  '/admin/stampa': typeof AdminStampaRoute
   '/api/ordini': typeof ApiOrdiniRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/ordine/$id': typeof AdminOrdineIdRoute
@@ -156,6 +163,7 @@ export interface FileRoutesByTo {
   '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
   '/admin/impostazioni': typeof AdminImpostazioniRoute
+  '/admin/stampa': typeof AdminStampaRoute
   '/api/ordini': typeof ApiOrdiniRoute
   '/admin': typeof AdminIndexRoute
   '/admin/ordine/$id': typeof AdminOrdineIdRoute
@@ -178,6 +186,7 @@ export interface FileRoutesById {
   '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
   '/admin/impostazioni': typeof AdminImpostazioniRoute
+  '/admin/stampa': typeof AdminStampaRoute
   '/api/ordini': typeof ApiOrdiniRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/ordine/$id': typeof AdminOrdineIdRoute
@@ -201,6 +210,7 @@ export interface FileRouteTypes {
     | '/regalo'
     | '/termini'
     | '/admin/impostazioni'
+    | '/admin/stampa'
     | '/api/ordini'
     | '/admin/'
     | '/admin/ordine/$id'
@@ -222,6 +232,7 @@ export interface FileRouteTypes {
     | '/regalo'
     | '/termini'
     | '/admin/impostazioni'
+    | '/admin/stampa'
     | '/api/ordini'
     | '/admin'
     | '/admin/ordine/$id'
@@ -243,6 +254,7 @@ export interface FileRouteTypes {
     | '/regalo'
     | '/termini'
     | '/admin/impostazioni'
+    | '/admin/stampa'
     | '/api/ordini'
     | '/admin/'
     | '/admin/ordine/$id'
@@ -265,6 +277,7 @@ export interface RootRouteChildren {
   RegaloRoute: typeof RegaloRoute
   TerminiRoute: typeof TerminiRoute
   AdminImpostazioniRoute: typeof AdminImpostazioniRoute
+  AdminStampaRoute: typeof AdminStampaRoute
   ApiOrdiniRoute: typeof ApiOrdiniRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminOrdineIdRoute: typeof AdminOrdineIdRoute
@@ -338,6 +351,13 @@ declare module '@tanstack/react-router' {
       path: '/api/ordini'
       fullPath: '/api/ordini'
       preLoaderRoute: typeof ApiOrdiniRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/stampa': {
+      id: '/admin/stampa'
+      path: '/admin/stampa'
+      fullPath: '/admin/stampa'
+      preLoaderRoute: typeof AdminStampaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/impostazioni': {
@@ -447,6 +467,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegaloRoute: RegaloRoute,
   TerminiRoute: TerminiRoute,
   AdminImpostazioniRoute: AdminImpostazioniRoute,
+  AdminStampaRoute: AdminStampaRoute,
   ApiOrdiniRoute: ApiOrdiniRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminOrdineIdRoute: AdminOrdineIdRoute,
