@@ -24,7 +24,7 @@ export function Footer() {
         {/* Link navigazione */}
         <div className="mb-12 flex flex-wrap justify-center gap-8 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
           <Link to="/" className="transition-colors hover:text-gold">Home</Link>
-          <Link to="/ordina" className="transition-colors hover:text-gold">Ordina ora</Link>
+          <Link to="/crea" className="transition-colors hover:text-gold">Ordina ora</Link>
           <Link to="/carte" className="transition-colors hover:text-gold">Tutte le carte</Link>
           <Link to="/chi-siamo" className="transition-colors hover:text-gold">Chi siamo</Link>
           <Link to="/regalo" className="transition-colors hover:text-gold">Regalo perfetto</Link>

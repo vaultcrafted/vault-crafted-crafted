@@ -3,6 +3,7 @@ import { CATS, ELEMENTS, MAX_EDITION, type CardData } from "./vaultCard";
 
 export const SPEDIZIONE = 4.99;
 export const MAX_PHOTO = 10 * 1024 * 1024;
+export const HOLO_PRICE = 9.99;
 
 // win = finestra della custodia nella foto (x, y, larghezza, altezza in %), dove si disegna la carta del cliente
 export const CUSTODIE: {
@@ -58,14 +59,16 @@ export const CUSTODIE: {
 ];
 export const custodiaOf = (id: string) => CUSTODIE.find((c) => c.id === id) ?? CUSTODIE[0];
 
-export function priceOf(cat: string, custodia: string) {
+export function priceOf(cat: string, custodia: string, holo = false) {
   const c = CATS.find((x) => x.k === cat) ?? CATS[0];
   const cu = custodiaOf(custodia);
+  const holoPrice = holo ? HOLO_PRICE : 0;
   return {
     price: c.price,
     casePrice: cu.price,
+    holoPrice,
     shipping: SPEDIZIONE,
-    total: Math.round((c.price + cu.price + SPEDIZIONE) * 100) / 100,
+    total: Math.round((c.price + cu.price + holoPrice + SPEDIZIONE) * 100) / 100,
   };
 }
 
@@ -174,6 +177,7 @@ export function sanitizeCard(c: Partial<CardData> | undefined): CardData | null 
     ret: el(c.ret, false) as CardData["ret"],
     retN: Math.max(0, Math.min(3, Number(c.retN) || 0)),
     motto: str(c.motto, 60),
+    holo: c.holo === true,
     serial: null,
     edition: null,
   };

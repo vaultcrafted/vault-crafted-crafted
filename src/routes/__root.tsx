@@ -39,7 +39,7 @@ const SCHEMA_WEBSITE = {
     "@type": "SearchAction",
     "target": {
       "@type": "EntryPoint",
-      "urlTemplate": "https://vaultcrafted.com/ordina"
+      "urlTemplate": "https://vaultcrafted.com/crea"
     },
     "query-input": "required name=search_term_string"
   }

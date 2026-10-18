@@ -68,7 +68,7 @@ export const Route = createFileRoute("/api/ordini")({
         await env.FILES.put(photoKey, bytes, { httpMetadata: { contentType: photoType } });
 
         const cu = custodiaOf(str(body.custodia, 40));
-        const p = priceOf(card.cat, cu.id);
+        const p = priceOf(card.cat, cu.id, card.holo);
         const art = body.artPos ?? { zoom: 1, px: 0, py: 0 };
         const artPos = JSON.stringify({
           zoom: num(art.zoom, 1, 3, 1),
@@ -114,6 +114,7 @@ export const Route = createFileRoute("/api/ordini")({
           ["Numero", `N° ${pad3(res.serial)} · ${res.edition}/${MAX_EDITION}`],
           ["Carta", `${card.name} · ${catOf(card.cat).n} · ${elementOf(card.el)[1]}`],
           ["Custodia", cu.price ? `${cu.label} (+€${cu.price})` : cu.label],
+          ["Pellicola olografica", card.holo ? `Sì (+€${p.holoPrice.toFixed(2)})` : "No"],
           ["Totale", `€${p.total.toFixed(2)} spedizione inclusa`],
         ]);
         await Promise.all([

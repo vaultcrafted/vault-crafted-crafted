@@ -17,7 +17,7 @@ const SCHEMA_PRODUCT_REGALO = {
   "offers": {
     "@type": "AggregateOffer",
     "priceCurrency": "EUR",
-    "lowPrice": "25.99",
+    "lowPrice": "26.99",
     "highPrice": "49.99",
     "availability": "https://schema.org/InStock",
     "seller": { "@type": "Organization", "name": "Vault Crafted" },
@@ -72,7 +72,7 @@ export const Route = createFileRoute("/regalo")({
   head: () => ({
     meta: [
       { title: "Il regalo perfetto e originale — Vault Crafted | Carta personalizzata" },
-      { name: "description", content: "Cerca un regalo originale e unico? Una carta da collezione personalizzata Vault Crafted è il regalo perfetto per compleanni, lauree, anniversari, Natale e molto altro. Pezzo unico numerato, da €25.99." },
+      { name: "description", content: "Cerca un regalo originale e unico? Una carta da collezione personalizzata Vault Crafted è il regalo perfetto per compleanni, lauree, anniversari, Natale e molto altro. Pezzo unico numerato, da €26.99." },
       { name: "keywords", content: "regalo originale, regalo personalizzato, regalo compleanno unico, carta pokemon regalo, regalo laurea originale, regalo anniversario, regalo natale originale, regalo migliore amico" },
       { name: "robots", content: "index, follow" },
       { property: "og:url", content: "https://vaultcrafted.com/regalo" },
@@ -128,7 +128,7 @@ function RegaloPage() {
           <p className="mx-auto mt-8 max-w-xl text-base text-muted-foreground md:text-lg">
             Smettila di regalare cose che finiscono nel cassetto. Una carta Vault è un pezzo unico, personalizzato, irripetibile — qualcosa che la persona che ami terrà per sempre.
           </p>
-          <Link to="/ordina" className="btn-gold group mt-10 inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]">
+          <Link to="/crea" className="btn-gold group mt-10 inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]">
             Crea il regalo ora
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
@@ -204,7 +204,7 @@ function RegaloPage() {
             Pronto a fare il <em className="shimmer-text">regalo perfetto?</em>
           </h2>
           <p className="mt-6 text-muted-foreground">Pochi minuti. Un'idea. Un regalo che nessuno dimenticherà mai.</p>
-          <Link to="/ordina" className="btn-gold group mt-10 inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]">
+          <Link to="/crea" className="btn-gold group mt-10 inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]">
             Crea il regalo ora
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>

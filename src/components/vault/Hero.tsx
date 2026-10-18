@@ -52,7 +52,7 @@ export function Hero() {
               <Link to="/" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold">
                 Home
               </Link>
-              <Link to="/ordina" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-gold transition-colors hover:text-gold/70">
+              <Link to="/crea" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-gold transition-colors hover:text-gold/70">
                 Ordina ora
               </Link>
               <Link to="/carte" onClick={() => setMenuOpen(false)} className="text-sm uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-gold">
@@ -109,7 +109,7 @@ export function Hero() {
           className="mt-12"
         >
           <Link
-            to="/ordina"
+            to="/crea"
             className="btn-gold group inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]"
           >
             Ordina ora

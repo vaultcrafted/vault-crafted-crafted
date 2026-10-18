@@ -96,6 +96,8 @@ export interface CardData {
   ret: ElKey;
   retN: number;
   motto: string;
+  /** pellicola olografica (+€ HOLO_PRICE) */
+  holo?: boolean;
   serial: number | null;
   edition: number | null;
 }

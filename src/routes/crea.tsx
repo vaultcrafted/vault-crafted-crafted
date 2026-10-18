@@ -25,6 +25,7 @@ import {
   CUSTODIE,
   MAX_PHOTO,
   SPEDIZIONE,
+  HOLO_PRICE,
   cardErrors,
   contactErrors,
   custodiaOf,
@@ -110,7 +111,8 @@ function CreaPage() {
 
   const cat = catOf(d.cat);
   const cust = custodiaOf(custodia);
-  const total = cat.price + cust.price + SPEDIZIONE;
+  const holoPrice = d.holo ? HOLO_PRICE : 0;
+  const total = cat.price + cust.price + holoPrice + SPEDIZIONE;
   const shown = withSamples(done ? { ...d, serial: done.serial, edition: done.edition } : d);
 
   // miniatura della carta del cliente, messa dentro le foto delle custodie
@@ -266,7 +268,8 @@ function CreaPage() {
             <div className="vc-price">
               <span>
                 {cat.n}
-                {cust.price ? ` + ${cust.label}` : ""} + spedizione
+                {cust.price ? ` + ${cust.label}` : ""}
+                {d.holo ? " + olografica" : ""} + spedizione
               </span>
               <b>€{total.toFixed(2)}</b>
             </div>
@@ -322,7 +325,7 @@ function CreaPage() {
             }
           />
 
-          <Step n={8} title="Custodia">
+          <Step n={8} title="Custodia e pellicola">
             <p className="vc-hint" style={{ margin: "0 0 12px" }}>
               Per proteggerla e metterla in mostra. La carta arriva comunque nella sua scatola.
             </p>
@@ -366,6 +369,18 @@ function CreaPage() {
                   )}
                 </div>
               ))}
+            </div>
+            <p className="vc-hint" style={{ margin: "18px 0 8px" }}>
+              <b>Pellicola olografica</b>: effetto brillante e cangiante come le carte rare. +€
+              {HOLO_PRICE.toFixed(2).replace(".", ",")}
+            </p>
+            <div className="vc-seg">
+              <button type="button" aria-pressed={!!d.holo} onClick={() => set({ holo: true })}>
+                Sì, olografica
+              </button>
+              <button type="button" aria-pressed={!d.holo} onClick={() => set({ holo: false })}>
+                No grazie
+              </button>
             </div>
           </Step>
 
@@ -422,6 +437,12 @@ function CreaPage() {
                 <div>
                   <span>{cust.label}</span>
                   <b>€{cust.price.toFixed(2)}</b>
+                </div>
+              )}
+              {d.holo && (
+                <div>
+                  <span>Pellicola olografica</span>
+                  <b>€{HOLO_PRICE.toFixed(2)}</b>
                 </div>
               )}
               <div>

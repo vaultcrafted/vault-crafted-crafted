@@ -147,7 +147,7 @@ function CartePage() {
             Vuoi la tua <em className="shimmer-text">carta unica?</em>
           </h2>
           <p className="mt-6 text-muted-foreground">Pochi minuti. Un'idea. Una carta che nessun altro avrà mai.</p>
-          <Link to="/ordina" className="btn-gold group mt-10 inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]">
+          <Link to="/crea" className="btn-gold group mt-10 inline-flex items-center gap-3 rounded-full px-9 py-5 text-sm font-semibold uppercase tracking-[0.25em]">
             Ordina ora
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>

@@ -29,7 +29,7 @@ export function FinalCta() {
         </Reveal>
         <Reveal delay={0.35}>
           <Link
-            to="/ordina"
+            to="/crea"
             className="btn-gold group mt-12 inline-flex items-center gap-3 rounded-full px-10 py-5 text-sm font-semibold uppercase tracking-[0.25em]"
           >
             Crea ora la tua carta

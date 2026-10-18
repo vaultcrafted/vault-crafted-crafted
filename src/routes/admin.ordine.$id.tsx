@@ -565,7 +565,9 @@ function OrderDetail({ id }: { id: string }) {
             {!legacy && (
               <p className="vc-hint">
                 {catOf(o.category).n} {euro(o.price)} + {o.case_label || "nessuna custodia"}{" "}
-                {euro(o.case_price)} + spedizione {euro(o.shipping)} = <b>{euro(o.total)}</b>
+                {euro(o.case_price)}
+                {o.total - o.price - o.case_price - o.shipping > 0.5 ? " + pellicola olografica €9,99" : ""} +
+                spedizione {euro(o.shipping)} = <b>{euro(o.total)}</b>
               </p>
             )}
           </div>

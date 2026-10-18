@@ -76,7 +76,13 @@ export const Route = createFileRoute("/api/admin/ordini/$id")({
         }
         if (typeof b.custodia === "string" || set.category) {
           const cu = custodiaOf(typeof b.custodia === "string" ? b.custodia : o.case_id);
-          const p = priceOf(String(set.category ?? o.category), cu.id);
+          let holo = false;
+          try {
+            holo = JSON.parse(String(set.card_json ?? o.card_json ?? "{}")).holo === true;
+          } catch {
+            /* vecchio formato */
+          }
+          const p = priceOf(String(set.category ?? o.category), cu.id, holo);
           Object.assign(set, {
             case_id: cu.id,
             case_label: cu.label,
