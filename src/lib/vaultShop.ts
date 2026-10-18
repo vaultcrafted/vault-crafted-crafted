@@ -3,7 +3,7 @@ import { CATS, ELEMENTS, MAX_EDITION, type CardData } from "./vaultCard";
 
 export const SPEDIZIONE = 4.99;
 export const MAX_PHOTO = 10 * 1024 * 1024;
-export const HOLO_PRICE = 9.99;
+export const HOLO_PRICE = 7.99;
 
 // win = finestra della custodia nella foto (x, y, larghezza, altezza in %), dove si disegna la carta del cliente
 export const CUSTODIE: {

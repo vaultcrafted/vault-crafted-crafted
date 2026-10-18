@@ -17,8 +17,8 @@ const SCHEMA_PRODUCT_REGALO = {
   "offers": {
     "@type": "AggregateOffer",
     "priceCurrency": "EUR",
-    "lowPrice": "26.99",
-    "highPrice": "49.99",
+    "lowPrice": "24.99",
+    "highPrice": "51.98",
     "availability": "https://schema.org/InStock",
     "seller": { "@type": "Organization", "name": "Vault Crafted" },
     "shippingDetails": {
@@ -72,7 +72,7 @@ export const Route = createFileRoute("/regalo")({
   head: () => ({
     meta: [
       { title: "Il regalo perfetto e originale — Vault Crafted | Carta personalizzata" },
-      { name: "description", content: "Cerca un regalo originale e unico? Una carta da collezione personalizzata Vault Crafted è il regalo perfetto per compleanni, lauree, anniversari, Natale e molto altro. Pezzo unico numerato, da €26.99." },
+      { name: "description", content: "Cerca un regalo originale e unico? Una carta da collezione personalizzata Vault Crafted è il regalo perfetto per compleanni, lauree, anniversari, Natale e molto altro. Pezzo unico numerato, da €24.99." },
       { name: "keywords", content: "regalo originale, regalo personalizzato, regalo compleanno unico, carta pokemon regalo, regalo laurea originale, regalo anniversario, regalo natale originale, regalo migliore amico" },
       { name: "robots", content: "index, follow" },
       { property: "og:url", content: "https://vaultcrafted.com/regalo" },

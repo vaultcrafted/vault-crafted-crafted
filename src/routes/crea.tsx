@@ -40,7 +40,7 @@ export const Route = createFileRoute("/crea")({
       {
         name: "description",
         content:
-          "Componi la tua carta Vault dal vivo: scegli categoria, elemento, attacchi e abilità, carica la foto e guarda la carta prendere forma. Disegnata a mano, numerata, da €22.",
+          "Componi la tua carta Vault dal vivo: scegli categoria, elemento, attacchi e abilità, carica la foto e guarda la carta prendere forma. Disegnata a mano, numerata, da €20.",
       },
       { property: "og:url", content: "https://vaultcrafted.com/crea" },
       { property: "og:title", content: "Crea la tua carta — Vault Crafted" },

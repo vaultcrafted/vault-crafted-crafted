@@ -24,8 +24,8 @@ const SCHEMA_PRODUCT_COLLECTION = {
   "offers": {
     "@type": "AggregateOffer",
     "priceCurrency": "EUR",
-    "lowPrice": "26.99",
-    "highPrice": "49.99",
+    "lowPrice": "24.99",
+    "highPrice": "51.98",
     "offerCount": "5",
     "availability": "https://schema.org/InStock",
     "seller": {
