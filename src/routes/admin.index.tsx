@@ -146,7 +146,6 @@ function OrdersList() {
                   <b>{o.card_name || "—"}</b>
                   <span className="ad-sub">
                     {o.source === "foglio" ? o.category || "Vecchio ordine" : catOf(o.category).n}
-                    {o.has_art ? " · illustrazione ✓" : ""}
                   </span>
                 </td>
                 <td className="hide-m">

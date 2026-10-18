@@ -3,13 +3,13 @@ import { Reveal } from "./Reveal";
 const steps = [
   {
     n: "01",
-    title: "Compila il form",
-    desc: "Raccontaci la tua idea. Stile, soggetto, dettagli. Tu immagini, noi disegnamo.",
+    title: "La componi tu",
+    desc: "Nel configuratore scegli tutto e carichi la tua foto. Vedi la carta finita prima di ordinarla.",
   },
   {
     n: "02",
-    title: "Ricevi la bozza",
-    desc: "Ti inviamo l'anteprima. Approvi. Modifichiamo. Fino al risultato perfetto.",
+    title: "La stampiamo noi",
+    desc: "Controlliamo che sia perfetta per la stampa e la stampiamo con il suo numero di serie.",
   },
   {
     n: "03",

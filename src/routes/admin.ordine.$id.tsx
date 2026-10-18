@@ -198,26 +198,6 @@ function OrderDetail({ id }: { id: string }) {
     setBusy("");
   };
 
-  const uploadArt = async (f: File | undefined) => {
-    if (!f) return;
-    setBusy("art");
-    try {
-      const base64 = toB64(await f.arrayBuffer());
-      await api(`/api/admin/ordini/${id}/illustrazione`, {
-        method: "POST",
-        json: { name: f.name, type: f.type, base64 },
-      });
-      const r = await api<{ order: OrderRow }>(`/api/admin/ordini/${id}`);
-      apply(r.order);
-      setUseArt("art");
-      flash("Illustrazione caricata");
-    } catch (e) {
-      flash((e as Error).message);
-    } finally {
-      setBusy("");
-    }
-  };
-
   const cardForPrint = (): CardData | null =>
     card ? { ...card, serial: o?.serial ?? null, edition: o?.edition ?? null } : null;
 
@@ -240,13 +220,6 @@ function OrderDetail({ id }: { id: string }) {
   const sendDraft = async () => {
     const c = cardForPrint();
     if (!c || !o) return;
-    if (
-      !o.art_key &&
-      !confirm(
-        "Non hai ancora caricato l'illustrazione: la bozza userà la foto del cliente. Inviare lo stesso?",
-      )
-    )
-      return;
     setBusy("draft");
     try {
       // anteprima ritagliata sul formato finito, angoli arrotondati
@@ -271,7 +244,7 @@ function OrderDetail({ id }: { id: string }) {
       const r = await api<{ order: OrderRow }>(`/api/admin/ordini/${id}`);
       apply(r.order);
       setDraftMsg("");
-      flash("Bozza inviata al cliente");
+      flash("Riepilogo e pagamento inviati al cliente");
     } catch (e) {
       flash((e as Error).message);
     } finally {
@@ -280,7 +253,7 @@ function OrderDetail({ id }: { id: string }) {
   };
 
   const remove = async () => {
-    if (!confirm("Eliminare definitivamente questo ordine, con foto e illustrazione?")) return;
+    if (!confirm("Eliminare definitivamente questo ordine, con la sua foto?")) return;
     await api(`/api/admin/ordini/${id}`, { method: "DELETE" });
     void nav({ to: "/admin" });
   };
@@ -346,25 +319,7 @@ function OrderDetail({ id }: { id: string }) {
           )}
           {card && (
             <div className="ad-box">
-              <h2>Illustrazione e stampa</h2>
-              <div className="vc-seg" style={{ marginBottom: 10 }}>
-                <button
-                  type="button"
-                  aria-pressed={useArt === "art"}
-                  disabled={!o.art_key}
-                  onClick={() => setUseArt("art")}
-                >
-                  Illustrazione
-                </button>
-                <button
-                  type="button"
-                  aria-pressed={useArt === "photo"}
-                  disabled={!o.photo_key}
-                  onClick={() => setUseArt("photo")}
-                >
-                  Foto cliente
-                </button>
-              </div>
+              <h2>Stampa</h2>
               <label className="vc-field">
                 <span>Zoom (trascina sulla carta per spostare)</span>
                 <input
@@ -384,19 +339,6 @@ function OrderDetail({ id }: { id: string }) {
                 />
               </label>
               <div className="ad-actions" style={{ marginTop: 12 }}>
-                <label className="vc-btn dark" style={{ cursor: "pointer" }}>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={(e) => uploadArt(e.target.files?.[0])}
-                  />
-                  {busy === "art"
-                    ? "Carico…"
-                    : o.art_key
-                      ? "Sostituisci illustrazione"
-                      : "Carica illustrazione"}
-                </label>
                 <button
                   type="button"
                   className="vc-btn"
@@ -410,11 +352,6 @@ function OrderDetail({ id }: { id: string }) {
                 {o.photo_key && (
                   <a className="vc-btn ghost" href={fileUrl(o.photo_key, true)}>
                     Foto cliente
-                  </a>
-                )}
-                {o.art_key && (
-                  <a className="vc-btn ghost" href={fileUrl(o.art_key, true)}>
-                    Illustrazione originale
                   </a>
                 )}
               </div>
@@ -453,7 +390,9 @@ function OrderDetail({ id }: { id: string }) {
                     checked={!!o.paid}
                     onChange={(e) =>
                       patch(
-                        { paid: e.target.checked },
+                        e.target.checked && ["nuovo", "in_lavorazione", "bozza_inviata"].includes(o.status)
+                          ? { paid: true, status: "approvato" }
+                          : { paid: e.target.checked },
                         e.target.checked ? "Segnato come pagato" : "Segnato da pagare",
                       )
                     }
@@ -464,10 +403,10 @@ function OrderDetail({ id }: { id: string }) {
             </div>
             {card && (
               <>
-                <Field label="Messaggio con la bozza (facoltativo)">
+                <Field label="Messaggio per il cliente (facoltativo)">
                   <textarea
                     value={draftMsg}
-                    placeholder="Es. Ecco la tua carta! Ho messo il Duomo sullo sfondo come mi avevi chiesto."
+                    placeholder="Es. Ciao! Ho centrato meglio la foto, ecco come verrà stampata."
                     onChange={(e) => setDraftMsg(e.target.value)}
                   />
                 </Field>
@@ -478,7 +417,7 @@ function OrderDetail({ id }: { id: string }) {
                     onClick={sendDraft}
                     disabled={busy === "draft"}
                   >
-                    {busy === "draft" ? "Invio…" : "Invia bozza al cliente"}
+                    {busy === "draft" ? "Invio…" : "Invia riepilogo e pagamento"}
                   </button>
                   <button
                     type="button"

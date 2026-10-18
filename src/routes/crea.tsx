@@ -40,7 +40,7 @@ export const Route = createFileRoute("/crea")({
       {
         name: "description",
         content:
-          "Componi la tua carta Vault dal vivo: scegli categoria, elemento, attacchi e abilità, carica la foto e guarda la carta prendere forma. Disegnata a mano, numerata, da €20.",
+          "Componi la tua carta Vault dal vivo: scegli categoria, elemento, attacchi e abilità, carica la foto e guarda la carta prendere forma. Stampata e numerata, da €20.",
       },
       { property: "og:url", content: "https://vaultcrafted.com/crea" },
       { property: "og:title", content: "Crea la tua carta — Vault Crafted" },
@@ -166,7 +166,7 @@ function CreaPage() {
   const submit = async () => {
     const e = [
       ...cardErrors(d),
-      ...(photo ? [] : ["La foto da cui disegnare la carta"]),
+      ...(photo ? [] : ["La foto per la carta"]),
       ...contactErrors(contacts),
     ];
     setErrors(e);
@@ -230,8 +230,8 @@ function CreaPage() {
               N° {String(done.serial).padStart(3, "0")} · {done.edition}/{MAX_EDITION}
             </p>
             <p>
-              Ti abbiamo mandato una email di conferma. Disegniamo l'illustrazione a mano partendo
-              dalla tua foto e ti mandiamo la bozza entro 24–48 ore. Le modifiche sono gratuite.
+              Ti abbiamo mandato una email di conferma. Controlliamo la carta e ti scriviamo con il
+              riepilogo e le istruzioni per il pagamento, poi la stampiamo e te la spediamo.
             </p>
             <Link to="/" className="vc-btn">
               Torna alla home
@@ -250,8 +250,7 @@ function CreaPage() {
         <p className="vc-kicker">FORMATO VAULT</p>
         <h1>Crea la tua carta</h1>
         <p>
-          Scegli, scrivi, guarda la carta prendere forma. Poi la disegniamo a mano e la stampiamo
-          per te.
+          Scegli, scrivi, guarda la carta prendere forma. Poi la stampiamo per te, numerata.
         </p>
       </header>
 
@@ -289,9 +288,9 @@ function CreaPage() {
             photoStep={
               <>
                 <p className="vc-hint">
-                  Carica la foto della persona (o delle persone) da mettere sulla carta.
-                  L'illustrazione la disegniamo noi a mano: qui ti serve per vedere l'inquadratura.
-                  Trascinala sull'anteprima per spostarla.
+                  Carica la foto da mettere sulla carta: è quella che stampiamo, quindi meglio
+                  nitida e con buona luce. Trascinala sull'anteprima per sistemare l'inquadratura e
+                  usa lo zoom se serve.
                 </p>
                 <label className="vc-upload">
                   <input
@@ -468,8 +467,8 @@ function CreaPage() {
               {sending ? "Invio in corso…" : "Invia l'ordine"}
             </button>
             <p className="vc-hint">
-              Ti mandiamo la bozza disegnata a mano via email entro 24–48 ore. Le modifiche sono
-              gratuite.
+              Dopo l'ordine ti scriviamo con il riepilogo e le istruzioni per pagare. La stampa parte
+              appena arriva il pagamento.
             </p>
           </section>
         </form>

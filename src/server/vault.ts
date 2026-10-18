@@ -17,8 +17,8 @@ export const env = cfEnv as unknown as Env;
 export const STATUSES = [
   ["nuovo", "Nuovo"],
   ["in_lavorazione", "In lavorazione"],
-  ["bozza_inviata", "Bozza inviata"],
-  ["approvato", "Approvato"],
+  ["bozza_inviata", "Attesa pagamento"],
+  ["approvato", "Pronto per la stampa"],
   ["in_stampa", "In stampa"],
   ["spedito", "Spedito"],
   ["consegnato", "Consegnato"],
@@ -158,7 +158,7 @@ export function mailLayout(title: string, body: string) {
 <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border-radius:14px;overflow:hidden">
 <tr><td style="background:#141A3A;padding:18px 24px"><img src="${env.SITE_URL ?? "https://vaultcrafted.com"}/LOGO.png" alt="Vault Crafted" height="34"></td></tr>
 <tr><td style="padding:24px"><h1 style="margin:0 0 12px;font-size:24px">${esc(title)}</h1>${body}</td></tr>
-<tr><td style="padding:14px 24px;background:#F4F5F8;font-size:12px;color:#5A5D6B">Vault Crafted · carte da collezione disegnate a mano · vaultcrafted.com</td></tr>
+<tr><td style="padding:14px 24px;background:#F4F5F8;font-size:12px;color:#5A5D6B">Vault Crafted · carte da collezione personalizzate · vaultcrafted.com</td></tr>
 </table></td></tr></table></body></html>`;
 }
 export function rows(pairs: [string, string][]) {

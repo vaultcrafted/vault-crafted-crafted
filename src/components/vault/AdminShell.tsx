@@ -6,8 +6,8 @@ import { STAGE_CSS } from "./CardStage";
 export const STATUS_LABELS: Record<string, string> = {
   nuovo: "Nuovo",
   in_lavorazione: "In lavorazione",
-  bozza_inviata: "Bozza inviata",
-  approvato: "Approvato",
+  bozza_inviata: "Attesa pagamento",
+  approvato: "Pronto per la stampa",
   in_stampa: "In stampa",
   spedito: "Spedito",
   consegnato: "Consegnato",

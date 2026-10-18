@@ -14,7 +14,8 @@ import {
   sendMail,
 } from "@/server/vault";
 
-// Invia al cliente la bozza (anteprima PNG) e segna l'ordine come "bozza inviata".
+// Invia al cliente il riepilogo con l'anteprima della carta e le istruzioni per pagare,
+// e segna l'ordine come "attesa pagamento" (stato bozza_inviata).
 export const Route = createFileRoute("/api/admin/ordini/$id/bozza")({
   server: {
     handlers: {
@@ -32,22 +33,26 @@ export const Route = createFileRoute("/api/admin/ordini/$id/bozza")({
           message?: string;
         };
         if (!png) return bad("Anteprima mancante");
+        const pay = await env.DB.prepare("SELECT value FROM settings WHERE key = 'payment_info'")
+          .first<{ value: string }>();
+        const payInfo = (pay?.value ?? "").trim();
         const first = esc(o.customer_name.split(" ")[0] || "");
         const r = await sendMail({
           to: [{ email: o.email, name: o.customer_name }],
-          subject: `Ecco la bozza della tua carta Vault N° ${pad3(o.serial)}`,
+          subject: `La tua carta Vault N° ${pad3(o.serial)}: riepilogo e pagamento`,
           html: mailLayout(
-            "La tua bozza è pronta",
-            `<p>Ciao ${first}, in allegato trovi la bozza della tua carta <b>${esc(o.card_name)}</b>.</p>
+            "La tua carta è pronta per la stampa",
+            `<p>Ciao ${first}, abbiamo controllato la tua carta <b>${esc(o.card_name)}</b>: in allegato trovi l'anteprima di come verrà stampata.</p>
             ${message ? `<p style="white-space:pre-line">${esc(message)}</p>` : ""}
             ${rows([
               ["Categoria", catOf(o.category).n],
               ["Numero", `N° ${pad3(o.serial)} · ${o.edition ?? "—"}/${MAX_EDITION}`],
               ["Totale", `€${o.total.toFixed(2)}`],
             ])}
-            <p>Se va bene rispondi a questa email con <b>OK</b>, altrimenti scrivici cosa cambiare: le modifiche sono gratuite.</p>`,
+            ${payInfo ? `<p><b>Come pagare</b></p><p style="white-space:pre-line">${esc(payInfo)}</p>` : ""}
+            <p>Appena il pagamento arriva la stampiamo e la spediamo. Per qualsiasi domanda rispondi a questa email.</p>`,
           ),
-          attachment: [{ name: `bozza-vault-${pad3(o.serial)}.png`, content: png }],
+          attachment: [{ name: `anteprima-vault-${pad3(o.serial)}.png`, content: png }],
         });
         if (!r.ok) return bad("Invio non riuscito, controlla Brevo", 502);
         await env.DB.prepare(

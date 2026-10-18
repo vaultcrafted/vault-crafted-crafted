@@ -71,6 +71,7 @@ function Settings() {
     )
       .then((r) => {
         setStart(r.settings.serial_start ?? "1");
+        setPayInfo(r.settings.payment_info ?? "");
         setMaxSerial(r.maxSerial);
         setMail(r.mail);
       })
@@ -78,6 +79,15 @@ function Settings() {
   }, []);
 
   const [testing, setTesting] = useState(false);
+  const [payInfo, setPayInfo] = useState("");
+  const savePay = async () => {
+    try {
+      await api("/api/admin/impostazioni", { method: "PUT", json: { payment_info: payInfo } });
+      setMsg("Istruzioni di pagamento salvate");
+    } catch (e) {
+      setMsg((e as Error).message);
+    }
+  };
   const testMail = async () => {
     setTesting(true);
     try {
@@ -158,12 +168,33 @@ function Settings() {
       </section>
 
       <section className="ad-box">
+        <h2>Pagamento</h2>
+        <p className="vc-hint">
+          Queste istruzioni vengono aggiunte all'email "riepilogo e pagamento" che mandi dal
+          dettaglio ordine.
+        </p>
+        <Field label="Come pagare">
+          <textarea
+            rows={4}
+            value={payInfo}
+            placeholder={"Bonifico a: IBAN IT00 X000 0000 0000 0000 0000 000\nIntestato a: …\nCausale: N° carta"}
+            onChange={(e) => setPayInfo(e.target.value)}
+          />
+        </Field>
+        <div className="ad-actions" style={{ marginTop: 10 }}>
+          <button type="button" className="vc-btn" onClick={savePay}>
+            Salva
+          </button>
+        </div>
+      </section>
+
+      <section className="ad-box">
         <h2>Email</h2>
         <p className="vc-hint">
           {mail === null
             ? "…"
             : mail
-              ? "Brevo è collegato: conferme, bozze e avvisi di spedizione partono in automatico."
+              ? "Brevo è collegato: conferme d'ordine, riepiloghi di pagamento e avvisi di spedizione partono in automatico."
               : "Brevo non è ancora collegato: gli ordini arrivano nel pannello ma le email non partono."}
         </p>
         <div className="ad-actions">

@@ -46,7 +46,7 @@ export const Route = createFileRoute("/api/ordini")({
           note: str(body.contacts?.note, 2000),
         };
         const missing = [...cardErrors(card), ...contactErrors(contacts)];
-        if (!body.photo?.base64) missing.push("La foto da cui disegnare la carta");
+        if (!body.photo?.base64) missing.push("La foto per la carta");
         if (missing.length) return json({ error: "Mancano dei dati", missing }, 400);
 
         const bytes = b64ToBytes(body.photo!.base64);
@@ -124,7 +124,7 @@ export const Route = createFileRoute("/api/ordini")({
             html: mailLayout(
               "Ordine ricevuto!",
               `<p>Ciao ${esc(contacts.nome_cognome.split(" ")[0] || "")}, grazie per il tuo ordine.</p>
-              <p>Disegniamo l'illustrazione a mano partendo dalla tua foto e ti mandiamo la bozza entro 24–48 ore. Le modifiche sono gratuite.</p>${summary}
+              <p>Controlliamo che la carta sia perfetta per la stampa e ti scriviamo con il riepilogo e le istruzioni per il pagamento. Appena il pagamento arriva la stampiamo e la spediamo in 3–4 giorni lavorativi.</p>${summary}
               <p style="font-size:13px;color:#5A5D6B">Per qualsiasi cosa rispondi a questa email o scrivici su WhatsApp al 333 287 6277.</p>`,
             ),
           }),

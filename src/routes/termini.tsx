@@ -63,10 +63,9 @@ function TerminiPage() {
               <h2 className="font-display text-xl text-foreground mb-4">3. Processo d'ordine</h2>
               <p>Il processo di ordinazione avviene nelle seguenti fasi:</p>
               <ul className="mt-3 space-y-2 ml-4 list-disc">
-                <li>Il cliente compila il modulo d'ordine sul sito fornendo tutti i dettagli richiesti</li>
-                <li>Vault Crafted invia una bozza grafica pre-stampa via email per approvazione</li>
-                <li>Il cliente approva la bozza o richiede modifiche</li>
-                <li>Dopo l'approvazione viene comunicato il totale da pagare e le istruzioni per il pagamento</li>
+                <li>Il cliente compone la carta nel configuratore del sito, carica la propria foto e invia l'ordine</li>
+                <li>Vault Crafted verifica che la carta sia idonea alla stampa e, se necessario, contatta il cliente</li>
+                <li>Viene comunicato via email il totale da pagare e le istruzioni per il pagamento</li>
                 <li>La produzione inizia esclusivamente dopo la conferma del pagamento</li>
                 <li>La carta viene spedita entro 3-4 giorni lavorativi dalla conferma del pagamento</li>
               </ul>
@@ -74,12 +73,12 @@ function TerminiPage() {
 
             <div>
               <h2 className="font-display text-xl text-foreground mb-4">4. Prezzi e pagamento</h2>
-              <p>I prezzi indicati sul sito sono comprensivi di progettazione, stampa, taglio e scatola protettiva con gadget. La spedizione ha un costo aggiuntivo di 4,99€. Le custodie protettive hanno costi aggiuntivi indicati sul sito. Il pagamento avviene tramite le modalità comunicate via email dopo l'approvazione della bozza. La produzione non inizia fino al ricevimento del pagamento.</p>
+              <p>I prezzi indicati sul sito sono comprensivi di progettazione, stampa, taglio e scatola protettiva con gadget. La spedizione ha un costo aggiuntivo di 4,99€. Le custodie protettive hanno costi aggiuntivi indicati sul sito. Il pagamento avviene tramite le modalità comunicate via email dopo l'ordine. La produzione non inizia fino al ricevimento del pagamento.</p>
             </div>
 
             <div>
               <h2 className="font-display text-xl text-foreground mb-4">5. Diritto di recesso e rimborsi</h2>
-              <p>Trattandosi di prodotti personalizzati e realizzati su misura, ai sensi dell'art. 59 lett. c) del Codice del Consumo (D.Lgs. 206/2005), <strong className="text-foreground">il diritto di recesso non si applica</strong> una volta approvata la bozza grafica e confermato il pagamento. È possibile richiedere modifiche alla bozza prima dell'approvazione finale senza costi aggiuntivi. In caso di difetti di produzione imputabili a Vault Crafted, verrà offerta la riproduzione gratuita della carta.</p>
+              <p>Trattandosi di prodotti personalizzati e realizzati su misura, ai sensi dell'art. 59 lett. c) del Codice del Consumo (D.Lgs. 206/2005), <strong className="text-foreground">il diritto di recesso non si applica</strong> una volta confermato il pagamento e avviata la produzione. Prima del pagamento è possibile chiedere modifiche alla carta o annullare l'ordine scrivendoci, senza costi aggiuntivi. In caso di difetti di produzione imputabili a Vault Crafted, verrà offerta la riproduzione gratuita della carta.</p>
             </div>
 
             <div>

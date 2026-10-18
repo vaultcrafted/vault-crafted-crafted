@@ -44,15 +44,15 @@ const SCHEMA_FAQ = {
       "name": "Quanto tempo serve per ricevere la carta?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Il processo completo richiede 7-10 giorni lavorativi. Entro 24-48 ore ricevi la bozza grafica da approvare. Una volta approvata, la carta viene prodotta e spedita in 3-4 giorni. La consegna tramite corriere richiede 5-7 giorni lavorativi."
+        "text": "Dopo l'ordine ti mandiamo il riepilogo con le istruzioni per pagare. Appena il pagamento arriva la carta viene stampata e spedita in 3-4 giorni lavorativi. La consegna tramite corriere richiede 5-7 giorni lavorativi."
       }
     },
     {
       "@type": "Question",
-      "name": "Posso modificare il design dopo l'approvazione della bozza?",
+      "name": "Vedo la carta prima di ordinarla?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Sì, puoi richiedere tutte le modifiche che vuoi prima di approvare la bozza finale, senza costi aggiuntivi. Una volta dato il via libera definitivo e confermato il pagamento, la carta entra in produzione e non è più modificabile."
+        "text": "Sì: nel configuratore la carta si aggiorna mentre scegli e scrivi, quindi ordini esattamente quello che vedi."
       }
     },
     {
@@ -68,7 +68,7 @@ const SCHEMA_FAQ = {
       "name": "Come avviene il pagamento?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Il pagamento avviene dopo l'approvazione della bozza grafica. Una volta che hai dato il via libera al design, ti invieremo via email il totale da pagare e le istruzioni per il pagamento. La produzione parte esclusivamente dopo la conferma del pagamento."
+        "text": "Dopo l'ordine ti inviamo via email il totale da pagare e le istruzioni per il pagamento. La produzione parte esclusivamente dopo la conferma del pagamento."
       }
     },
     {

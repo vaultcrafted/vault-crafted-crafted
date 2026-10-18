@@ -28,7 +28,7 @@ export const CATS: { k: CatKey; n: string; full: boolean; price: number; hint: s
     n: "Base",
     full: false,
     price: 20,
-    hint: "Cornice argento, illustrazione nella finestra.",
+    hint: "Cornice argento, foto nella finestra.",
   },
   {
     k: "rare",
@@ -42,21 +42,21 @@ export const CATS: { k: CatKey; n: string; full: boolean; price: number; hint: s
     n: "Full Art",
     full: true,
     price: 26,
-    hint: "Illustrazione a tutta carta, bordo argento.",
+    hint: "Foto a tutta carta, bordo argento.",
   },
   {
     k: "prism",
     n: "Prisma",
     full: true,
     price: 30,
-    hint: "Illustrazione a tutta carta, bordo prismatico.",
+    hint: "Foto a tutta carta, bordo prismatico.",
   },
   {
     k: "legend",
     n: "Legend",
     full: true,
     price: 34,
-    hint: "Illustrazione a tutta carta, bordo oro.",
+    hint: "Foto a tutta carta, bordo oro.",
   },
 ];
 
@@ -489,7 +489,7 @@ function drawTexts(c: Ctx, d: CardData, chip: { ink: string; label: string }) {
   c.fillStyle = bink;
   c.textAlign = "center";
   c.font = F.body(15, "italic");
-  c.fillText(`Elemento ${en} · ${cat.n} · Disegnata a mano da Vault Crafted`, 431, lay.band + 16.5);
+  c.fillText(`Elemento ${en} · ${cat.n} · Creata con Vault Crafted`, 431, lay.band + 16.5);
 
   // mosse
   type M = [string, string, string, boolean];

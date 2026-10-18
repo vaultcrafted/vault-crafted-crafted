@@ -64,10 +64,10 @@ function PrintSheet() {
       .then((d) => {
         const list = d.orders.filter((o) => o.source === "sito");
         setRows(list);
-        // preseleziona le carte approvate con l'illustrazione caricata
+        // preseleziona le carte pronte per la stampa (pagate)
         setSel(
           Object.fromEntries(
-            list.map((o) => [o.id, o.status === "approvato" && !!o.has_art]),
+            list.map((o) => [o.id, o.status === "approvato"]),
           ),
         );
       })
@@ -105,7 +105,7 @@ function PrintSheet() {
         await renderCard(cv.getContext("2d")!, { ...card, serial: o.serial, edition: o.edition }, art);
         const entry = {
           canvas: cv,
-          label: `N°${pad(o.serial)} ${card.name || ""}${card.holo ? " ✦holo" : ""}${o.art_key ? "" : " (FOTO!)"}`,
+          label: `N°${pad(o.serial)} ${card.name || ""}${card.holo ? " ✦holo" : ""}`,
         };
         (splitHolo && card.holo ? holo : normal).push(entry);
       }
@@ -195,7 +195,6 @@ function PrintSheet() {
                     <b>{o.card_name || "—"}</b>
                     <span className="ad-sub">
                       {catOf(o.category).n}
-                      {o.has_art ? "" : " · manca l'illustrazione"}
                     </span>
                   </td>
                   <td className="hide-m">{o.customer_name}</td>
@@ -259,8 +258,8 @@ function PrintSheet() {
           {msg && <p className="vc-hint" role="status">{msg}</p>}
         </div>
         <p className="vc-hint">
-          Le carte senza illustrazione usano la foto del cliente e sono segnate "(FOTO!)" nella
-          didascalia. Per sistemare inquadrature o testi apri l'ordine dalla{" "}
+          Sono preselezionate le carte "Pronto per la stampa" (già pagate). Per sistemare
+          inquadrature o testi apri l'ordine dalla{" "}
           <Link to="/admin">lista ordini</Link>.
         </p>
       </div>

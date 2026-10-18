@@ -183,8 +183,8 @@ function RegaloPage() {
           </motion.h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
-              { num: "1", title: "Compila il form", desc: "Raccontaci chi è la persona e cosa vuoi sulla carta. Ci vorranno 5 minuti." },
-              { num: "2", title: "Approva la bozza", desc: "Ti mandiamo il design da approvare. Puoi chiedere modifiche finché non è perfetto." },
+              { num: "1", title: "Componi la carta", desc: "Carica la sua foto, scegli attacchi e frase e vedi la carta finita. Ci vogliono 5 minuti." },
+              { num: "2", title: "La stampiamo noi", desc: "Controlliamo che sia perfetta per la stampa e la stampiamo numerata." },
               { num: "3", title: "Ricevi il regalo", desc: "La carta arriva a casa tua in packaging premium, pronta da regalare." },
             ].map((step) => (
               <motion.div key={step.num} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="flex flex-col items-center text-center">

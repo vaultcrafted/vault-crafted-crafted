@@ -36,14 +36,22 @@ export const Route = createFileRoute("/api/admin/impostazioni")({
       PUT: async ({ request }) => {
         const deny = await requireAdmin(request);
         if (deny) return deny;
-        const b = (await request.json().catch(() => ({}))) as { serial_start?: number };
-        const n = Math.max(1, Math.floor(Number(b.serial_start)) || 1);
-        await env.DB.prepare(
-          "INSERT INTO settings (key, value) VALUES ('serial_start', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
-        )
-          .bind(String(n))
-          .run();
-        return json({ ok: true, serial_start: n });
+        const b = (await request.json().catch(() => ({}))) as {
+          serial_start?: number;
+          payment_info?: string;
+        };
+        const put = (k: string, v: string) =>
+          env.DB.prepare(
+            "INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+          )
+            .bind(k, v)
+            .run();
+        if (b.serial_start !== undefined) {
+          const n = Math.max(1, Math.floor(Number(b.serial_start)) || 1);
+          await put("serial_start", String(n));
+        }
+        if (typeof b.payment_info === "string") await put("payment_info", b.payment_info.slice(0, 2000));
+        return json({ ok: true });
       },
     },
   },
