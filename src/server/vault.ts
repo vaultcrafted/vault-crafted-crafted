@@ -117,7 +117,7 @@ export async function sendMail(opts: {
   replyTo?: { email: string; name?: string };
   attachment?: { name: string; content: string }[];
 }) {
-  if (!env.BREVO_API_KEY) return { ok: false, skipped: true };
+  if (!env.BREVO_API_KEY) return { ok: false, skipped: true, error: "BREVO_API_KEY mancante" };
   const r = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
@@ -140,8 +140,12 @@ export async function sendMail(opts: {
       attachment: opts.attachment,
     }),
   });
-  if (!r.ok) console.error("Brevo", r.status, await r.text());
-  return { ok: r.ok, skipped: false };
+  if (!r.ok) {
+    const error = `${r.status} ${(await r.text()).slice(0, 300)}`;
+    console.error("Brevo", error);
+    return { ok: false, skipped: false, error };
+  }
+  return { ok: true, skipped: false };
 }
 
 const esc = (s: string) =>

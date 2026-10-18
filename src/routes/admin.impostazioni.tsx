@@ -77,6 +77,21 @@ function Settings() {
       .catch((e) => setMsg(e.message));
   }, []);
 
+  const [testing, setTesting] = useState(false);
+  const testMail = async () => {
+    setTesting(true);
+    try {
+      const r = await api<{ ok: boolean; error?: string; to: string }>("/api/admin/impostazioni", {
+        method: "POST",
+      });
+      setMsg(r.ok ? `Email di prova inviata a ${r.to}` : `Brevo ha risposto: ${r.error}`);
+    } catch (e) {
+      setMsg((e as Error).message);
+    } finally {
+      setTesting(false);
+    }
+  };
+
   const saveStart = async () => {
     try {
       await api("/api/admin/impostazioni", {
@@ -151,6 +166,11 @@ function Settings() {
               ? "Brevo è collegato: conferme, bozze e avvisi di spedizione partono in automatico."
               : "Brevo non è ancora collegato: gli ordini arrivano nel pannello ma le email non partono."}
         </p>
+        <div className="ad-actions">
+          <button type="button" className="vc-btn" onClick={testMail} disabled={testing}>
+            {testing ? "Invio…" : "Manda un'email di prova"}
+          </button>
+        </div>
       </section>
 
       <section className="ad-box">

@@ -4,6 +4,7 @@
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "observability": { "enabled": true },
   // Gestionale ordini: database D1 "vault-ordini" e archivio R2 "vault-ordini" (foto, illustrazioni).
   "d1_databases": [
     { "binding": "DB", "database_name": "vault-ordini", "database_id": "444b6151-c080-4fb4-95ed-035dadcfcae5", "migrations_dir": "migrations" }

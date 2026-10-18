@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { env, json, requireAdmin } from "@/server/vault";
+import { env, json, mailLayout, requireAdmin, sendMail } from "@/server/vault";
 
 // Impostazioni del gestionale (per ora: numero di partenza della numerazione).
 export const Route = createFileRoute("/api/admin/impostazioni")({
@@ -20,6 +20,18 @@ export const Route = createFileRoute("/api/admin/impostazioni")({
           maxSerial: max?.m ?? 0,
           mail: !!env.BREVO_API_KEY,
         });
+      },
+      // Email di prova all'indirizzo admin, per verificare Brevo
+      POST: async ({ request }) => {
+        const deny = await requireAdmin(request);
+        if (deny) return deny;
+        const to = env.MAIL_ADMIN ?? "vaultcrafted@gmail.com";
+        const r = await sendMail({
+          to: [{ email: to, name: "Vault Crafted" }],
+          subject: "Email di prova dal pannello Vault",
+          html: mailLayout("Funziona!", "<p>Se leggi questa email, Brevo è collegato correttamente.</p>"),
+        });
+        return json({ ...r, to });
       },
       PUT: async ({ request }) => {
         const deny = await requireAdmin(request);
