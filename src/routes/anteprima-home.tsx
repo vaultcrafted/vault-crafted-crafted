@@ -1,19 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { FONTS_HREF } from "@/components/vault/CardEditor";
-import { SCRUB_CSS, ScrubHero } from "@/components/vault/home/ScrubHero";
+import { HOLO_CSS, HoloCard } from "@/components/vault/home/HoloCard";
 import { CATS } from "@/lib/vaultCard";
 import { CUSTODIE, HOLO_PRICE, SPEDIZIONE } from "@/lib/vaultShop";
 
-// Proposta della nuova home: apertura con video comandato dallo scorrimento
-// (scrivania del collezionista), materiali acciaio e acrilico. Non collegata dal sito.
+// Proposta della nuova home: chiara e pulita come il configuratore, con le carte
+// vere come protagoniste. Non collegata dal sito.
 export const Route = createFileRoute("/anteprima-home")({
   component: HomePreview,
   head: () => ({
     meta: [
       { title: "Vault Crafted · Carte da collezione disegnate a mano" },
       { name: "robots", content: "noindex, nofollow" },
-      { name: "theme-color", content: "#10151F" },
+      { name: "theme-color", content: "#E9EAEF" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -27,6 +27,8 @@ const FILES =
     " ",
   );
 const CARDS = FILES.map((f) => `/carte/${f}.webp`);
+// tre colonne per la parete di carte che scorre nell'apertura
+const COLS = [0, 1, 2].map((c) => CARDS.filter((_, i) => i % 3 === c));
 const PAGES = Array.from({ length: Math.ceil(CARDS.length / 9) }, (_, i) => CARDS.slice(i * 9, i * 9 + 9));
 const euro = (n: number) => `€${n.toFixed(2).replace(".", ",").replace(",00", "")}`;
 const minPrice = Math.min(...CATS.map((c) => c.price));
@@ -51,29 +53,24 @@ const FAQ: [string, string][] = [
   ["Posso regalarla?", "Sì: metti l'indirizzo di chi la riceve e scrivici nelle note se vuoi una dedica."],
 ];
 
-function Binder() {
+function Binder({ onOpen }: { onOpen: (src: string) => void }) {
   const [page, setPage] = useState(0);
   const [dir, setDir] = useState(0);
   const go = (d: number) => {
     setDir(d);
     setPage((p) => (p + d + PAGES.length) % PAGES.length);
   };
-  useEffect(() => {
-    const on = (e: KeyboardEvent) => {
-      if (!(document.activeElement as HTMLElement | null)?.closest?.(".hm-binder")) return;
-      if (e.key === "ArrowRight") go(1);
-      if (e.key === "ArrowLeft") go(-1);
-    };
-    addEventListener("keydown", on);
-    return () => removeEventListener("keydown", on);
-  }, []);
   const cards = PAGES[page];
   return (
     <div className="hm-binder">
       <div className="hm-sheet" key={page} data-dir={dir}>
         {Array.from({ length: 9 }).map((_, i) => (
           <div className="hm-pocket" key={i}>
-            {cards[i] ? <img src={cards[i]} alt="Carta realizzata da Vault Crafted" loading="lazy" /> : null}
+            {cards[i] ? (
+              <button type="button" onClick={() => onOpen(cards[i])} aria-label="Ingrandisci la carta">
+                <img src={cards[i]} alt="Carta realizzata da Vault Crafted" loading="lazy" />
+              </button>
+            ) : null}
           </div>
         ))}
         <div className="hm-holes" aria-hidden>
@@ -99,12 +96,20 @@ function Binder() {
 
 function HomePreview() {
   const cases = CUSTODIE.filter((c) => c.price > 0);
+  const [zoom, setZoom] = useState<string | null>(null);
+  useEffect(() => {
+    if (!zoom) return;
+    const on = (e: KeyboardEvent) => e.key === "Escape" && setZoom(null);
+    addEventListener("keydown", on);
+    return () => removeEventListener("keydown", on);
+  }, [zoom]);
+
   return (
     <main className="hm">
-      <style>{SCRUB_CSS + HM_CSS}</style>
+      <style>{HOLO_CSS + HM_CSS}</style>
 
       <nav className="hm-nav">
-        <Link to="/" aria-label="Vault Crafted, home">
+        <Link to="/" aria-label="Vault Crafted, home" className="hm-logo">
           <img src="/LOGO.png" alt="Vault Crafted" />
         </Link>
         <div>
@@ -117,40 +122,42 @@ function HomePreview() {
         </div>
       </nav>
 
-      <ScrubHero
-        video="/home/hero-scrub.mp4"
-        videoWebm="/home/hero-scrub.webm"
-        poster="/home/hero-poster.jpg"
-        ending="/home/hero-ending.jpg"
-        settle={
-          <>
-            <img className="hm-slabcard" src="/carte/kurolily.webp" alt="Una carta Vault nella sua custodia" />
-            <div className="hm-settle-txt">
-              <h1>La prossima è la tua.</h1>
-              <p>
-                Ci mandi una foto, la disegniamo a mano e la stampiamo come una vera carta da
-                collezione. Da {euro(minPrice)}, e paghi solo dopo aver visto la bozza.
-              </p>
-              <Link to="/crea" className="hm-btn">
-                Crea la tua carta
-              </Link>
+      <header className="hm-hero">
+        <div className="hm-hero-txt">
+          <h1>La tua storia, disegnata su una carta.</h1>
+          <p>
+            Ci mandi una foto e la trasformiamo in una carta da collezione disegnata a mano,
+            numerata e solo tua. Da {euro(minPrice)}, e paghi dopo aver visto la bozza.
+          </p>
+          <div className="hm-cta">
+            <Link to="/crea" className="hm-btn">
+              Crea la tua carta
+            </Link>
+            <a href="#carte" className="hm-link">
+              Guarda le carte
+            </a>
+          </div>
+        </div>
+        <div className="hm-wall" aria-label="Alcune carte che abbiamo disegnato">
+          {COLS.map((col, c) => (
+            <div className={`hm-col c${c}`} key={c}>
+              <div>
+                {[...col, ...col].map((src, i) => (
+                  <button
+                    type="button"
+                    key={i}
+                    onClick={() => setZoom(src)}
+                    aria-label="Ingrandisci la carta"
+                    tabIndex={i < col.length ? 0 : -1}
+                  >
+                    <img src={src} alt="" loading={i < 3 ? "eager" : "lazy"} />
+                  </button>
+                ))}
+              </div>
             </div>
-          </>
-        }
-      >
-        <div className="hm-band l" data-band="0,0.3">
-          <p className="hm-big">Una foto.</p>
-          <p className="hm-big dim">Una carta che resta.</p>
+          ))}
         </div>
-        <div className="hm-band r" data-band="0.32,0.6">
-          <p className="hm-mid">Disegnata a mano, da zero.</p>
-          <p>Niente filtri, niente modelli già pronti. Ogni carta parte dalla storia che ci racconti.</p>
-        </div>
-        <div className="hm-band l" data-band="0.62,0.84">
-          <p className="hm-mid">Una su 420.</p>
-          <p>Ogni carta ha il suo numero di serie. Un'altra uguale non esiste.</p>
-        </div>
-      </ScrubHero>
+      </header>
 
       <section className="hm-sec" id="come">
         <h2>Come nasce una carta</h2>
@@ -181,6 +188,28 @@ function HomePreview() {
         </ol>
       </section>
 
+      <section className="hm-sec hm-feature">
+        <div className="hm-feature-card">
+          <HoloCard src="/carte/omega-riot.webp" alt="Carta con pellicola olografica" foil={0.9} />
+        </div>
+        <div>
+          <h2>Ogni carta è un pezzo unico</h2>
+          <ul className="hm-facts">
+            <li>
+              <b>Disegnata a mano.</b> Nessun filtro, nessun modello già pronto: l'illustrazione parte
+              dalla tua foto.
+            </li>
+            <li>
+              <b>Numerata.</b> Ogni carta ha il suo numero di serie, e un'altra uguale non esiste.
+            </li>
+            <li>
+              <b>Olografica, se vuoi.</b> Con la pellicola i riflessi cambiano a ogni movimento. Passa
+              il mouse sulla carta. +{euro(HOLO_PRICE)}
+            </li>
+          </ul>
+        </div>
+      </section>
+
       <section className="hm-sec hm-split" id="carte">
         <div className="hm-split-txt">
           <h2>Dal nostro raccoglitore</h2>
@@ -192,7 +221,7 @@ function HomePreview() {
             Tutta la collezione
           </Link>
         </div>
-        <Binder />
+        <Binder onOpen={setZoom} />
       </section>
 
       <section className="hm-sec" id="prezzi">
@@ -261,115 +290,135 @@ function HomePreview() {
           <a href="https://www.instagram.com/vault_crafted">Instagram</a>
         </span>
       </footer>
+
+      {zoom && (
+        <div className="hm-lb" role="dialog" aria-modal="true" aria-label="Carta ingrandita" onClick={() => setZoom(null)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <HoloCard src={zoom} alt="Carta ingrandita" foil={0.5} />
+          </div>
+          <button type="button" onClick={() => setZoom(null)} aria-label="Chiudi">
+            ✕
+          </button>
+        </div>
+      )}
     </main>
   );
 }
 
 const HM_CSS = `
-.hm{--night:#10151F;--steel:#1B2230;--plate:#242C3B;--alloy:#9AA2B0;--frost:#E7EAEE;--lamp:#F3D9A8;--red:#D7262E;
-  background:var(--night);color:var(--frost);font-family:Archivo,system-ui,sans-serif;font-size:17px;line-height:1.55;overflow-x:clip}
+.hm{--bg:#E9EAEF;--panel:#FFFFFF;--ink:#141A3A;--muted:#5A5D6B;--line:#D3D6DF;--red:#D7262E;
+  min-height:100vh;background:var(--bg);color:var(--ink);font-family:Archivo,system-ui,sans-serif;font-size:17px;line-height:1.55;overflow-x:clip}
 .hm a{color:inherit}
-.hm :focus-visible{outline:2px solid var(--red);outline-offset:3px}
-.hm h2{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(40px,5vw,68px);line-height:.95;margin:0 0 28px}
-.hm-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 26px;border-radius:12px;background:var(--red);color:#fff !important;text-decoration:none;
-  font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:22px;letter-spacing:.02em;box-shadow:0 12px 30px -14px rgba(215,38,46,.8);transition:transform .2s cubic-bezier(.2,.8,.2,1),background .2s}
-.hm-btn:hover{transform:translateY(-2px);background:#E6333B}
-.hm-btn.sm{min-height:40px;font-size:17px;padding:0 16px;border-radius:10px}
-.hm-link{font-weight:700;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--alloy)}
-.hm-nav{position:fixed;inset:0 0 auto;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:12px 28px;background:rgba(16,21,31,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 1px 0 rgba(255,255,255,.06)}
-.hm-nav img{height:34px;display:block}
+.hm :focus-visible{outline:2px solid #1F86D6;outline-offset:3px}
+.hm h2{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,4.6vw,62px);line-height:.95;margin:0 0 26px}
+.hm-btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;border-radius:12px;background:var(--ink);color:#fff !important;text-decoration:none;
+  font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:22px;letter-spacing:.02em;transition:transform .2s cubic-bezier(.2,.8,.2,1),background .2s}
+.hm-btn:hover{transform:translateY(-2px);background:#232B5C}
+.hm-btn.sm{min-height:40px;font-size:17px;padding:0 16px;border-radius:10px;background:#fff;color:var(--ink) !important}
+.hm-btn.sm:hover{background:#F1F2F6}
+.hm-link{font-weight:700;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
+.hm-link:hover{text-decoration-color:var(--ink)}
+.hm-nav{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:12px 28px;background:#141A3A}
+.hm-logo img{height:34px;display:block}
 .hm-nav div{display:flex;align-items:center;gap:26px}
-.hm-nav div a:not(.hm-btn){text-decoration:none;font-weight:600;font-size:15px;color:#C9CEDA}
+.hm-nav div a:not(.hm-btn){text-decoration:none;font-weight:600;font-size:15px;color:#C9CEE3}
 .hm-nav div a:not(.hm-btn):hover{color:#fff}
-/* didascalie sopra il video */
-.hm-band{max-width:min(520px,34vw);isolation:isolate;text-shadow:0 1px 2px rgba(8,10,16,.95),0 3px 12px rgba(8,10,16,.75),0 10px 44px rgba(8,10,16,.8)}
-.hm-band::before{content:"";position:absolute;inset:-30% -25%;z-index:-1;background:radial-gradient(ellipse 60% 55% at 50% 50%,rgba(10,13,20,.62),rgba(10,13,20,0) 75%)}
-.hm-band.l{left:6vw;top:22vh}
-.hm-band.r{right:6vw;top:30vh;text-align:right}
-.hm-band p{margin:0 0 10px;color:#D4D8E1;font-size:clamp(17px,1.35vw,20px);max-width:40ch}
-.hm-band.r p{margin-left:auto}
-.hm-band .hm-big{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(54px,6.4vw,104px);line-height:.9;color:var(--frost);margin:0;max-width:none}
-.hm-band .hm-big.dim{color:var(--lamp)}
-.hm-band .hm-mid{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,4vw,64px);line-height:.95;color:var(--frost);max-width:none;transform:translateY(calc((1 - var(--k,1)) * 18px))}
-/* fine dello scorrimento: carta vera nella custodia */
-.hm{--fh:max(56.25vw,100svh)}
-.hm-slabcard{position:absolute;left:calc(50% + var(--fh) * 0.0014);top:calc(50% + var(--fh) * 0.0134);height:calc(var(--fh) * .497);width:auto;
-  transform:translate(-50%,-50%) scale(calc(.97 + .03 * var(--k)));opacity:var(--k);border-radius:2.5% / 1.8%;filter:brightness(.96)}
-.hm-settle-txt{position:absolute;left:6vw;bottom:12vh;max-width:min(470px,34vw);isolation:isolate;opacity:var(--k);transform:translateY(calc((1 - var(--k)) * 26px));text-shadow:0 2px 20px rgba(8,10,16,.8)}
-.hm-settle-txt::before{content:"";position:absolute;inset:-40% -30%;z-index:-1;background:radial-gradient(ellipse 60% 60% at 40% 55%,rgba(10,13,20,.75),rgba(10,13,20,0) 75%)}
-.hm-settle-txt h1{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(48px,5.6vw,90px);line-height:.92;margin:0 0 14px}
-.hm-settle-txt p{color:#D4D8E1;margin:0 0 22px;max-width:40ch}
-.hm-settle-txt .hm-btn{text-shadow:none}
+/* apertura */
+.hm-hero{max-width:1320px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:40px;align-items:center;min-height:calc(100svh - 64px)}
+.hm-hero-txt{padding:60px 0}
+.hm-hero h1{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(52px,6.6vw,104px);line-height:.9;letter-spacing:-.01em;margin:0 0 22px;max-width:11ch}
+.hm-hero p{font-size:clamp(17px,1.4vw,20px);color:var(--muted);max-width:44ch;margin:0 0 28px}
+.hm-cta{display:flex;flex-wrap:wrap;align-items:center;gap:22px}
+.hm-wall{position:relative;height:calc(100svh - 64px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;overflow:hidden;
+  -webkit-mask-image:linear-gradient(transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(transparent,#000 12%,#000 88%,transparent)}
+.hm-col>div{display:flex;flex-direction:column;gap:16px;animation:hmup 60s linear infinite}
+.hm-col.c1>div{animation-direction:reverse;animation-duration:70s}
+.hm-col.c2>div{animation-duration:54s}
+.hm-col.c1{margin-top:-90px}
+.hm-wall:hover .hm-col>div{animation-play-state:paused}
+.hm-col button{display:block;padding:0;border:0;background:none;cursor:zoom-in;border-radius:4.5% / 3.2%;overflow:hidden;
+  box-shadow:0 14px 30px -18px rgba(20,26,58,.55);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.hm-col button:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 26px 44px -20px rgba(20,26,58,.6)}
+.hm-col img{display:block;width:100%;height:auto}
+@keyframes hmup{to{transform:translateY(calc(-50% - 8px))}}
 /* sezioni */
-.hm-sec{max-width:1240px;margin:0 auto;padding:110px 28px 20px}
-.hm-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;counter-reset:s}
-.hm-steps li{counter-increment:s}
-.hm-steps img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;background:var(--steel);box-shadow:0 0 0 1px rgba(255,255,255,.06)}
-.hm-steps h3{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;margin:18px 0 6px;display:flex;align-items:baseline;gap:12px}
-.hm-steps h3::before{content:counter(s);font-size:18px;color:var(--alloy);font-weight:700}
-.hm-steps p{margin:0;color:var(--alloy);max-width:38ch}
+.hm-sec{max-width:1240px;margin:0 auto;padding:100px 28px 10px}
+.hm-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;counter-reset:s}
+.hm-steps li{counter-increment:s;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px 14px 22px}
+.hm-steps img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;background:var(--bg)}
+.hm-steps h3{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;margin:16px 6px 6px;display:flex;align-items:baseline;gap:12px}
+.hm-steps h3::before{content:counter(s);font-size:18px;color:var(--muted);font-weight:700}
+.hm-steps p{margin:0 6px;color:var(--muted);max-width:38ch}
+.hm-feature{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:64px;align-items:center}
+.hm-feature-card{width:min(100%,380px);justify-self:center}
+.hm-feature-card .hx-holo-in{box-shadow:0 40px 70px -30px rgba(20,26,58,.6)}
+.hm-facts{list-style:none;margin:0;padding:0;display:grid;gap:18px}
+.hm-facts li{color:var(--muted);max-width:52ch;padding-left:18px;border-left:3px solid var(--line)}
+.hm-facts b{color:var(--ink)}
 .hm-split{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:56px;align-items:center}
-.hm-split-txt p{color:var(--alloy);max-width:36ch;margin:0 0 18px}
+.hm-split-txt p{color:var(--muted);max-width:36ch;margin:0 0 18px}
 /* il raccoglitore */
 .hm-binder{perspective:1600px;width:min(100%,560px);justify-self:center}
-.hm-sheet{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:18px 18px 18px 46px;border-radius:12px;
-  background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),var(--plate);box-shadow:0 30px 60px -30px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.08);
-  transform-origin:left center;animation:hmflip .55s cubic-bezier(.2,.8,.2,1)}
+.hm-sheet{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:18px 18px 18px 46px;border-radius:12px;background:#2A3047;
+  box-shadow:0 30px 60px -30px rgba(20,26,58,.6);transform-origin:left center;animation:hmflip .55s cubic-bezier(.2,.8,.2,1)}
 .hm-sheet[data-dir="-1"]{transform-origin:right center;animation-name:hmflipb}
 .hm-sheet[data-dir="0"]{animation:none}
 @keyframes hmflip{from{transform:rotateY(-24deg) translateX(30px);opacity:.3}}
 @keyframes hmflipb{from{transform:rotateY(24deg) translateX(-30px);opacity:.3}}
-.hm-pocket{position:relative;aspect-ratio:703/980;border-radius:6px;background:rgba(16,21,31,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);overflow:hidden}
+.hm-pocket{position:relative;aspect-ratio:703/980;border-radius:6px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);overflow:hidden}
+.hm-pocket button{display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:zoom-in}
 .hm-pocket img{display:block;width:100%;height:100%;object-fit:cover}
-.hm-pocket::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.18),rgba(255,255,255,0) 28%,rgba(255,255,255,0) 70%,rgba(255,255,255,.08));pointer-events:none}
+.hm-pocket::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.2),rgba(255,255,255,0) 28%,rgba(255,255,255,0) 70%,rgba(255,255,255,.08));pointer-events:none}
 .hm-holes{position:absolute;left:14px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-around}
-.hm-holes i{width:14px;height:14px;border-radius:50%;background:var(--night);box-shadow:inset 0 2px 3px rgba(0,0,0,.6)}
-.hm-binder-nav{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:16px;color:var(--alloy);font-size:15px}
-.hm-binder-nav button{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:var(--steel);color:var(--frost);font-size:26px;line-height:1;cursor:pointer}
-.hm-binder-nav button:hover{border-color:rgba(255,255,255,.45)}
+.hm-holes i{width:14px;height:14px;border-radius:50%;background:var(--bg);box-shadow:inset 0 2px 3px rgba(0,0,0,.35)}
+.hm-binder-nav{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:16px;color:var(--muted);font-size:15px}
+.hm-binder-nav button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:26px;line-height:1;cursor:pointer}
+.hm-binder-nav button:hover{border-color:var(--ink)}
 /* prezzi */
-.hm-price{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+.hm-price{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 28px}
 .hm-price table{width:100%;border-collapse:collapse}
-.hm-price caption{text-align:left;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:24px;color:var(--alloy);padding-bottom:8px}
-.hm-price th,.hm-price td{padding:13px 0;border-top:1px solid rgba(255,255,255,.1);text-align:left;vertical-align:baseline}
-.hm-price th{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:24px;white-space:nowrap;padding-right:18px}
-.hm-price td{color:var(--alloy);font-size:15px}
-.hm-price td:last-child{text-align:right;color:var(--frost);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:24px;white-space:nowrap;padding-left:14px}
+.hm-price caption{text-align:left;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:22px;color:var(--muted);padding-bottom:6px}
+.hm-price th,.hm-price td{padding:12px 0;border-top:1px solid #E6E8EE;text-align:left;vertical-align:baseline}
+.hm-price th{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:23px;white-space:nowrap;padding-right:16px}
+.hm-price td{color:var(--muted);font-size:15px}
+.hm-price td:last-child{text-align:right;color:var(--ink);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:23px;white-space:nowrap;padding-left:14px}
 /* domande */
 .hm-faq{max-width:860px}
-.hm-faq details{border-top:1px solid rgba(255,255,255,.1)}
-.hm-faq details:last-of-type{border-bottom:1px solid rgba(255,255,255,.1)}
-.hm-faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;padding:18px 0;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:26px}
+.hm-faq details{border-top:1px solid var(--line)}
+.hm-faq details:last-of-type{border-bottom:1px solid var(--line)}
+.hm-faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;padding:18px 0;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:25px}
 .hm-faq summary::-webkit-details-marker{display:none}
-.hm-faq summary::after{content:"+";color:var(--alloy);transition:transform .25s}
+.hm-faq summary::after{content:"+";color:var(--muted);transition:transform .25s}
 .hm-faq details[open] summary::after{transform:rotate(45deg)}
-.hm-faq details p{margin:0 0 20px;color:var(--alloy);max-width:62ch}
-.hm-final{max-width:1240px;margin:110px auto 0;padding:70px 28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;border-top:1px solid rgba(255,255,255,.1)}
+.hm-faq details p{margin:0 0 20px;color:var(--muted);max-width:62ch}
+.hm-final{max-width:1240px;margin:100px auto 0;padding:56px 28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;border-top:1px solid var(--line)}
 .hm-final h2{margin:0;max-width:18ch}
-.hm-foot{max-width:1240px;margin:0 auto;padding:28px 28px 40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;color:var(--alloy);font-size:14px}
+.hm-foot{background:#141A3A;color:#A7AEC9;font-size:14px}
+.hm-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;padding:26px max(28px,calc(50% - 592px)) 34px}
 .hm-foot img{height:28px}
 .hm-foot span:last-child{display:flex;gap:18px}
+.hm-foot a{color:#fff}
+/* carta ingrandita */
+.hm-lb{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:rgba(20,26,58,.82);backdrop-filter:blur(6px);animation:hmfade .2s}
+.hm-lb>div{width:min(82vw,56vh)}
+.hm-lb>button{position:absolute;top:16px;right:18px;width:44px;height:44px;border-radius:50%;border:0;background:#fff;color:var(--ink);font-size:18px;cursor:pointer}
+@keyframes hmfade{from{opacity:0}}
 @media (max-width:900px){
-  .hm-nav{padding:12px 16px}
+  .hm-nav{padding:10px 16px}
   .hm-nav div a:not(.hm-btn){display:none}
-  .hm-sec{padding:80px 18px 10px}
-  .hm-steps,.hm-split,.hm-price{grid-template-columns:1fr}
-  .hm-split{gap:28px}
-  .hm-final{padding:50px 18px;margin-top:70px}
+  .hm-hero{grid-template-columns:1fr;min-height:0;padding:0;gap:0}
+  .hm-hero-txt{padding:34px 18px 26px}
+  .hm-wall{height:62svh;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0 10px;order:2}
+  .hm-col>div{gap:10px}
+  .hm-col.c1{margin-top:-50px}
+  .hm-sec{padding:70px 18px 6px}
+  .hm-steps,.hm-split,.hm-feature{grid-template-columns:1fr}
+  .hm-feature{gap:34px}
+  .hm-feature-card{width:min(70vw,300px)}
+  .hm-price{grid-template-columns:1fr;padding:14px 18px}
   .hm-price td:nth-child(2){display:none}
   .hm-price th{white-space:normal}
-}
-@media (max-width: 720px),(orientation: portrait) and (max-width: 1024px),(orientation: portrait) and (pointer: coarse),(orientation: landscape) and (pointer: coarse) and (max-height: 560px),(prefers-reduced-motion: reduce){
-  .hm{--fh:64svh}
-  .sh-stage{min-height:0}
-  .sh-poster{inset:0 0 auto;height:var(--fh);background-size:auto 100%;background-position:center}
-  .sh-poster::after{content:"";position:absolute;inset:auto 0 0;height:30%;background:linear-gradient(transparent,var(--night))}
-  .hm-slabcard{top:calc(var(--fh) / 2 + var(--fh) * 0.0134);transform:translate(-50%,-50%)}
-  .sh-scrim{display:none}
-  .sh-settle{padding:calc(var(--fh) - 2svh) 18px 36px}
-  .hm-settle-txt{position:relative;left:auto;bottom:auto;max-width:none;opacity:1;transform:none}
-  .hm-settle-txt::before{display:none}
-  .hm-settle-txt h1{font-size:50px}
+  .hm-final{padding:44px 18px;margin-top:60px}
 }
 @media (prefers-reduced-motion:reduce){.hm *{animation:none !important;transition:none !important}}
 `;
