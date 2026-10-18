@@ -15,6 +15,7 @@ import { Route as OrdinaRouteImport } from './routes/ordina'
 import { Route as CreaRouteImport } from './routes/crea'
 import { Route as ChiSiamoRouteImport } from './routes/chi-siamo'
 import { Route as CarteRouteImport } from './routes/carte'
+import { Route as AnteprimaHomeRouteImport } from './routes/anteprima-home'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ApiOrdiniRouteImport } from './routes/api/ordini'
@@ -58,6 +59,11 @@ const ChiSiamoRoute = ChiSiamoRouteImport.update({
 const CarteRoute = CarteRouteImport.update({
   id: '/carte',
   path: '/carte',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnteprimaHomeRoute = AnteprimaHomeRouteImport.update({
+  id: '/anteprima-home',
+  path: '/anteprima-home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -134,6 +140,7 @@ const ApiAdminOrdiniIdBozzaRoute = ApiAdminOrdiniIdBozzaRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/anteprima-home': typeof AnteprimaHomeRoute
   '/carte': typeof CarteRoute
   '/chi-siamo': typeof ChiSiamoRoute
   '/crea': typeof CreaRoute
@@ -156,6 +163,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/anteprima-home': typeof AnteprimaHomeRoute
   '/carte': typeof CarteRoute
   '/chi-siamo': typeof ChiSiamoRoute
   '/crea': typeof CreaRoute
@@ -179,6 +187,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/anteprima-home': typeof AnteprimaHomeRoute
   '/carte': typeof CarteRoute
   '/chi-siamo': typeof ChiSiamoRoute
   '/crea': typeof CreaRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/anteprima-home'
     | '/carte'
     | '/chi-siamo'
     | '/crea'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/anteprima-home'
     | '/carte'
     | '/chi-siamo'
     | '/crea'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/anteprima-home'
     | '/carte'
     | '/chi-siamo'
     | '/crea'
@@ -270,6 +282,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnteprimaHomeRoute: typeof AnteprimaHomeRoute
   CarteRoute: typeof CarteRoute
   ChiSiamoRoute: typeof ChiSiamoRoute
   CreaRoute: typeof CreaRoute
@@ -330,6 +343,13 @@ declare module '@tanstack/react-router' {
       path: '/carte'
       fullPath: '/carte'
       preLoaderRoute: typeof CarteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/anteprima-home': {
+      id: '/anteprima-home'
+      path: '/anteprima-home'
+      fullPath: '/anteprima-home'
+      preLoaderRoute: typeof AnteprimaHomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -460,6 +480,7 @@ const ApiAdminOrdiniRouteWithChildren = ApiAdminOrdiniRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnteprimaHomeRoute: AnteprimaHomeRoute,
   CarteRoute: CarteRoute,
   ChiSiamoRoute: ChiSiamoRoute,
   CreaRoute: CreaRoute,
