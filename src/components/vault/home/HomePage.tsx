@@ -10,8 +10,8 @@ const FILES =
     " ",
   );
 const CARDS = FILES.map((f) => `/carte/${f}.webp`);
-// tre colonne per la parete di carte che scorre nell'apertura
-const COLS = [0, 1, 2].map((c) => CARDS.filter((_, i) => i % 3 === c));
+// quattro colonne per la parete di carte che scorre nell'apertura
+const COLS = [0, 1, 2, 3].map((c) => CARDS.filter((_, i) => i % 4 === c));
 const PAGES = Array.from({ length: Math.ceil(CARDS.length / 9) }, (_, i) => CARDS.slice(i * 9, i * 9 + 9));
 const euro = (n: number) => `€${n.toFixed(2).replace(".", ",").replace(",00", "")}`;
 const minPrice = Math.min(...CATS.map((c) => c.price));
@@ -310,17 +310,19 @@ const HM_CSS = `
 .hm-nav div a:not(.hm-btn){text-decoration:none;font-weight:600;font-size:15px;color:#C9CEE3}
 .hm-nav div a:not(.hm-btn):hover{color:#fff}
 /* apertura */
-.hm-hero{max-width:1320px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:40px;align-items:center;min-height:calc(100svh - 64px)}
+.hm-hero{max-width:1400px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr);gap:40px;align-items:center;min-height:calc(100svh - 64px)}
 .hm-hero-txt{padding:60px 0}
 .hm-hero h1{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(52px,6.6vw,104px);line-height:.9;letter-spacing:-.01em;margin:0 0 22px;max-width:11ch}
 .hm-hero p{font-size:clamp(17px,1.4vw,20px);color:var(--muted);max-width:44ch;margin:0 0 28px}
 .hm-cta{display:flex;flex-wrap:wrap;align-items:center;gap:22px}
-.hm-wall{position:relative;height:calc(100svh - 64px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;overflow:hidden;
+.hm-wall{position:relative;height:calc(100svh - 64px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;overflow:hidden;
   -webkit-mask-image:linear-gradient(transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(transparent,#000 12%,#000 88%,transparent)}
 .hm-col>div{display:flex;flex-direction:column;gap:16px;animation:hmup 60s linear infinite}
 .hm-col.c1>div{animation-direction:reverse;animation-duration:70s}
 .hm-col.c2>div{animation-duration:54s}
 .hm-col.c1{margin-top:-90px}
+.hm-col.c3>div{animation-direction:reverse;animation-duration:64s}
+.hm-col.c3{margin-top:-40px}
 .hm-wall:hover .hm-col>div{animation-play-state:paused}
 .hm-col button{display:block;padding:0;border:0;background:none;cursor:zoom-in;border-radius:4.5% / 3.2%;overflow:hidden;
   box-shadow:0 14px 30px -18px rgba(20,26,58,.55);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
@@ -397,6 +399,7 @@ const HM_CSS = `
   .hm-wall{height:62svh;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0 10px;order:2}
   .hm-col>div{gap:10px}
   .hm-col.c1{margin-top:-50px}
+  .hm-col.c3{display:none}
   .hm-sec{padding:70px 18px 6px}
   .hm-steps,.hm-split,.hm-feature{grid-template-columns:1fr}
   .hm-feature{gap:34px}
