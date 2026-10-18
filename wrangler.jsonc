@@ -6,7 +6,7 @@
   "main": "@tanstack/react-start/server-entry",
   // Gestionale ordini: database D1 "vault-ordini" e archivio R2 "vault-ordini" (foto, illustrazioni).
   "d1_databases": [
-    { "binding": "DB", "database_name": "vault-ordini", "database_id": "0246ada1-0e40-46de-a1d1-7918364a3958", "migrations_dir": "migrations" }
+    { "binding": "DB", "database_name": "vault-ordini", "database_id": "444b6151-c080-4fb4-95ed-035dadcfcae5", "migrations_dir": "migrations" }
   ],
   "r2_buckets": [{ "binding": "FILES", "bucket_name": "vault-ordini" }],
   "vars": {
