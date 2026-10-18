@@ -19,12 +19,14 @@ export function CardStage({
   artVersion,
   fontsVersion,
   compact = false,
+  onArtMoved,
 }: {
   data: CardData;
   art: React.MutableRefObject<ArtState>;
   artVersion: number;
   fontsVersion: number;
   compact?: boolean;
+  onArtMoved?: () => void;
 }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -32,6 +34,8 @@ export function CardStage({
   const cvRef = useRef<HTMLCanvasElement>(null);
   const fxRef = useRef<HTMLCanvasElement>(null);
   const dataRef = useRef(data);
+  const movedRef = useRef(onArtMoved);
+  movedRef.current = onArtMoved;
   const dragging = useRef<null | { x: number; y: number; px: number; py: number }>(null);
   dataRef.current = data;
 
@@ -63,8 +67,10 @@ export function CardStage({
       draw();
     };
     const up = () => {
+      const was = !!dragging.current;
       dragging.current = null;
       cv.classList.remove("is-drag");
+      if (was) movedRef.current?.();
     };
     cv.addEventListener("pointerdown", down);
     cv.addEventListener("pointermove", move);

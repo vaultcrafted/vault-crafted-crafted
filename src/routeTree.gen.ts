@@ -16,6 +16,18 @@ import { Route as CreaRouteImport } from './routes/crea'
 import { Route as ChiSiamoRouteImport } from './routes/chi-siamo'
 import { Route as CarteRouteImport } from './routes/carte'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as ApiOrdiniRouteImport } from './routes/api/ordini'
+import { Route as AdminImpostazioniRouteImport } from './routes/admin.impostazioni'
+import { Route as ApiAdminOrdiniRouteImport } from './routes/api/admin/ordini'
+import { Route as ApiAdminLoginRouteImport } from './routes/api/admin/login'
+import { Route as ApiAdminImpostazioniRouteImport } from './routes/api/admin/impostazioni'
+import { Route as ApiAdminImportaRouteImport } from './routes/api/admin/importa'
+import { Route as ApiAdminFileRouteImport } from './routes/api/admin/file'
+import { Route as AdminOrdineIdRouteImport } from './routes/admin.ordine.$id'
+import { Route as ApiAdminOrdiniIdRouteImport } from './routes/api/admin/ordini.$id'
+import { Route as ApiAdminOrdiniIdIllustrazioneRouteImport } from './routes/api/admin/ordini.$id.illustrazione'
+import { Route as ApiAdminOrdiniIdBozzaRouteImport } from './routes/api/admin/ordini.$id.bozza'
 
 const TerminiRoute = TerminiRouteImport.update({
   id: '/termini',
@@ -52,6 +64,67 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOrdiniRoute = ApiOrdiniRouteImport.update({
+  id: '/api/ordini',
+  path: '/api/ordini',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminImpostazioniRoute = AdminImpostazioniRouteImport.update({
+  id: '/admin/impostazioni',
+  path: '/admin/impostazioni',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminOrdiniRoute = ApiAdminOrdiniRouteImport.update({
+  id: '/api/admin/ordini',
+  path: '/api/admin/ordini',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminLoginRoute = ApiAdminLoginRouteImport.update({
+  id: '/api/admin/login',
+  path: '/api/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminImpostazioniRoute = ApiAdminImpostazioniRouteImport.update({
+  id: '/api/admin/impostazioni',
+  path: '/api/admin/impostazioni',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminImportaRoute = ApiAdminImportaRouteImport.update({
+  id: '/api/admin/importa',
+  path: '/api/admin/importa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminFileRoute = ApiAdminFileRouteImport.update({
+  id: '/api/admin/file',
+  path: '/api/admin/file',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminOrdineIdRoute = AdminOrdineIdRouteImport.update({
+  id: '/admin/ordine/$id',
+  path: '/admin/ordine/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminOrdiniIdRoute = ApiAdminOrdiniIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiAdminOrdiniRoute,
+} as any)
+const ApiAdminOrdiniIdIllustrazioneRoute =
+  ApiAdminOrdiniIdIllustrazioneRouteImport.update({
+    id: '/illustrazione',
+    path: '/illustrazione',
+    getParentRoute: () => ApiAdminOrdiniIdRoute,
+  } as any)
+const ApiAdminOrdiniIdBozzaRoute = ApiAdminOrdiniIdBozzaRouteImport.update({
+  id: '/bozza',
+  path: '/bozza',
+  getParentRoute: () => ApiAdminOrdiniIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +134,18 @@ export interface FileRoutesByFullPath {
   '/ordina': typeof OrdinaRoute
   '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
+  '/admin/impostazioni': typeof AdminImpostazioniRoute
+  '/api/ordini': typeof ApiOrdiniRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/ordine/$id': typeof AdminOrdineIdRoute
+  '/api/admin/file': typeof ApiAdminFileRoute
+  '/api/admin/importa': typeof ApiAdminImportaRoute
+  '/api/admin/impostazioni': typeof ApiAdminImpostazioniRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/ordini': typeof ApiAdminOrdiniRouteWithChildren
+  '/api/admin/ordini/$id': typeof ApiAdminOrdiniIdRouteWithChildren
+  '/api/admin/ordini/$id/bozza': typeof ApiAdminOrdiniIdBozzaRoute
+  '/api/admin/ordini/$id/illustrazione': typeof ApiAdminOrdiniIdIllustrazioneRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +155,18 @@ export interface FileRoutesByTo {
   '/ordina': typeof OrdinaRoute
   '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
+  '/admin/impostazioni': typeof AdminImpostazioniRoute
+  '/api/ordini': typeof ApiOrdiniRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/ordine/$id': typeof AdminOrdineIdRoute
+  '/api/admin/file': typeof ApiAdminFileRoute
+  '/api/admin/importa': typeof ApiAdminImportaRoute
+  '/api/admin/impostazioni': typeof ApiAdminImpostazioniRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/ordini': typeof ApiAdminOrdiniRouteWithChildren
+  '/api/admin/ordini/$id': typeof ApiAdminOrdiniIdRouteWithChildren
+  '/api/admin/ordini/$id/bozza': typeof ApiAdminOrdiniIdBozzaRoute
+  '/api/admin/ordini/$id/illustrazione': typeof ApiAdminOrdiniIdIllustrazioneRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +177,18 @@ export interface FileRoutesById {
   '/ordina': typeof OrdinaRoute
   '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
+  '/admin/impostazioni': typeof AdminImpostazioniRoute
+  '/api/ordini': typeof ApiOrdiniRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/ordine/$id': typeof AdminOrdineIdRoute
+  '/api/admin/file': typeof ApiAdminFileRoute
+  '/api/admin/importa': typeof ApiAdminImportaRoute
+  '/api/admin/impostazioni': typeof ApiAdminImpostazioniRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/ordini': typeof ApiAdminOrdiniRouteWithChildren
+  '/api/admin/ordini/$id': typeof ApiAdminOrdiniIdRouteWithChildren
+  '/api/admin/ordini/$id/bozza': typeof ApiAdminOrdiniIdBozzaRoute
+  '/api/admin/ordini/$id/illustrazione': typeof ApiAdminOrdiniIdIllustrazioneRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +200,18 @@ export interface FileRouteTypes {
     | '/ordina'
     | '/regalo'
     | '/termini'
+    | '/admin/impostazioni'
+    | '/api/ordini'
+    | '/admin/'
+    | '/admin/ordine/$id'
+    | '/api/admin/file'
+    | '/api/admin/importa'
+    | '/api/admin/impostazioni'
+    | '/api/admin/login'
+    | '/api/admin/ordini'
+    | '/api/admin/ordini/$id'
+    | '/api/admin/ordini/$id/bozza'
+    | '/api/admin/ordini/$id/illustrazione'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +221,18 @@ export interface FileRouteTypes {
     | '/ordina'
     | '/regalo'
     | '/termini'
+    | '/admin/impostazioni'
+    | '/api/ordini'
+    | '/admin'
+    | '/admin/ordine/$id'
+    | '/api/admin/file'
+    | '/api/admin/importa'
+    | '/api/admin/impostazioni'
+    | '/api/admin/login'
+    | '/api/admin/ordini'
+    | '/api/admin/ordini/$id'
+    | '/api/admin/ordini/$id/bozza'
+    | '/api/admin/ordini/$id/illustrazione'
   id:
     | '__root__'
     | '/'
@@ -109,6 +242,18 @@ export interface FileRouteTypes {
     | '/ordina'
     | '/regalo'
     | '/termini'
+    | '/admin/impostazioni'
+    | '/api/ordini'
+    | '/admin/'
+    | '/admin/ordine/$id'
+    | '/api/admin/file'
+    | '/api/admin/importa'
+    | '/api/admin/impostazioni'
+    | '/api/admin/login'
+    | '/api/admin/ordini'
+    | '/api/admin/ordini/$id'
+    | '/api/admin/ordini/$id/bozza'
+    | '/api/admin/ordini/$id/illustrazione'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +264,15 @@ export interface RootRouteChildren {
   OrdinaRoute: typeof OrdinaRoute
   RegaloRoute: typeof RegaloRoute
   TerminiRoute: typeof TerminiRoute
+  AdminImpostazioniRoute: typeof AdminImpostazioniRoute
+  ApiOrdiniRoute: typeof ApiOrdiniRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminOrdineIdRoute: typeof AdminOrdineIdRoute
+  ApiAdminFileRoute: typeof ApiAdminFileRoute
+  ApiAdminImportaRoute: typeof ApiAdminImportaRoute
+  ApiAdminImpostazioniRoute: typeof ApiAdminImpostazioniRoute
+  ApiAdminLoginRoute: typeof ApiAdminLoginRoute
+  ApiAdminOrdiniRoute: typeof ApiAdminOrdiniRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -172,8 +326,117 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ordini': {
+      id: '/api/ordini'
+      path: '/api/ordini'
+      fullPath: '/api/ordini'
+      preLoaderRoute: typeof ApiOrdiniRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/impostazioni': {
+      id: '/admin/impostazioni'
+      path: '/admin/impostazioni'
+      fullPath: '/admin/impostazioni'
+      preLoaderRoute: typeof AdminImpostazioniRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/ordini': {
+      id: '/api/admin/ordini'
+      path: '/api/admin/ordini'
+      fullPath: '/api/admin/ordini'
+      preLoaderRoute: typeof ApiAdminOrdiniRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/login': {
+      id: '/api/admin/login'
+      path: '/api/admin/login'
+      fullPath: '/api/admin/login'
+      preLoaderRoute: typeof ApiAdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/impostazioni': {
+      id: '/api/admin/impostazioni'
+      path: '/api/admin/impostazioni'
+      fullPath: '/api/admin/impostazioni'
+      preLoaderRoute: typeof ApiAdminImpostazioniRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/importa': {
+      id: '/api/admin/importa'
+      path: '/api/admin/importa'
+      fullPath: '/api/admin/importa'
+      preLoaderRoute: typeof ApiAdminImportaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/file': {
+      id: '/api/admin/file'
+      path: '/api/admin/file'
+      fullPath: '/api/admin/file'
+      preLoaderRoute: typeof ApiAdminFileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/ordine/$id': {
+      id: '/admin/ordine/$id'
+      path: '/admin/ordine/$id'
+      fullPath: '/admin/ordine/$id'
+      preLoaderRoute: typeof AdminOrdineIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/ordini/$id': {
+      id: '/api/admin/ordini/$id'
+      path: '/$id'
+      fullPath: '/api/admin/ordini/$id'
+      preLoaderRoute: typeof ApiAdminOrdiniIdRouteImport
+      parentRoute: typeof ApiAdminOrdiniRoute
+    }
+    '/api/admin/ordini/$id/illustrazione': {
+      id: '/api/admin/ordini/$id/illustrazione'
+      path: '/illustrazione'
+      fullPath: '/api/admin/ordini/$id/illustrazione'
+      preLoaderRoute: typeof ApiAdminOrdiniIdIllustrazioneRouteImport
+      parentRoute: typeof ApiAdminOrdiniIdRoute
+    }
+    '/api/admin/ordini/$id/bozza': {
+      id: '/api/admin/ordini/$id/bozza'
+      path: '/bozza'
+      fullPath: '/api/admin/ordini/$id/bozza'
+      preLoaderRoute: typeof ApiAdminOrdiniIdBozzaRouteImport
+      parentRoute: typeof ApiAdminOrdiniIdRoute
+    }
   }
 }
+
+interface ApiAdminOrdiniIdRouteChildren {
+  ApiAdminOrdiniIdBozzaRoute: typeof ApiAdminOrdiniIdBozzaRoute
+  ApiAdminOrdiniIdIllustrazioneRoute: typeof ApiAdminOrdiniIdIllustrazioneRoute
+}
+
+const ApiAdminOrdiniIdRouteChildren: ApiAdminOrdiniIdRouteChildren = {
+  ApiAdminOrdiniIdBozzaRoute: ApiAdminOrdiniIdBozzaRoute,
+  ApiAdminOrdiniIdIllustrazioneRoute: ApiAdminOrdiniIdIllustrazioneRoute,
+}
+
+const ApiAdminOrdiniIdRouteWithChildren =
+  ApiAdminOrdiniIdRoute._addFileChildren(ApiAdminOrdiniIdRouteChildren)
+
+interface ApiAdminOrdiniRouteChildren {
+  ApiAdminOrdiniIdRoute: typeof ApiAdminOrdiniIdRouteWithChildren
+}
+
+const ApiAdminOrdiniRouteChildren: ApiAdminOrdiniRouteChildren = {
+  ApiAdminOrdiniIdRoute: ApiAdminOrdiniIdRouteWithChildren,
+}
+
+const ApiAdminOrdiniRouteWithChildren = ApiAdminOrdiniRoute._addFileChildren(
+  ApiAdminOrdiniRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -183,6 +446,15 @@ const rootRouteChildren: RootRouteChildren = {
   OrdinaRoute: OrdinaRoute,
   RegaloRoute: RegaloRoute,
   TerminiRoute: TerminiRoute,
+  AdminImpostazioniRoute: AdminImpostazioniRoute,
+  ApiOrdiniRoute: ApiOrdiniRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminOrdineIdRoute: AdminOrdineIdRoute,
+  ApiAdminFileRoute: ApiAdminFileRoute,
+  ApiAdminImportaRoute: ApiAdminImportaRoute,
+  ApiAdminImpostazioniRoute: ApiAdminImpostazioniRoute,
+  ApiAdminLoginRoute: ApiAdminLoginRoute,
+  ApiAdminOrdiniRoute: ApiAdminOrdiniRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -4,4 +4,19 @@
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  // Gestionale ordini: database (ordini) e archivio file (foto, illustrazioni).
+  // database_id va sostituito con l'ID reale del database "vault-ordini" sull'account Cloudflare del sito.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "vault-ordini", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }
+  ],
+  "r2_buckets": [{ "binding": "FILES", "bucket_name": "vault-ordini" }],
+  "vars": {
+    "SITE_URL": "https://vaultcrafted.com",
+    "MAIL_FROM": "ordini@vaultcrafted.com",
+    "MAIL_FROM_NAME": "Vault Crafted",
+    "MAIL_ADMIN": "vaultcrafted@gmail.com"
+  }
+  // Segreti da impostare su Cloudflare (non vanno nel codice):
+  //   ADMIN_PASSWORD  → password del pannello /admin
+  //   BREVO_API_KEY   → chiave API di Brevo per le email
 }
