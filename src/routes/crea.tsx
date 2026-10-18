@@ -10,7 +10,17 @@ import {
   withSamples,
 } from "@/components/vault/CardEditor";
 import { CardStage, STAGE_CSS } from "@/components/vault/CardStage";
-import { MAX_EDITION, catOf, loadFonts, type ArtState, type CardData } from "@/lib/vaultCard";
+import {
+  CARD_H,
+  CARD_W,
+  MAX_EDITION,
+  TRIM,
+  catOf,
+  loadFonts,
+  renderCard,
+  type ArtState,
+  type CardData,
+} from "@/lib/vaultCard";
 import {
   CUSTODIE,
   MAX_PHOTO,
@@ -101,6 +111,28 @@ function CreaPage() {
   const cust = custodiaOf(custodia);
   const total = cat.price + cust.price + SPEDIZIONE;
   const shown = withSamples(done ? { ...d, serial: done.serial, edition: done.edition } : d);
+
+  // miniatura della carta del cliente, messa dentro le foto delle custodie
+  const [cardThumb, setCardThumb] = useState("");
+  const shownKey = JSON.stringify(shown);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const full = document.createElement("canvas");
+      full.width = CARD_W;
+      full.height = CARD_H;
+      void renderCard(full.getContext("2d")!, JSON.parse(shownKey) as CardData, art.current).then(
+        () => {
+          const out = document.createElement("canvas");
+          out.width = 372;
+          out.height = 520;
+          const g = out.getContext("2d")!;
+          g.drawImage(full, TRIM.x, TRIM.y, TRIM.w, TRIM.h, 0, 0, 372, 520);
+          setCardThumb(out.toDataURL("image/jpeg", 0.85));
+        },
+      );
+    }, 350);
+    return () => clearTimeout(t);
+  }, [shownKey, artVersion, fontsVersion]);
 
   const onFile = (f: File | undefined) => {
     setFileError("");
@@ -302,7 +334,22 @@ function CreaPage() {
                   onClick={() => setCustodia(c.id)}
                 >
                   {c.img ? (
-                    <img src={c.img} alt="" loading="lazy" width={300} height={300} />
+                    <span className="vc-case-img">
+                      <img src={c.img} alt="" loading="lazy" width={300} height={300} />
+                      {c.win && cardThumb && (
+                        <span
+                          className="vc-case-card"
+                          style={{
+                            left: `${c.win[0]}%`,
+                            top: `${c.win[1]}%`,
+                            width: `${c.win[2]}%`,
+                            height: `${c.win[3]}%`,
+                          }}
+                        >
+                          <img src={cardThumb} alt="" />
+                        </span>
+                      )}
+                    </span>
                   ) : (
                     <span className="vc-case-none">Solo la carta</span>
                   )}

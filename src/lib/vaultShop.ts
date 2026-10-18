@@ -4,28 +4,56 @@ import { CATS, ELEMENTS, MAX_EDITION, type CardData } from "./vaultCard";
 export const SPEDIZIONE = 4.99;
 export const MAX_PHOTO = 10 * 1024 * 1024;
 
-export const CUSTODIE: { id: string; label: string; price: number; img?: string }[] = [
+// win = finestra della custodia nella foto (x, y, larghezza, altezza in %), dove si disegna la carta del cliente
+export const CUSTODIE: {
+  id: string;
+  label: string;
+  price: number;
+  img?: string;
+  win?: [number, number, number, number];
+}[] = [
   { id: "nessuna", label: "Nessuna custodia", price: 0 },
-  { id: "one-touch-35pt", label: "One Touch 35pt", price: 1, img: "/custodie/one-touch-35pt.webp" },
+  {
+    id: "one-touch-35pt",
+    label: "One Touch 35pt",
+    price: 1,
+    img: "/custodie/one-touch-35pt.webp",
+    win: [31.82, 30.33, 36.37, 50.83],
+  },
   {
     id: "one-touch-bordo-nero",
     label: "One Touch 35pt bordo nero",
     price: 2,
     img: "/custodie/one-touch-bordo-nero.webp",
+    win: [31.49, 25.5, 37.2, 52.0],
   },
-  { id: "recessed-snap", label: "Recessed Snap", price: 2, img: "/custodie/recessed-snap.webp" },
-  { id: "mini-snap", label: "Mini Snap", price: 2, img: "/custodie/mini-snap.webp" },
+  {
+    id: "recessed-snap",
+    label: "Recessed Snap",
+    price: 2,
+    img: "/custodie/recessed-snap.webp",
+    win: [30.34, 20.5, 40.18, 56.17],
+  },
+  {
+    id: "mini-snap",
+    label: "Mini Snap",
+    price: 2,
+    img: "/custodie/mini-snap.webp",
+    win: [24.92, 12.33, 50.55, 70.67],
+  },
   {
     id: "screwdown-recessed",
     label: "Screwdown Recessed",
     price: 3,
     img: "/custodie/screwdown-recessed.webp",
+    win: [31.05, 23.83, 37.56, 52.5],
   },
   {
     id: "screwdown-bordo-nero",
     label: "Screwdown bordo nero",
     price: 5,
     img: "/custodie/screwdown-bordo-nero.webp",
+    win: [38.35, 37.33, 23.13, 32.33],
   },
 ];
 export const custodiaOf = (id: string) => CUSTODIE.find((c) => c.id === id) ?? CUSTODIE[0];

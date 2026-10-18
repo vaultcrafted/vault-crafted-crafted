@@ -397,7 +397,12 @@ export const EDITOR_CSS = `
 .vc-cases button{font:inherit;color:var(--ink);cursor:pointer;background:var(--field);border:1.5px solid var(--line);border-radius:14px;padding:6px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;transition:transform .15s,border-color .15s}
 .vc-cases button:hover{transform:translateY(-2px)}
 .vc-cases button[aria-pressed=true]{border-color:var(--ink);background:#fff;box-shadow:0 0 0 1.5px var(--ink)}
-.vc-cases img,.vc-case-none{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#AEB8D6,#737EA6);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:20px}
+.vc-case-none{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#AEB8D6,#737EA6);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:20px}
+.vc-case-img{position:relative;display:block;width:100%;aspect-ratio:1;border-radius:10px;overflow:hidden}
+.vc-case-img>img{width:100%;height:100%;object-fit:cover;display:block;border-radius:0}
+.vc-case-card{position:absolute;border-radius:4.7%/3.37%;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.vc-case-card img{width:100%;height:100%;display:block;object-fit:fill;aspect-ratio:auto;border-radius:0}
+.vc-case-card::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.32) 0,rgba(255,255,255,.06) 30%,rgba(255,255,255,0) 55%,rgba(255,255,255,.14) 100%);pointer-events:none}
 .vc-case-name{font-size:13px;font-weight:600;line-height:1.25;margin-top:4px}
 .vc-cases b{font-family:'Saira Condensed',sans-serif;font-size:18px}
 .vc-list{display:flex;flex-direction:column;gap:6px}
