@@ -316,6 +316,11 @@ function OrderDetail({ id }: { id: string }) {
           {o.serial ? `N° ${pad(o.serial)}` : "Ordine"} · {o.card_name || "—"}
         </h1>
         <StatusPill s={o.status} />
+        {card?.holo && (
+          <span className="ad-pill" style={{ ["--c" as string]: "#8B5CF6" }}>
+            ✨ Pellicola olografica
+          </span>
+        )}
         <span className="grow" />
         <span className="vc-hint" style={{ margin: 0 }}>
           {fmtDate(o.created_at)}
