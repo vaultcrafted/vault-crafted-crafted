@@ -11,7 +11,7 @@ export const Route = createFileRoute("/anteprima-home")({
   component: HomePreview,
   head: () => ({
     meta: [
-      { title: "Vault Crafted · Carte da collezione disegnate a mano" },
+      { title: "Vault Crafted · Carte da collezione personalizzate" },
       { name: "robots", content: "noindex, nofollow" },
       { name: "theme-color", content: "#E9EAEF" },
     ],
@@ -36,19 +36,19 @@ const minPrice = Math.min(...CATS.map((c) => c.price));
 const FAQ: [string, string][] = [
   [
     "Quanto ci vuole?",
-    "La bozza arriva entro 24–48 ore dall'ordine. Dopo che l'approvi e paghi, stampiamo e spediamo in 3–4 giorni lavorativi. Il corriere ci mette altri 5–7 giorni.",
+    "Dopo l'ordine controlliamo la carta, la stampiamo e la spediamo in 3–4 giorni lavorativi. Il corriere ci mette altri 5–7 giorni.",
   ],
   [
     "Quando pago?",
-    "Solo dopo aver visto e approvato la bozza. Ti mandiamo il totale e le istruzioni per email, e la stampa parte quando il pagamento arriva.",
+    "Dopo l'ordine ti mandiamo per email il totale e le istruzioni per pagare. La stampa parte quando il pagamento arriva.",
   ],
   [
-    "E se la bozza non mi convince?",
-    "Ce lo dici e la sistemiamo. Le modifiche prima dell'approvazione sono gratis, tutte quelle che servono.",
+    "Vedo la carta prima di ordinarla?",
+    "Sì: nel configuratore la carta si aggiorna mentre scegli e scrivi, quindi ordini esattamente quello che vedi.",
   ],
   [
     "Che foto devo mandare?",
-    "Una foto nitida e con buona luce, almeno 1000×1000 pixel. Se non va bene te lo diciamo prima di disegnare.",
+    "Una foto nitida e con buona luce, almeno 1000×1000 pixel. Se non va bene per la stampa ti scriviamo prima di stampare.",
   ],
   ["Posso regalarla?", "Sì: metti l'indirizzo di chi la riceve e scrivici nelle note se vuoi una dedica."],
 ];
@@ -124,10 +124,10 @@ function HomePreview() {
 
       <header className="hm-hero">
         <div className="hm-hero-txt">
-          <h1>La tua storia, disegnata su una carta.</h1>
+          <h1>La tua storia, su una carta da collezione.</h1>
           <p>
-            Ci mandi una foto e la trasformiamo in una carta da collezione disegnata a mano,
-            numerata e solo tua. Da {euro(minPrice)}, e paghi dopo aver visto la bozza.
+            Componi la tua carta con la tua foto, la vedi prendere forma mentre la scrivi e noi la
+            stampiamo numerata, pronta da collezionare. Da {euro(minPrice)}.
           </p>
           <div className="hm-cta">
             <Link to="/crea" className="hm-btn">
@@ -138,7 +138,7 @@ function HomePreview() {
             </a>
           </div>
         </div>
-        <div className="hm-wall" aria-label="Alcune carte che abbiamo disegnato">
+        <div className="hm-wall" aria-label="Alcune carte che abbiamo stampato">
           {COLS.map((col, c) => (
             <div className={`hm-col c${c}`} key={c}>
               <div>
@@ -166,16 +166,16 @@ function HomePreview() {
             <img src="/home/passo-configuratore.webp" alt="Il configuratore di Vault Crafted" loading="lazy" />
             <h3>La componi tu</h3>
             <p>
-              Nel configuratore scegli categoria, elemento, attacchi e frase. Carichi la foto e vedi
-              la carta mentre la scrivi.
+              Nel configuratore scegli categoria, elemento, attacchi e frase, carichi la tua foto e
+              vedi la carta finita prima di ordinarla.
             </p>
           </li>
           <li>
-            <img src="/home/passo-illustrazione.webp" alt="Un'illustrazione disegnata a mano" loading="lazy" />
-            <h3>La disegniamo noi</h3>
+            <img src="/home/passo-stampa.webp" alt="Una carta Vault stampata" loading="lazy" />
+            <h3>La stampiamo noi</h3>
             <p>
-              Entro due giorni ti mandiamo la bozza con l'illustrazione fatta a mano. La sistemiamo
-              finché non ti piace.
+              Controlliamo che foto e testi siano perfetti per la stampa, poi la stampiamo in alta
+              qualità con il suo numero di serie.
             </p>
           </li>
           <li>
@@ -196,8 +196,8 @@ function HomePreview() {
           <h2>Ogni carta è un pezzo unico</h2>
           <ul className="hm-facts">
             <li>
-              <b>Disegnata a mano.</b> Nessun filtro, nessun modello già pronto: l'illustrazione parte
-              dalla tua foto.
+              <b>Con la tua foto.</b> Nessun modello già pronto: la carta la componi tu, con la tua
+              immagine e le tue frasi.
             </li>
             <li>
               <b>Numerata.</b> Ogni carta ha il suo numero di serie, e un'altra uguale non esiste.
@@ -215,7 +215,7 @@ function HomePreview() {
           <h2>Dal nostro raccoglitore</h2>
           <p>
             Coppie, amici, artisti, cani di famiglia. Sfoglia alcune delle carte che abbiamo già
-            disegnato.
+            stampato.
           </p>
           <Link to="/carte" className="hm-link">
             Tutta la collezione
@@ -283,7 +283,7 @@ function HomePreview() {
 
       <footer className="hm-foot">
         <img src="/LOGO.png" alt="Vault Crafted" />
-        <span>Carte da collezione disegnate a mano a Livorno Ferraris (VC)</span>
+        <span>Carte da collezione personalizzate, stampate a Livorno Ferraris (VC)</span>
         <span>
           <Link to="/termini">Termini</Link>
           <a href="https://wa.me/393332876277">WhatsApp</a>
