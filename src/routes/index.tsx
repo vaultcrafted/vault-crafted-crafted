@@ -1,15 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Hero } from "@/components/vault/Hero";
-import { ValueProps } from "@/components/vault/ValueProps";
-import { HowItWorks } from "@/components/vault/HowItWorks";
-import { VideoSection } from "@/components/vault/VideoSection";
-import { Gallery } from "@/components/vault/Gallery";
-import { CardsCarousel } from "@/components/vault/CardsCarousel";
-import { Faq } from "@/components/vault/Faq";
-import { Newsletter } from "@/components/vault/Newsletter";
-import { FinalCta } from "@/components/vault/FinalCta";
-import { Footer } from "@/components/vault/Footer";
-import { WhatsappButton } from "@/components/vault/WhatsappButton";
+import { FONTS_HREF } from "@/components/vault/CardEditor";
+import { HomePage } from "@/components/vault/home/HomePage";
 
 const SCHEMA_PRODUCT_COLLECTION = {
   "@context": "https://schema.org",
@@ -140,6 +131,8 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://vaultcrafted.com" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "stylesheet", href: FONTS_HREF },
     ],
     scripts: [
       {
@@ -159,19 +152,5 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  return (
-    <main className="bg-background text-foreground">
-      <Hero />
-      <CardsCarousel />
-      <ValueProps />
-      <HowItWorks />
-      <VideoSection />
-      <Gallery />
-      <Faq />
-      <Newsletter />
-      <FinalCta />
-      <Footer />
-      <WhatsappButton />
-    </main>
-  );
+  return <HomePage />;
 }
