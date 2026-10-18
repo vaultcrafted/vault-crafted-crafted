@@ -2,9 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CardStage, STAGE_CSS } from "@/components/vault/CardStage";
 import { EDITOR_CSS, FONTS_HREF, withSamples } from "@/components/vault/CardEditor";
+import { HOLO_CSS, HoloCard } from "@/components/vault/home/HoloCard";
+import { Nebula, Sparks } from "@/components/vault/home/Nebula";
 import {
   CATS,
   ELEMENTS,
+  elementOf,
   loadFonts,
   type ArtState,
   type CardData,
@@ -13,7 +16,7 @@ import {
 } from "@/lib/vaultCard";
 import { CUSTODIE, HOLO_PRICE, SPEDIZIONE } from "@/lib/vaultShop";
 
-// Proposta della nuova home nello stile del configuratore. Non è collegata dal sito.
+// Proposta della nuova home: cinematografica, scura, con effetti. Non è collegata dal sito.
 export const Route = createFileRoute("/anteprima-home")({
   component: HomePreview,
   head: () => ({
@@ -28,109 +31,139 @@ export const Route = createFileRoute("/anteprima-home")({
   }),
 });
 
-const imageModules = import.meta.glob("@/assets/*.png", { eager: true }) as Record<
-  string,
-  { default: string }
->;
-const REAL = Object.entries(imageModules)
-  .map(([p, m]) => ({
-    src: m.default,
-    name: (p.split("/").pop() ?? "").replace(".png", "").replace(/_/g, " "),
-  }))
-  .sort((a, b) => a.name.localeCompare(b.name));
-const pick = (n: string) => REAL.find((r) => r.name === n) ?? REAL[0];
-const HERO = [pick("ETR"), pick("JAZ E BOBO"), pick("GRIME SPITTERZ")];
+const FILES =
+  "azzurra colle-der-fomento danno diego-vallino dj-craim epcoraw etr fabri-fibra gemitaiz gino grime-spitterz haxo ikb jaz-e-bobo kurolily laura-massei lazza lincio mattak matteo-iuliani mirko-gardoni omega-riot pipino-il-breve poppi prodest ric-de-large riccardo-salomoni warcard".split(
+    " ",
+  );
+const CARDS = FILES.map((f) => ({
+  src: `/carte/${f}.webp`,
+  name: f.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+}));
+const byName = (f: string) => CARDS[FILES.indexOf(f)] ?? CARDS[0];
+const HERO = ["jaz-e-bobo", "etr", "kurolily", "grime-spitterz", "ikb", "diego-vallino"].map(byName);
+const HERO_GLOW = ["#E8462A", "#F5C518", "#E2A917", "#3FB58A", "#D7262E", "#1F86D6"];
+const DECK = ["ric-de-large", "epcoraw", "gino", "kurolily", "jaz-e-bobo", "etr", "grime-spitterz", "ikb", "warcard"].map(byName);
 
 const euro = (n: number) => `€${n.toFixed(2).replace(".", ",").replace(",00", "")}`;
 
 const STEPS = [
-  {
-    t: "Componi la carta",
-    d: "Sul configuratore scegli categoria, elemento, attacchi e frase. Carichi la foto e la vedi prendere forma dal vivo.",
-  },
-  {
-    t: "Ricevi la bozza",
-    d: "Entro 24–48 ore ti mandiamo l'illustrazione disegnata a mano. Modifiche gratis finché non è perfetta.",
-  },
-  {
-    t: "Arriva a casa tua",
-    d: "Approvi, paghi, la stampiamo, numerata e sigillata. Spedizione tracciata in tutta Italia.",
-  },
+  ["Componi", "Sul configuratore scegli categoria, elemento, attacchi e frase. Carichi la foto e la carta prende forma dal vivo."],
+  ["Bozza", "Entro 24–48 ore ricevi l'illustrazione disegnata a mano. Modifiche gratis finché non è perfetta."],
+  ["Nel Vault", "Approvi e paghi: la stampiamo, numerata e sigillata, e parte con corriere tracciato."],
 ];
-
 const FAQ = [
-  [
-    "Quanto tempo serve?",
-    "Bozza entro 24–48 ore dall'ordine. Dopo l'approvazione e il pagamento la carta viene stampata e spedita in 3–4 giorni lavorativi; il corriere impiega circa 5–7 giorni.",
-  ],
-  [
-    "Quando pago?",
-    "Dopo aver approvato la bozza. Ti mandiamo il totale e le istruzioni via email: la stampa parte solo a pagamento ricevuto.",
-  ],
-  [
-    "Posso chiedere modifiche?",
-    "Sì, tutte quelle che vuoi prima di approvare la bozza, senza costi in più.",
-  ],
-  [
-    "Che foto devo caricare?",
-    "Una foto nitida e ben illuminata (almeno 1000×1000 px). Se non va bene te lo diciamo in fase di bozza.",
-  ],
-  [
-    "Posso regalarla?",
-    "Certo: metti l'indirizzo di chi la riceve e scrivici nelle note se vuoi una dedica o un pacchetto regalo.",
-  ],
+  ["Quanto tempo serve?", "Bozza entro 24–48 ore. Dopo approvazione e pagamento la carta viene stampata e spedita in 3–4 giorni lavorativi; il corriere impiega circa 5–7 giorni."],
+  ["Quando pago?", "Dopo aver approvato la bozza: ti mandiamo il totale e le istruzioni via email. La stampa parte solo a pagamento ricevuto."],
+  ["Posso chiedere modifiche?", "Tutte quelle che vuoi prima di approvare, senza costi in più."],
+  ["Che foto serve?", "Una foto nitida e ben illuminata, almeno 1000×1000 px. Se non va bene te lo diciamo in fase di bozza."],
+  ["Posso regalarla?", "Certo: metti l'indirizzo di chi la riceve e scrivici nelle note se vuoi una dedica."],
 ];
 
-/** illustrazione segnaposto per le carte dimostrative */
+/** aggiunge .in agli elementi .rv quando entrano nello schermo */
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll(".rv");
+    const io = new IntersectionObserver(
+      (es) => es.forEach((e) => e.isIntersecting && e.target.classList.add("in")),
+      { threshold: 0.18 },
+    );
+    els.forEach((e) => io.observe(e));
+    return () => io.disconnect();
+  }, []);
+}
+
+/** avanzamento 0→1 di una sezione mentre la si scorre */
+function useScrollProgress(ref: React.RefObject<HTMLElement | null>) {
+  const [p, setP] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const on = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const el = ref.current;
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const total = r.height - innerHeight;
+        setP(Math.max(0, Math.min(1, -r.top / Math.max(1, total))));
+      });
+    };
+    on();
+    addEventListener("scroll", on, { passive: true });
+    addEventListener("resize", on);
+    return () => {
+      removeEventListener("scroll", on);
+      removeEventListener("resize", on);
+    };
+  }, [ref]);
+  return p;
+}
+
 function useDemoArt() {
   const art = useRef<ArtState>({ img: null, zoom: 1, px: 0, py: 0 });
   const [v, setV] = useState(0);
   useEffect(() => {
-    const c = document.createElement("canvas");
-    c.width = 900;
-    c.height = 1200;
-    const g = c.getContext("2d")!;
-    const gr = g.createLinearGradient(0, 0, 900, 1200);
-    gr.addColorStop(0, "#2B3570");
-    gr.addColorStop(0.55, "#6C4DB3");
-    gr.addColorStop(1, "#E8462A");
-    g.fillStyle = gr;
-    g.fillRect(0, 0, 900, 1200);
-    for (let i = 0; i < 70; i++) {
-      g.globalAlpha = Math.random() * 0.5;
-      g.fillStyle = "#fff";
-      g.beginPath();
-      g.arc(Math.random() * 900, Math.random() * 1200, Math.random() * 4 + 1, 0, 6.3);
-      g.fill();
-    }
-    g.globalAlpha = 0.9;
-    g.fillStyle = "#fff";
-    g.textAlign = "center";
-    g.font = "800 64px 'Saira Condensed', sans-serif";
-    g.fillText("LA TUA", 450, 560);
-    g.fillText("ILLUSTRAZIONE", 450, 630);
-    const im = new Image();
-    im.onload = () => {
-      art.current = { img: im, zoom: 1, px: 0, py: 0 };
-      setV((x) => x + 1);
+    // ritaglia solo l'illustrazione dalla carta di esempio
+    const src = new Image();
+    src.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = 600;
+      c.height = 460;
+      c.getContext("2d")!.drawImage(src, 60, 95, 600, 460, 0, 0, 600, 460);
+      const im = new Image();
+      im.onload = () => {
+        art.current = { img: im, zoom: 1, px: 0, py: 0 };
+        setV((x) => x + 1);
+      };
+      im.src = c.toDataURL("image/jpeg", 0.92);
     };
-    im.src = c.toDataURL("image/jpeg", 0.9);
+    src.src = "/carte/jaz-e-bobo.webp";
   }, []);
   return [art, v] as const;
 }
 
 function HomePreview() {
+  useReveal();
+  const [heroI, setHeroI] = useState(0);
+  const [flip, setFlip] = useState(false);
   const [fonts, setFonts] = useState(0);
   const [art, artV] = useDemoArt();
-  const [demo, setDemo] = useState<{ cat: CatKey; el: ElKey }>({ cat: "rare", el: "fuoco" });
+  const [demo, setDemo] = useState<{ cat: CatKey; el: ElKey }>({ cat: "fullart", el: "fuoco" });
   const [auto, setAuto] = useState(true);
   const [open, setOpen] = useState<number | null>(0);
   const [lb, setLb] = useState<number | null>(null);
+  const deckRef = useRef<HTMLElement>(null);
+  const deckP = useScrollProgress(deckRef);
+  const stepsRef = useRef<HTMLElement>(null);
+  const stepsP = useScrollProgress(stepsRef);
+  const [vw, setVw] = useState(1400);
+  useEffect(() => {
+    const f = () => setVw(innerWidth);
+    f();
+    addEventListener("resize", f);
+    return () => removeEventListener("resize", f);
+  }, []);
+  const gapX = Math.min(118, vw / 10.5);
 
   useEffect(() => {
     void loadFonts().then(() => setFonts((x) => x + 1));
+    const imgs = CARDS.map((c) => {
+      const i = new Image();
+      i.src = c.src;
+      return i;
+    });
+    return () => void imgs;
   }, []);
-  // la carta dimostrativa cambia da sola finché non la tocchi
+  // la carta dell'apertura si gira e cambia ogni pochi secondi
+  useEffect(() => {
+    const id = setInterval(() => {
+      setFlip(true);
+      setTimeout(() => {
+        setHeroI((i) => (i + 1) % HERO.length);
+        setFlip(false);
+      }, 420);
+    }, 4200);
+    return () => clearInterval(id);
+  }, []);
   useEffect(() => {
     if (!auto) return;
     const id = setInterval(() => {
@@ -150,7 +183,7 @@ function HomePreview() {
         el: demo.el,
         mode: "two",
         name: "Il tuo nome",
-        hp: "180",
+        hp: "200",
         abName: "",
         abText: "",
         m1: "La tua mossa",
@@ -172,277 +205,475 @@ function HomePreview() {
     [demo],
   );
   const minPrice = Math.min(...CATS.map((c) => c.price));
+  const heroAcc = HERO_GLOW[heroI];
   const cases = CUSTODIE.filter((c) => c.img);
 
-  return (
-    <main className="vc-page hp">
-      <style>{EDITOR_CSS + STAGE_CSS + HP_CSS}</style>
+  // ventaglio del mazzo: da pila a arco mentre scorri
+  const ease = (x: number) => 1 - Math.pow(1 - x, 3);
+  const spread = ease(Math.min(1, deckP * 1.35));
+  const lift = ease(Math.max(0, Math.min(1, (deckP - 0.6) / 0.4)));
 
-      <nav className="hp-nav">
-        <Link to="/" className="vc-logo" aria-label="Vault Crafted">
+  return (
+    <main className="hx">
+      <style>{EDITOR_CSS + STAGE_CSS + HOLO_CSS + HX_CSS}</style>
+
+      <nav className="hx-nav">
+        <Link to="/" aria-label="Vault Crafted">
           <img src="/LOGO.png" alt="Vault Crafted" />
         </Link>
-        <div className="hp-links">
+        <div className="hx-links">
           <Link to="/carte">Le carte</Link>
           <Link to="/regalo">Regalo</Link>
           <Link to="/chi-siamo">Chi siamo</Link>
-          <Link to="/crea" className="vc-btn">
+          <Link to="/crea" className="hx-btn sm">
             Crea la tua carta
           </Link>
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="hp-hero">
-        <div className="hp-hero-txt">
-          <p className="vc-kicker">CARTE DA COLLEZIONE · DISEGNATE A MANO</p>
-          <h1>
-            La tua storia,
-            <br />
-            <em>in una carta.</em>
-          </h1>
-          <p className="hp-lead">
-            Ci mandi una foto, la disegniamo a mano e la stampiamo come una vera carta da
-            collezione: numerata, unica, solo tua.
-          </p>
-          <div className="hp-cta">
-            <Link to="/crea" className="vc-btn vc-btn-big">
-              Crea la tua carta →
-            </Link>
-            <span>
-              da <b>{euro(minPrice)}</b> · bozza in 24–48 ore
-            </span>
-          </div>
-          <ul className="hp-ticks">
-            <li>Zero template</li>
-            <li>Modifiche gratis</li>
-            <li>Paghi dopo la bozza</li>
-          </ul>
+      {/* ========== APERTURA ========== */}
+      <section className="hx-hero">
+        <Nebula accent={heroAcc} />
+        <Sparks accent={heroAcc} count={170} />
+        <div className="hx-ring" aria-hidden style={{ ["--c" as string]: heroAcc }}>
+          <i />
+          <i />
+          <i />
         </div>
-        <div className="vc-stage hp-fan" aria-label="Alcune carte che abbiamo realizzato">
-          <div className="vc-aura" aria-hidden>
-            <i />
-            <i />
-            <i />
+        <div className="hx-hero-in">
+          <div className="hx-hero-txt">
+            <p className="hx-kick">
+              <span /> Carte da collezione · disegnate a mano
+            </p>
+            <h1>
+              <span className="w" style={{ animationDelay: ".1s" }}>Ogni</span>{" "}
+              <span className="w" style={{ animationDelay: ".2s" }}>storia</span>
+              <br />
+              <span className="w" style={{ animationDelay: ".3s" }}>merita una</span>
+              <br />
+              <span className="w hx-shine" style={{ animationDelay: ".45s" }}>
+                carta rara.
+              </span>
+            </h1>
+            <p className="hx-lead w" style={{ animationDelay: ".65s" }}>
+              Ci mandi una foto, la disegniamo a mano e la stampiamo come una vera carta da
+              collezione. Numerata, unica, solo tua.
+            </p>
+            <div className="hx-cta w" style={{ animationDelay: ".8s" }}>
+              <Link to="/crea" className="hx-btn">
+                Crea la tua carta <b>→</b>
+              </Link>
+              <span>
+                da <b>{euro(minPrice)}</b> · paghi dopo la bozza
+              </span>
+            </div>
           </div>
-          <div className="vc-rays" aria-hidden />
-          <div className="vc-halo" aria-hidden />
-          {HERO.map((c, i) => (
-            <img key={c.name} src={c.src} alt={`Carta ${c.name}`} className={`hp-fc hp-fc${i}`} />
-          ))}
+          <div className="hx-hero-card" style={{ ["--glow" as string]: heroAcc }}>
+            <div className={`hx-flip${flip ? " out" : ""}`}>
+              <HoloCard src={HERO[heroI].src} alt={`Carta ${HERO[heroI].name}`} foil={0.7} />
+            </div>
+            <div className="hx-shadow" aria-hidden />
+          </div>
+        </div>
+        <div className="hx-scroll" aria-hidden>
+          <span />
         </div>
       </section>
 
-      {/* COME FUNZIONA */}
-      <section className="hp-sec">
-        <p className="vc-kicker">COME FUNZIONA</p>
-        <h2>Tre passi, una carta tua.</h2>
-        <div className="hp-steps">
-          {STEPS.map((s, i) => (
-            <div className="hp-step" key={s.t}>
-              <span>0{i + 1}</span>
-              <h3>{s.t}</h3>
-              <p>{s.d}</p>
+      {/* ========== NASTRO ========== */}
+      <div className="hx-ticker" aria-hidden>
+        <div>
+          {Array.from({ length: 2 }).map((_, k) => (
+            <span key={k}>
+              PEZZO UNICO ✦ DISEGNATA A MANO ✦ NUMERATA /420 ✦ ZERO TEMPLATE ✦ MODIFICHE GRATIS ✦
+              PAGHI DOPO LA BOZZA ✦&nbsp;
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ========== IL MAZZO ========== */}
+      <section className="hx-deck" ref={deckRef}>
+        <div className="hx-deck-sticky">
+          <Nebula accent="#6C4DB3" rays={0.4} className="dim" />
+          <div className="hx-deck-title" style={{ opacity: 1 - lift * 0.15 }}>
+            <p className="hx-kick">
+              <span /> Dal Vault
+            </p>
+            <h2>
+              Ogni carta è <em>una persona.</em>
+            </h2>
+          </div>
+          <div className="hx-fan">
+            {DECK.map((c, i) => {
+              const k = i - (DECK.length - 1) / 2;
+              const x = k * gapX * spread;
+              const y = Math.abs(k) * Math.abs(k) * 9 * (gapX / 118) * spread - lift * 20;
+              const rot = k * 7 * spread;
+              const s = 0.92 + spread * 0.08;
+              return (
+                <div
+                  key={c.src}
+                  className="hx-fan-c"
+                  style={{
+                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${rot}deg) scale(${s})`,
+                    zIndex: 10 - Math.abs(Math.round(k)),
+                  }}
+                >
+                  <HoloCard src={c.src} alt={`Carta ${c.name}`} onClick={() => setLb(CARDS.indexOf(c))} />
+                </div>
+              );
+            })}
+          </div>
+          <p className="hx-deck-cap" style={{ opacity: lift }}>
+            Tutte disegnate a mano, tutte diverse. <Link to="/carte">Guarda la collezione →</Link>
+          </p>
+        </div>
+      </section>
+
+      {/* ========== COME FUNZIONA ========== */}
+      <section className="hx-steps" ref={stepsRef}>
+        <div className="hx-wrap">
+          <p className="hx-kick rv">
+            <span /> Come funziona
+          </p>
+          <h2 className="rv">
+            Tre passi. <em>Una carta tua.</em>
+          </h2>
+          <div className="hx-steps-row">
+            <div className="hx-line" aria-hidden>
+              <i style={{ transform: `scaleX(${Math.min(1, stepsP * 1.6)})` }} />
+            </div>
+            {STEPS.map(([t, d], i) => (
+              <div className="hx-step rv" key={t} style={{ transitionDelay: `${i * 0.15}s` }}>
+                <span className={stepsP * 1.6 > i / 2.2 ? "lit" : ""}>0{i + 1}</span>
+                <h3>{t}</h3>
+                <p>{d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========== FORMATO VAULT ========== */}
+      <section className="hx-format">
+        <div className="hx-wrap hx-format-in">
+          <div className="hx-format-stage rv" onPointerDown={() => setAuto(false)}>
+            <CardStage data={card} art={art} artVersion={artV} fontsVersion={fonts} />
+          </div>
+          <div className="rv">
+            <p className="hx-kick">
+              <span /> Il formato Vault
+            </p>
+            <h2>
+              Cinque categorie. <em>Nove elementi.</em>
+            </h2>
+            <p className="hx-lead">
+              Cornice, colori ed effetti cambiano con quello che scegli. Provale qui: è la stessa
+              carta che componi nel configuratore.
+            </p>
+            <div className="hx-cats">
+              {CATS.map((c) => (
+                <button
+                  key={c.k}
+                  type="button"
+                  aria-pressed={demo.cat === c.k}
+                  onClick={() => {
+                    setAuto(false);
+                    setDemo({ ...demo, cat: c.k });
+                  }}
+                >
+                  <b>{c.n}</b>
+                  <span>{euro(c.price)}</span>
+                </button>
+              ))}
+            </div>
+            <div className="hx-els">
+              {ELEMENTS.map(([k, n, col]) => (
+                <button
+                  key={k}
+                  type="button"
+                  title={n}
+                  aria-label={n}
+                  aria-pressed={demo.el === k}
+                  style={{ ["--c" as string]: col }}
+                  onClick={() => {
+                    setAuto(false);
+                    setDemo({ ...demo, el: k });
+                  }}
+                />
+              ))}
+              <span>{elementOf(demo.el)[1]}</span>
+            </div>
+            <Link to="/crea" className="hx-btn" style={{ marginTop: 22 }}>
+              Componi la tua <b>→</b>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ========== OLOGRAFICA + CUSTODIE ========== */}
+      <section className="hx-holo-sec">
+        <div className="hx-wrap hx-holo-in2">
+          <div className="rv">
+            <p className="hx-kick">
+              <span /> Extra
+            </p>
+            <h2>
+              Pellicola <em className="hx-rainbow">olografica.</em>
+            </h2>
+            <p className="hx-lead">
+              Riflessi arcobaleno che cambiano a ogni movimento, come le carte più rare. Passaci
+              sopra col mouse. <b>+{euro(HOLO_PRICE)}</b>
+            </p>
+            <div className="hx-cases">
+              {cases.map((c) => (
+                <figure key={c.id}>
+                  <img src={c.img} alt={c.label} loading="lazy" />
+                  <figcaption>
+                    {c.label}
+                    <b>+{euro(c.price)}</b>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+            <p className="hx-note">Spedizione tracciata in tutta Italia {euro(SPEDIZIONE)}.</p>
+          </div>
+          <div className="hx-holo-big rv" style={{ ["--glow" as string]: "#b25cff" }}>
+            <HoloCard src={byName("omega-riot").src} alt="Carta con pellicola olografica" foil={1} />
+          </div>
+        </div>
+      </section>
+
+      {/* ========== MARQUEE ========== */}
+      <section className="hx-marq" aria-label="Galleria delle carte">
+        {[0, 1].map((row) => (
+          <div key={row} className={`hx-marq-row${row ? " rev" : ""}`}>
+            <div>
+              {[...CARDS.slice(row * 14, row * 14 + 14), ...CARDS.slice(row * 14, row * 14 + 14)].map((c, i) => (
+                <button key={i} type="button" onClick={() => setLb(CARDS.indexOf(c))} aria-label={`Ingrandisci ${c.name}`}>
+                  <img src={c.src} alt="" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* ========== FAQ ========== */}
+      <section className="hx-faq">
+        <div className="hx-wrap" style={{ maxWidth: 900 }}>
+          <p className="hx-kick rv">
+            <span /> Domande
+          </p>
+          <h2 className="rv">Prima di entrare.</h2>
+          {FAQ.map(([q, a], i) => (
+            <div className={`hx-q${open === i ? " open" : ""}`} key={q}>
+              <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? null : i)}>
+                {q}
+                <span aria-hidden>+</span>
+              </button>
+              <div className="hx-a">
+                <p>{a}</p>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* FORMATO VAULT */}
-      <section className="hp-sec hp-format">
-        <div className="hp-format-stage" onPointerDown={() => setAuto(false)}>
-          <CardStage data={card} art={art} artVersion={artV} fontsVersion={fonts} />
-        </div>
-        <div>
-          <p className="vc-kicker">IL FORMATO VAULT</p>
-          <h2>Cinque categorie, nove elementi.</h2>
-          <p className="hp-lead">
-            Ogni carta nasce nel nostro formato: cornice, colori ed effetti cambiano con la
-            categoria e l'elemento che scegli. Provale qui, poi componi la tua.
-          </p>
-          <div className="hp-cats">
-            {CATS.map((c) => (
-              <button
-                key={c.k}
-                type="button"
-                aria-pressed={demo.cat === c.k}
-                onClick={() => {
-                  setAuto(false);
-                  setDemo({ ...demo, cat: c.k });
-                }}
-              >
-                <b>{c.n}</b>
-                <span>{euro(c.price)}</span>
-              </button>
-            ))}
-          </div>
-          <div className="hp-els">
-            {ELEMENTS.map(([k, n, col]) => (
-              <button
-                key={k}
-                type="button"
-                title={n}
-                aria-label={n}
-                aria-pressed={demo.el === k}
-                style={{ ["--c" as string]: col }}
-                onClick={() => {
-                  setAuto(false);
-                  setDemo({ ...demo, el: k });
-                }}
-              />
-            ))}
-          </div>
-          <p className="vc-hint">
-            {CATS.find((c) => c.k === demo.cat)?.hint} Spedizione {euro(SPEDIZIONE)}, pellicola
-            olografica +{euro(HOLO_PRICE)}.
-          </p>
-          <Link to="/crea" className="vc-btn vc-btn-big" style={{ marginTop: 18 }}>
-            Apri il configuratore →
+      {/* ========== FINALE ========== */}
+      <section className="hx-final">
+        <Nebula accent="#E2A917" rays={1.6} />
+        <Sparks accent="#E2A917" count={120} />
+        <div className="hx-final-in rv">
+          <h2>
+            Entra nel <em className="hx-shine">Vault.</em>
+          </h2>
+          <p>Cinque minuti per comporla. Due giorni per la bozza. Per sempre tua.</p>
+          <Link to="/crea" className="hx-btn big">
+            Crea la tua carta <b>→</b>
           </Link>
         </div>
       </section>
 
-      {/* GALLERIA */}
-      <section className="hp-sec">
-        <p className="vc-kicker">DAL VAULT</p>
-        <h2>Alcune carte che abbiamo fatto.</h2>
-        <div className="hp-gallery">
-          {REAL.map((c, i) => (
-            <button key={c.name} type="button" onClick={() => setLb(i)} aria-label={`Ingrandisci ${c.name}`}>
-              <img src={c.src} alt={`Carta ${c.name}`} loading="lazy" />
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* CUSTODIE */}
-      <section className="hp-sec">
-        <p className="vc-kicker">PROTEGGILA, METTILA IN MOSTRA</p>
-        <h2>Custodie e pellicola olografica.</h2>
-        <div className="hp-cases">
-          {cases.map((c) => (
-            <figure key={c.id}>
-              <img src={c.img} alt={c.label} loading="lazy" />
-              <figcaption>
-                {c.label} <b>+{euro(c.price)}</b>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="hp-sec hp-faq">
-        <p className="vc-kicker">DOMANDE</p>
-        <h2>Quello che ci chiedono di più.</h2>
-        {FAQ.map(([q, a], i) => (
-          <div className="hp-q" key={q}>
-            <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? null : i)}>
-              {q}
-              <span aria-hidden>{open === i ? "−" : "+"}</span>
-            </button>
-            {open === i && <p>{a}</p>}
-          </div>
-        ))}
-      </section>
-
-      {/* CTA FINALE */}
-      <section className="hp-final">
-        <h2>Pronta per entrare nel Vault?</h2>
-        <p>Ci vogliono cinque minuti. La bozza arriva entro due giorni.</p>
-        <Link to="/crea" className="vc-btn vc-btn-big">
-          Crea la tua carta →
-        </Link>
-      </section>
-
-      <footer className="hp-foot">
-        <span>© Vault Crafted · carte da collezione disegnate a mano</span>
+      <footer className="hx-foot">
+        <img src="/LOGO.png" alt="Vault Crafted" />
+        <span>Carte da collezione disegnate a mano · Livorno Ferraris (VC)</span>
         <span>
           <Link to="/termini">Termini</Link> · <a href="https://wa.me/393332876277">WhatsApp</a> ·{" "}
-          <a href="https://instagram.com/vault_crafted">Instagram</a>
+          <a href="https://www.instagram.com/vault_crafted">Instagram</a>
         </span>
       </footer>
 
       {lb != null && (
-        <div className="vc-lightbox" role="dialog" aria-modal="true" onClick={() => setLb(null)}>
-          <img src={REAL[lb].src} alt={`Carta ${REAL[lb].name}`} style={{ maxHeight: "86vh", borderRadius: 14 }} />
+        <div className="hx-lb" role="dialog" aria-modal="true" onClick={() => setLb(null)}>
+          <div onClick={(e) => e.stopPropagation()} style={{ width: "min(80vw, 56vh)" }}>
+            <HoloCard src={CARDS[lb].src} alt={`Carta ${CARDS[lb].name}`} foil={0.8} />
+          </div>
+          <button type="button" aria-label="Chiudi" onClick={() => setLb(null)}>
+            ✕
+          </button>
         </div>
       )}
     </main>
   );
 }
 
-const HP_CSS = `
-.hp{padding-bottom:0}
-.hp .vc-btn-big{width:auto;margin-top:0;padding:16px 30px}
-.hp h2{margin:4px 0 18px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(32px,4.4vw,52px);line-height:1}
-.hp-nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 24px;background:#141A3A}
-.hp-links{display:flex;align-items:center;gap:20px}
-.hp-links a:not(.vc-btn){color:#C9CEE3;text-decoration:none;font-weight:600;font-size:14px}
-.hp-links a:not(.vc-btn):hover{color:#fff}
-.hp-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:40px;align-items:center;max-width:1400px;margin:0 auto;padding:40px 24px 30px}
-.hp-hero h1{margin:8px 0 16px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(52px,7vw,104px);line-height:.9;letter-spacing:-.01em}
-.hp-hero h1 em{font-style:normal;background:linear-gradient(90deg,#E8462A,#E2A917 45%,#1F86D6);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hp-lead{font-size:18px;line-height:1.5;color:var(--muted);max-width:520px;margin:0 0 22px}
-.hp-cta{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
-.hp-cta span{color:var(--muted)}
-.hp-cta b{color:var(--ink);font-family:'Saira Condensed',sans-serif;font-size:22px}
-.hp-ticks{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:22px 0 0}
-.hp-ticks li{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
-.hp-ticks li::before{content:"✓ ";color:#127A4B}
-.hp-fan{height:min(76vh,680px);min-height:460px}
-.hp-fc{position:absolute;z-index:2;width:min(46%,300px);border-radius:14px;box-shadow:0 30px 60px -20px rgba(10,14,40,.55);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-.hp-fc0{transform:translateX(-58%) rotate(-11deg) translateY(16px)}
-.hp-fc2{transform:translateX(58%) rotate(11deg) translateY(16px)}
-.hp-fc1{z-index:3;transform:translateY(-6px);animation:hpfloat 6s ease-in-out infinite}
-.hp-fan:hover .hp-fc0{transform:translateX(-76%) rotate(-15deg) translateY(10px)}
-.hp-fan:hover .hp-fc2{transform:translateX(76%) rotate(15deg) translateY(10px)}
-@keyframes hpfloat{50%{transform:translateY(-18px)}}
-.hp-sec{max-width:1400px;margin:0 auto;padding:56px 24px 10px}
-.hp-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.hp-step{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px}
-.hp-step span{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;background:var(--ink);color:#fff;border-radius:6px;padding:3px 7px}
-.hp-step h3{margin:14px 0 6px;font-family:'Saira Condensed',sans-serif;font-size:28px}
-.hp-step p{margin:0;color:var(--muted);line-height:1.5}
-.hp-format{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;align-items:center}
-.hp-format-stage .vc-stage{height:min(80vh,760px);min-height:520px}
-.hp-format-stage .vc-card{width:min(100%,calc(min(80vh,760px) * 0.66),480px)}
-.hp-cats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:8px 0 12px}
-.hp-cats button{font:inherit;cursor:pointer;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--ink)}
-.hp-cats b{font-family:'Saira Condensed',sans-serif;font-size:19px}
-.hp-cats span{font-size:13px;color:var(--muted)}
-.hp-cats button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
-.hp-cats button[aria-pressed=true] span{color:#C9CEE3}
-.hp-els{display:flex;flex-wrap:wrap;gap:8px}
-.hp-els button{width:34px;height:34px;border-radius:50%;cursor:pointer;background:var(--c);border:3px solid #fff;box-shadow:0 0 0 1.5px var(--line)}
-.hp-els button[aria-pressed=true]{box-shadow:0 0 0 2.5px var(--ink)}
-.hp-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
-.hp-gallery button{padding:0;border:0;background:none;cursor:zoom-in;border-radius:12px;overflow:hidden;transition:transform .2s}
-.hp-gallery button:hover{transform:translateY(-4px) rotate(-1deg)}
-.hp-gallery img{width:100%;display:block;aspect-ratio:945/1240;object-fit:cover}
-.hp-cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-.hp-cases figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.hp-cases img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover}
-.hp-cases figcaption{padding:10px 14px;font-weight:600;font-size:14px;display:flex;justify-content:space-between}
-.hp-faq{max-width:900px}
-.hp-q{border-bottom:1px solid var(--line)}
-.hp-q button{width:100%;display:flex;justify-content:space-between;gap:12px;font:inherit;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:22px;background:none;border:0;color:var(--ink);padding:16px 0;cursor:pointer;text-align:left}
-.hp-q p{margin:0 0 16px;color:var(--muted);line-height:1.55}
-.hp-final{margin:60px 24px 0;border-radius:28px;background:radial-gradient(120% 120% at 50% 0%,#2B3570,#141A3A 70%);color:#fff;text-align:center;padding:60px 24px}
-.hp-final h2{color:#fff}
-.hp-final p{color:#C9CEE3;margin:0 0 22px}
-.hp-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;max-width:1400px;margin:0 auto;padding:26px 24px 34px;color:var(--muted);font-size:13px}
-.hp-foot a{color:var(--ink)}
+const HX_CSS = `
+.hx{--ink:#F4F1E8;--muted:#A7AEC9;--gold:#E2A917;--bg:#070A1F;background:var(--bg);color:var(--ink);font-family:Archivo,system-ui,sans-serif;overflow-x:clip}
+.hx h2{margin:6px 0 18px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(40px,6vw,84px);line-height:.92;letter-spacing:-.01em}
+.hx h2 em,.hx h1 em{font-style:normal;color:var(--gold)}
+.hx-wrap{max-width:1360px;margin:0 auto;padding:0 28px}
+.hx-kick{display:flex;align-items:center;gap:10px;margin:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.hx-kick span{width:26px;height:2px;background:currentColor;box-shadow:0 0 12px currentColor}
+.hx-lead{font-size:clamp(16px,1.4vw,19px);line-height:1.55;color:var(--muted);max-width:560px;margin:0 0 24px}
+.hx-lead b{color:var(--ink)}
+.hx-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:12px;background:linear-gradient(180deg,#FFD25A,#E2A917 55%,#C98D06);color:#231800;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:22px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;padding:16px 30px;border-radius:999px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.25) inset,0 14px 40px -10px rgba(226,169,23,.7),0 0 70px -20px rgba(226,169,23,.9);transition:transform .2s,box-shadow .2s}
+.hx-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 0 1px rgba(255,255,255,.35) inset,0 18px 50px -10px rgba(226,169,23,.85),0 0 90px -10px rgba(226,169,23,1)}
+.hx-btn::after{content:"";position:absolute;inset:-40% auto -40% -60%;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-20deg);animation:hxsweep 3.2s ease-in-out infinite}
+.hx-btn b{transition:transform .2s}.hx-btn:hover b{transform:translateX(4px)}
+.hx-btn.sm{font-size:16px;padding:10px 18px}
+.hx-btn.big{font-size:clamp(22px,2.4vw,30px);padding:20px 40px}
+@keyframes hxsweep{0%,55%{left:-60%}100%{left:130%}}
+.hx-nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:linear-gradient(180deg,rgba(7,10,31,.85),rgba(7,10,31,0));backdrop-filter:blur(2px)}
+.hx-nav img{height:36px;display:block}
+.hx-links{display:flex;align-items:center;gap:24px}
+.hx-links a:not(.hx-btn){color:#D4D8EA;text-decoration:none;font-weight:600;font-size:14px;letter-spacing:.04em}
+.hx-links a:not(.hx-btn):hover{color:#fff}
+.hx-nebula{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hx-nebula.dim{opacity:.55}
+.hx-sparks{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+/* apertura */
+.hx-hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden}
+.hx-hero-in{position:relative;z-index:3;width:100%;max-width:1400px;margin:0 auto;padding:110px 28px 80px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:30px;align-items:center}
+.hx-hero h1{margin:16px 0 22px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(58px,8.6vw,138px);line-height:.86;letter-spacing:-.015em;text-transform:uppercase;text-shadow:0 10px 50px rgba(0,0,0,.5)}
+.hx .w{display:inline-block;opacity:0;transform:translateY(40px) rotate(2deg);filter:blur(10px);animation:hxin .9s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes hxin{to{opacity:1;transform:none;filter:none}}
+.hx-shine{background:linear-gradient(100deg,#FFE9A8 0%,#E2A917 22%,#fff 32%,#E2A917 42%,#FF8A3D 62%,#E2A917 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent !important;animation:hxin .9s cubic-bezier(.2,.8,.2,1) forwards,hxshine 4s linear 1.2s infinite}
+@keyframes hxshine{to{background-position:-250% 0}}
+.hx-cta{display:flex;flex-wrap:wrap;align-items:center;gap:20px}
+.hx-cta span{color:var(--muted)}
+.hx-cta span b{color:var(--ink);font-family:'Saira Condensed',sans-serif;font-size:24px}
+.hx-hero-card{position:relative;justify-self:center;width:min(100%,430px);animation:hxfloat 6s ease-in-out infinite}
+.hx-hero-card .hx-holo-in{box-shadow:0 50px 100px -30px rgba(0,0,0,.9),0 0 90px -20px var(--glow)}
+.hx-flip{transition:transform .42s cubic-bezier(.5,0,.5,1),opacity .42s,filter .42s}
+.hx-flip.out{transform:rotateY(90deg) scale(.92);opacity:.2;filter:brightness(2)}
+.hx-shadow{position:absolute;left:12%;right:12%;bottom:-46px;height:30px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent);filter:blur(6px)}
+@keyframes hxfloat{50%{transform:translateY(-16px)}}
+.hx-ring{position:absolute;z-index:1;right:max(2vw,calc(50% - 700px + 60px));top:50%;width:min(62vw,780px);aspect-ratio:1;transform:translateY(-50%);pointer-events:none;opacity:.6}
+.hx-ring i{position:absolute;inset:0;border-radius:50%;border:2px dashed color-mix(in srgb,var(--c) 70%,transparent);animation:hxspin 60s linear infinite;transition:border-color 1s}
+.hx-ring i:nth-child(2){inset:9%;border:1px solid color-mix(in srgb,var(--c) 45%,transparent);border-top-color:var(--c);border-bottom-color:var(--c);animation-duration:24s;animation-direction:reverse;box-shadow:0 0 40px -6px var(--c) inset}
+.hx-ring i:nth-child(3){inset:20%;border:6px dotted color-mix(in srgb,var(--c) 35%,transparent);animation-duration:90s}
+@keyframes hxspin{to{transform:rotate(360deg)}}
+.hx-scroll{position:absolute;z-index:3;left:50%;bottom:24px;width:26px;height:42px;border:2px solid rgba(255,255,255,.4);border-radius:14px;transform:translateX(-50%)}
+.hx-scroll span{position:absolute;left:50%;top:8px;width:4px;height:8px;margin-left:-2px;border-radius:2px;background:#fff;animation:hxdot 1.6s ease-in-out infinite}
+@keyframes hxdot{60%{transform:translateY(14px);opacity:0}}
+/* nastro */
+.hx-ticker{position:relative;z-index:4;background:var(--gold);color:#231800;transform:rotate(-1.5deg);margin:-26px -10px 0;padding:14px 0;overflow:hidden;box-shadow:0 20px 50px -20px rgba(226,169,23,.6)}
+.hx-ticker div{display:flex;width:max-content;animation:hxmarq 28s linear infinite}
+.hx-ticker span{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:24px;letter-spacing:.06em;white-space:nowrap}
+@keyframes hxmarq{to{transform:translateX(-50%)}}
+/* mazzo */
+.hx-deck{position:relative;height:280vh}
+.hx-deck-sticky{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center}
+.hx-deck-title{position:relative;z-index:2;text-align:center;padding-top:13vh}
+.hx-deck-title .hx-kick{justify-content:center}
+.hx-fan{position:absolute;z-index:3;left:50%;top:60%;width:0;height:0}
+.hx-fan-c{position:absolute;left:0;top:0;width:clamp(150px,15vw,230px);will-change:transform;transition:transform .12s linear}
+.hx-fan-c .hx-holo{cursor:zoom-in}
+.hx-fan-c:hover{z-index:20 !important}
+.hx-fan-c:hover .hx-holo-in{transform:translateY(-24px) scale(1.08) rotateX(var(--rx)) rotateY(var(--ry))}
+.hx-deck-cap{position:absolute;z-index:2;bottom:6vh;left:0;right:0;text-align:center;color:var(--muted);font-size:17px}
+.hx-deck-cap a{color:var(--gold);font-weight:700}
+/* passi */
+.hx-steps{position:relative;padding:120px 0 80px;background:radial-gradient(80% 60% at 50% 0%,rgba(108,77,179,.25),transparent 70%)}
+.hx-steps-row{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:40px}
+.hx-line{position:absolute;left:40px;right:40px;top:44px;height:2px;background:rgba(255,255,255,.1)}
+.hx-line i{position:absolute;inset:0;transform-origin:left;background:linear-gradient(90deg,var(--gold),#FF8A3D,#b25cff);box-shadow:0 0 18px var(--gold)}
+.hx-step{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:24px 26px 28px;backdrop-filter:blur(6px)}
+.hx-step span{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#0D1233;border:2px solid rgba(255,255,255,.2);font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--muted);transition:all .4s}
+.hx-step span.lit{border-color:var(--gold);color:#231800;background:var(--gold);box-shadow:0 0 30px var(--gold)}
+.hx-step h3{margin:18px 0 8px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:38px;text-transform:uppercase}
+.hx-step p{margin:0;color:var(--muted);line-height:1.55}
+/* formato */
+.hx-format{padding:60px 0 100px}
+.hx-format-in{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:56px;align-items:center}
+.hx-format-stage .vc-stage{height:min(84vh,780px);min-height:520px;border-radius:28px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 40px 120px -40px rgba(108,77,179,.8)}
+.hx-format-stage .vc-card{width:min(100%,calc(min(84vh,780px) * .66),500px)}
+.hx-cats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:6px 0 16px}
+.hx-cats button{font:inherit;cursor:pointer;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink);transition:all .2s}
+.hx-cats button:hover{border-color:rgba(255,255,255,.4)}
+.hx-cats b{font-family:'Saira Condensed',sans-serif;font-size:21px}
+.hx-cats span{font-size:13px;color:var(--muted)}
+.hx-cats button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#231800;box-shadow:0 0 30px -6px var(--gold)}
+.hx-cats button[aria-pressed=true] span{color:#3a2a00}
+.hx-els{display:flex;flex-wrap:wrap;align-items:center;gap:9px}
+.hx-els button{width:34px;height:34px;border-radius:50%;cursor:pointer;background:var(--c);border:3px solid #0D1233;box-shadow:0 0 0 1.5px rgba(255,255,255,.2);transition:transform .2s,box-shadow .2s}
+.hx-els button:hover{transform:scale(1.15)}
+.hx-els button[aria-pressed=true]{box-shadow:0 0 0 2.5px #fff,0 0 22px var(--c);transform:scale(1.12)}
+.hx-els span{margin-left:6px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:20px}
+/* olografica */
+.hx-holo-sec{padding:80px 0;background:radial-gradient(60% 70% at 80% 50%,rgba(178,92,255,.22),transparent 70%)}
+.hx-holo-in2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:56px;align-items:center}
+.hx-rainbow{background:linear-gradient(90deg,#ff2d6f,#ffd23f,#3dffb5,#3dc8ff,#b25cff,#ff2d6f);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent !important;animation:hxshine 5s linear infinite}
+.hx-holo-big{width:min(100%,420px);justify-self:center}
+.hx-cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.hx-cases figure{margin:0;border-radius:16px;overflow:hidden;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.hx-cases img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.hx-cases figcaption{display:flex;justify-content:space-between;gap:6px;padding:8px 10px;font-size:13px;font-weight:600}
+.hx-cases figcaption b{color:var(--gold)}
+.hx-note{color:var(--muted);font-size:14px;margin:14px 0 0}
+/* marquee */
+.hx-marq{padding:40px 0 90px;display:flex;flex-direction:column;gap:18px;transform:rotate(-3deg);margin:0 -40px}
+.hx-marq-row{overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.hx-marq-row>div{display:flex;gap:18px;width:max-content;animation:hxmarq 70s linear infinite}
+.hx-marq-row.rev>div{animation-direction:reverse;animation-duration:80s}
+.hx-marq-row:hover>div{animation-play-state:paused}
+.hx-marq button{padding:0;border:0;background:none;cursor:zoom-in;border-radius:12px;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.hx-marq button:hover{transform:translateY(-10px) scale(1.06) rotate(2deg);box-shadow:0 0 50px -8px var(--gold)}
+.hx-marq img{display:block;height:clamp(200px,22vw,300px);width:auto}
+/* faq */
+.hx-faq{padding:40px 0 100px}
+.hx-q{border-bottom:1px solid rgba(255,255,255,.12)}
+.hx-q button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;font:inherit;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:26px;background:none;border:0;color:var(--ink);padding:20px 0;cursor:pointer;text-align:left}
+.hx-q button span{font-size:30px;color:var(--gold);transition:transform .3s}
+.hx-q.open button span{transform:rotate(45deg)}
+.hx-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s}
+.hx-q.open .hx-a{grid-template-rows:1fr}
+.hx-a p{overflow:hidden;margin:0;color:var(--muted);line-height:1.6;font-size:17px}
+.hx-q.open .hx-a p{padding-bottom:20px}
+/* finale */
+.hx-final{position:relative;min-height:80vh;display:grid;place-items:center;overflow:hidden;text-align:center}
+.hx-final-in{position:relative;z-index:3;padding:80px 24px}
+.hx-final h2{font-size:clamp(64px,11vw,180px);text-transform:uppercase;margin:0 0 12px}
+.hx-final p{color:#D4D8EA;font-size:clamp(17px,1.6vw,21px);margin:0 0 34px}
+.hx-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;max-width:1360px;margin:0 auto;padding:30px 28px 40px;color:var(--muted);font-size:13px;border-top:1px solid rgba(255,255,255,.08)}
+.hx-foot img{height:30px}
+.hx-foot a{color:var(--ink)}
+/* lightbox */
+.hx-lb{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:rgba(4,6,20,.88);backdrop-filter:blur(8px);animation:hxfade .25s}
+.hx-lb>button{position:absolute;top:18px;right:22px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;font-size:18px;cursor:pointer}
+@keyframes hxfade{from{opacity:0}}
+/* comparsa allo scorrimento */
+.rv{opacity:0;transform:translateY(50px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}.hx .w{animation:none;opacity:1;transform:none;filter:none}}
 @media (max-width:900px){
-  .hp-links a:not(.vc-btn){display:none}
-  .hp-hero,.hp-format{grid-template-columns:1fr;gap:22px}
-  .hp-hero{padding:24px 16px}
-  .hp-fan{height:420px;min-height:0}
-  .hp-sec{padding:40px 16px 6px}
-  .hp-steps{grid-template-columns:1fr}
-  .hp-format-stage .vc-stage{height:520px;min-height:0}
-  .hp-cats{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .hp-final{margin:40px 16px 0}
-  .hp .vc-btn-big{width:100%}
+  .hx-links a:not(.hx-btn){display:none}
+  .hx-nav{padding:12px 16px}
+  .hx-wrap{padding:0 18px}
+  .hx-hero-in{grid-template-columns:1fr;padding:96px 18px 70px;text-align:left}
+  .hx-hero-card{width:min(58vw,250px);grid-row:1;margin-top:6px}
+  .hx-hero h1{font-size:clamp(50px,14vw,70px)}
+  .hx-ring{width:130vw;right:-40vw;top:32%}
+  .hx-deck{height:220vh}
+  .hx-fan-c{width:34vw}
+  .hx-steps-row,.hx-format-in,.hx-holo-in2{grid-template-columns:1fr}
+  .hx-line{display:none}
+  .hx-format-stage .vc-stage{height:560px;min-height:0}
+  .hx-cats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .hx-cases{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hx-q button{font-size:21px}
 }
 `;
