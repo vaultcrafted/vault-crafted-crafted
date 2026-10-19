@@ -8,7 +8,6 @@ import { CARD_SRCS, SiteShell, CardZoom } from "@/components/vault/home/Site";
 const CARDS = CARD_SRCS;
 // quattro colonne per la parete di carte che scorre nell'apertura
 const COLS = [0, 1, 2, 3].map((c) => CARDS.filter((_, i) => i % 4 === c));
-const PAGES = Array.from({ length: Math.ceil(CARDS.length / 9) }, (_, i) => CARDS.slice(i * 9, i * 9 + 9));
 const euro = (n: number) => `€${n.toFixed(2).replace(".", ",").replace(",00", "")}`;
 const minPrice = Math.min(...CATS.map((c) => c.price));
 
@@ -32,65 +31,98 @@ const FAQ: [string, string][] = [
   ["Posso regalarla?", "Sì: metti l'indirizzo di chi la riceve e scrivici nelle note se vuoi una dedica."],
 ];
 
+const N = CARDS.length;
+const pageOf = (i: number) => Array.from({ length: 9 }, (_, j) => CARDS[(((i * 9 + j) % N) + N) % N]);
+
+function Page({ i, side, onOpen }: { i: number; side: "l" | "r"; onOpen?: (src: string) => void }) {
+  return (
+    <div className={`bd-page ${side}`}>
+      {pageOf(i).map((src, j) => (
+        <div className="bd-pocket" key={j}>
+          {onOpen ? (
+            <button type="button" onClick={() => onOpen(src)} aria-label="Ingrandisci la carta">
+              <img src={src} alt="Carta realizzata da Vault Crafted" loading="lazy" draggable={false} />
+            </button>
+          ) : (
+            <img src={src} alt="" loading="lazy" draggable={false} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Raccoglitore aperto a doppia pagina: la pagina gira in 3D e sfoglia da solo. */
 function Binder({ onOpen }: { onOpen: (src: string) => void }) {
-  const [page, setPage] = useState(0);
-  const [dir, setDir] = useState(0);
+  const [s, setS] = useState(0); // doppia pagina corrente: pagine 2s e 2s+1
+  const [flip, setFlip] = useState<0 | 1 | -1>(0);
   const box = useRef<HTMLDivElement>(null);
   const hold = useRef(false);
-  const go = (d: number) => {
-    setDir(d);
-    setPage((p) => (p + d + PAGES.length) % PAGES.length);
+  const busy = useRef(false);
+  const go = (d: 1 | -1) => {
+    if (busy.current) return;
+    busy.current = true;
+    setFlip(d);
+    setTimeout(() => {
+      setS((x) => x + d);
+      setFlip(0);
+      busy.current = false;
+    }, 900);
   };
-  // sfoglia da solo quando è sullo schermo e nessuno ci sta interagendo
+  const goRef = useRef(go);
+  goRef.current = go;
   useEffect(() => {
     const el = box.current;
     if (!el || matchMedia("(prefers-reduced-motion:reduce)").matches) return;
     let seen = false;
-    const io = new IntersectionObserver(([e]) => (seen = e.isIntersecting), { threshold: 0.4 });
+    const io = new IntersectionObserver(([e]) => (seen = e.isIntersecting), { threshold: 0.35 });
     io.observe(el);
     const t = setInterval(() => {
-      if (seen && !hold.current && !document.hidden) go(1);
-    }, 5200);
+      if (seen && !hold.current && !document.hidden) goRef.current(1);
+    }, 5000);
     return () => {
       io.disconnect();
       clearInterval(t);
     };
   }, []);
-  const cards = PAGES[page];
+
+  const L = 2 * s;
+  // durante il giro, sotto la pagina che si muove compare già quella successiva
+  const left = flip === -1 ? L - 2 : L;
+  const right = flip === 1 ? L + 3 : L + 1;
   return (
     <div
-      className="hm-binder"
+      className="bd"
       ref={box}
       onPointerEnter={() => (hold.current = true)}
       onPointerLeave={() => (hold.current = false)}
-      onFocus={() => (hold.current = true)}
-      onBlur={() => (hold.current = false)}
     >
-      <div className="hm-sheet" key={page} data-dir={dir}>
-        {Array.from({ length: 9 }).map((_, i) => (
-          <div className="hm-pocket" key={i}>
-            {cards[i] ? (
-              <button type="button" onClick={() => onOpen(cards[i])} aria-label="Ingrandisci la carta">
-                <img src={cards[i]} alt="Carta realizzata da Vault Crafted" loading="lazy" />
-              </button>
-            ) : null}
-          </div>
-        ))}
-        <div className="hm-holes" aria-hidden>
+      <div className="bd-book">
+        <Page i={left} side="l" onOpen={flip ? undefined : onOpen} />
+        <Page i={right} side="r" onOpen={flip ? undefined : onOpen} />
+        <div className="bd-spine" aria-hidden>
           <i />
           <i />
           <i />
         </div>
+        {flip !== 0 && (
+          <div className={`bd-leaf ${flip === 1 ? "next" : "prev"}`} aria-hidden>
+            <div className="bd-face front">
+              <Page i={flip === 1 ? L + 1 : L} side={flip === 1 ? "r" : "l"} />
+            </div>
+            <div className="bd-face back">
+              <Page i={flip === 1 ? L + 2 : L - 1} side={flip === 1 ? "l" : "r"} />
+            </div>
+          </div>
+        )}
       </div>
-      <div className="hm-binder-nav">
+      <div className="bd-nav">
         <button type="button" onClick={() => go(-1)} aria-label="Pagina precedente">
-          ‹
+          <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
-        <span aria-live="polite">
-          Pagina {page + 1} di {PAGES.length}
-        </span>
+        <span>Sfoglia</span>
         <button type="button" onClick={() => go(1)} aria-label="Pagina successiva">
-          ›
+          <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
       </div>
     </div>
@@ -313,13 +345,12 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="hm-sec hm-split" id="carte">
-        <div className="hm-split-txt rv">
-          <h2>Dal nostro raccoglitore</h2>
-          <p>
-            Coppie, amici, artisti, cani di famiglia. Sfoglia alcune delle carte che abbiamo già
-            stampato.
-          </p>
+      <section className="hm-sec hm-binder-sec" id="carte">
+        <div className="hm-binder-head rv">
+          <div>
+            <h2>Dal nostro raccoglitore</h2>
+            <p>Coppie, amici, artisti, cani di famiglia: alcune delle carte che abbiamo già stampato.</p>
+          </div>
           <Link to="/carte" className="hm-link">
             Tutta la collezione
           </Link>
