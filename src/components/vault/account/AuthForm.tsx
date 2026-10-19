@@ -19,7 +19,11 @@ export function AuthForm({ onDone, initial = "login" }: { onDone: () => void; in
     setBusy(true);
     try {
       if (mode === "login") {
-        await acc("sessione", { json: { email: f.email, password: f.password } });
+        const r = await acc<{ admin?: boolean }>("sessione", { json: { email: f.email, password: f.password } });
+        if (r.admin) {
+          location.href = "/admin";
+          return;
+        }
         onDone();
       } else if (mode === "signup") {
         await acc("registrati", { json: f });

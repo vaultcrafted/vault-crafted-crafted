@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { bad, env, json, nowIso } from "@/server/vault";
+import { bad, checkPassword, env, json, nowIso, sessionCookie } from "@/server/vault";
 import { str } from "@/lib/vaultShop";
 import {
   clearCustomerCookie,
@@ -24,6 +24,10 @@ export const Route = createFileRoute("/api/account/sessione")({
         const email = str(b.email, 160).toLowerCase();
         const pw = typeof b.password === "string" ? b.password : "";
         await new Promise((r) => setTimeout(r, 300));
+        // l'email di Vault con la password del pannello apre l'admin
+        const adminEmail = (env.MAIL_ADMIN ?? "vaultcrafted@gmail.com").toLowerCase();
+        if (email === adminEmail && pw && (await checkPassword(pw)))
+          return json({ ok: true, admin: true }, 200, { "set-cookie": await sessionCookie() });
         const row = await env.DB.prepare(
           "SELECT id, pass, sess_ver, failed, locked_until FROM customers WHERE email = ?",
         )
