@@ -60,6 +60,8 @@ export function ensureSchema() {
       await env.DB.prepare("ALTER TABLE orders ADD COLUMN customer_id TEXT NOT NULL DEFAULT ''").run();
       await env.DB.prepare("CREATE INDEX IF NOT EXISTS orders_customer ON orders(customer_id)").run();
     }
+    // omaggio: carta regalata (non pagata ma neanche da incassare)
+    if (!have.has("gift")) await env.DB.prepare("ALTER TABLE orders ADD COLUMN gift INTEGER NOT NULL DEFAULT 0").run();
   })().catch((e) => {
     ready = null;
     throw e;

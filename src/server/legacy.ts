@@ -83,6 +83,7 @@ export function legacyFields(r: Record<string, string>) {
     created_at: created,
     status,
     paid,
+    gift: pagato === "OMAGGIO" ? 1 : 0,
     email: email.toLowerCase(),
     customer_name: EMAIL.test(name) ? "" : name,
     phone: pick(r, "cellulare", "telefono", "cell").replace(/^\.$/, ""),

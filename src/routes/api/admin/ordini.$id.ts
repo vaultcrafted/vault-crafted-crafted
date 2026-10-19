@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { MAX_EDITION, catOf } from "@/lib/vaultCard";
+import { ensureSchema } from "@/server/account";
 import { custodiaOf, num, priceOf, sanitizeCard, str, type OrderRow } from "@/lib/vaultShop";
 import {
   STATUS_KEYS,
@@ -36,9 +37,17 @@ export const Route = createFileRoute("/api/admin/ordini/$id")({
         if (!o) return bad("Ordine non trovato", 404);
         const b = (await request.json().catch(() => ({}))) as Record<string, unknown>;
         const set: Record<string, unknown> = {};
+        if (typeof b.gift === "boolean") await ensureSchema();
 
         if (typeof b.status === "string" && STATUS_KEYS.includes(b.status)) set.status = b.status;
-        if (typeof b.paid === "boolean") set.paid = b.paid ? 1 : 0;
+        if (typeof b.paid === "boolean") {
+          set.paid = b.paid ? 1 : 0;
+          if (b.paid) set.gift = 0;
+        }
+        if (typeof b.gift === "boolean") {
+          set.gift = b.gift ? 1 : 0;
+          if (b.gift) set.paid = 0;
+        }
         for (const [k, max] of [
           ["admin_note", 5000],
           ["tracking", 200],

@@ -2,8 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   AdminShell,
+  STATUS_COLORS,
   STATUS_LABELS,
-  StatusPill,
   api,
   euro,
   fmtDate,
@@ -26,6 +26,7 @@ interface Row {
   created_at: string;
   status: string;
   paid: number;
+  gift: number;
   email: string;
   customer_name: string;
   category: string;
@@ -34,6 +35,26 @@ interface Row {
   source: string;
   has_art: number;
 }
+
+type Pay = "pagato" | "da_pagare" | "omaggio";
+const payOf = (o: Row): Pay => (o.gift ? "omaggio" : o.paid ? "pagato" : "da_pagare");
+const PAY_LABELS: Record<Pay, string> = { da_pagare: "Da pagare", pagato: "Pagato", omaggio: "Omaggio" };
+
+interface Filters {
+  pay: string;
+  src: string;
+  anno: string;
+  ordina: string;
+}
+const NO_FILTERS: Filters = { pay: "", src: "", anno: "", ordina: "recenti" };
+const FKEY = "vault_admin_filtri";
+const loadFilters = (): Filters => {
+  try {
+    return { ...NO_FILTERS, ...JSON.parse(localStorage.getItem(FKEY) ?? "{}") };
+  } catch {
+    return NO_FILTERS;
+  }
+};
 
 const TABS: [string, string][] = [
   ["attivi", "Da fare"],
@@ -57,7 +78,21 @@ function OrdersList() {
     orders: Row[];
     counts: { status: string; n: number }[];
     money: { incassato: number; da_incassare: number };
+    years: string[];
   } | null>(null);
+  const [f, setF] = useState<Filters>(NO_FILTERS);
+  useEffect(() => setF(loadFilters()), []);
+  const setFilter = (k: keyof Filters, v: string) =>
+    setF((cur) => {
+      const n = { ...cur, [k]: v };
+      try {
+        localStorage.setItem(FKEY, JSON.stringify(n));
+      } catch {
+        /* niente */
+      }
+      return n;
+    });
+  const filtersOn = f.pay || f.src || f.anno || f.ordina !== "recenti";
   const [err, setErr] = useState("");
   const [sel, setSel] = useState<Set<string>>(new Set());
   const [reload, setReload] = useState(0);
@@ -69,7 +104,34 @@ function OrdersList() {
       else n.add(id);
       return n;
     });
-  const bulk = async (patch: { status?: string; paid?: boolean }) => {
+  // modifica di un solo ordine dalla riga: aggiorna subito la vista, poi salva
+  const quick = async (o: Row, patch: { status?: string; pay?: Pay }) => {
+    setData((d) =>
+      d
+        ? {
+            ...d,
+            orders: d.orders.map((x) =>
+              x.id !== o.id
+                ? x
+                : {
+                    ...x,
+                    ...(patch.status ? { status: patch.status } : {}),
+                    ...(patch.pay
+                      ? { paid: patch.pay === "pagato" ? 1 : 0, gift: patch.pay === "omaggio" ? 1 : 0 }
+                      : {}),
+                  },
+            ),
+          }
+        : d,
+    );
+    try {
+      await api("/api/admin/ordini", { method: "PATCH", json: { ids: [o.id], ...patch } });
+    } catch (e) {
+      setErr((e as Error).message);
+    }
+    setReload((r) => r + 1);
+  };
+  const bulk = async (patch: { status?: string; pay?: Pay }) => {
     setBusy(true);
     try {
       await api("/api/admin/ordini", { method: "PATCH", json: { ids: [...sel], ...patch } });
@@ -85,7 +147,7 @@ function OrdersList() {
   useEffect(() => {
     const t = setTimeout(() => {
       api<typeof data>(
-        `/api/admin/ordini?status=${encodeURIComponent(tab)}&q=${encodeURIComponent(q)}`,
+        `/api/admin/ordini?${new URLSearchParams({ status: tab, q, ...f })}`,
       )
         .then((d) => {
           setData(d);
@@ -94,8 +156,8 @@ function OrdersList() {
         .catch((e) => setErr(e.message));
     }, 200);
     return () => clearTimeout(t);
-  }, [tab, q, reload]);
-  useEffect(() => setSel(new Set()), [tab, q]);
+  }, [tab, q, reload, f]);
+  useEffect(() => setSel(new Set()), [tab, q, f]);
 
   const count = (s: string) => data?.counts.find((c) => c.status === s)?.n ?? 0;
   const active = (data?.counts ?? [])
@@ -138,6 +200,63 @@ function OrdersList() {
         value={q}
         onChange={(e) => setQ(e.target.value)}
       />
+      <div className="ad-filters">
+        <label>
+          <span>Pagamento</span>
+          <select value={f.pay} onChange={(e) => setFilter("pay", e.target.value)}>
+            <option value="">Tutti</option>
+            <option value="da_pagare">Da pagare</option>
+            <option value="pagato">Pagati</option>
+            <option value="omaggio">Omaggi</option>
+          </select>
+        </label>
+        <label>
+          <span>Provenienza</span>
+          <select value={f.src} onChange={(e) => setFilter("src", e.target.value)}>
+            <option value="">Tutti</option>
+            <option value="sito">Dal sito</option>
+            <option value="foglio">Vecchio foglio</option>
+          </select>
+        </label>
+        <label>
+          <span>Anno</span>
+          <select value={f.anno} onChange={(e) => setFilter("anno", e.target.value)}>
+            <option value="">Tutti</option>
+            {(data?.years ?? []).map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          <span>Ordina per</span>
+          <select value={f.ordina} onChange={(e) => setFilter("ordina", e.target.value)}>
+            <option value="recenti">Più recenti</option>
+            <option value="vecchi">Più vecchi</option>
+            <option value="numero">Numero carta</option>
+            <option value="totale">Totale più alto</option>
+            <option value="cliente">Cliente A–Z</option>
+          </select>
+        </label>
+        {filtersOn && (
+          <button
+            type="button"
+            className="ad-filters-x"
+            onClick={() => {
+              setF(NO_FILTERS);
+              try {
+                localStorage.removeItem(FKEY);
+              } catch {
+                /* niente */
+              }
+            }}
+          >
+            Azzera filtri
+          </button>
+        )}
+        {data && <em className="ad-filters-n">{data.orders.length} ordini</em>}
+      </div>
       {err && <p className="vc-err">{err}</p>}
       {sel.size > 0 && (
         <div className="ad-bulk" role="toolbar">
@@ -155,12 +274,17 @@ function OrdersList() {
               </option>
             ))}
           </select>
-          <button type="button" disabled={busy} onClick={() => bulk({ paid: true })}>
-            Segna pagati
-          </button>
-          <button type="button" disabled={busy} onClick={() => bulk({ paid: false })}>
-            Segna non pagati
-          </button>
+          <select
+            value=""
+            disabled={busy}
+            onChange={(e) => e.target.value && bulk({ pay: e.target.value as Pay })}
+            aria-label="Cambia pagamento"
+          >
+            <option value="">Pagamento…</option>
+            <option value="pagato">Pagato</option>
+            <option value="da_pagare">Da pagare</option>
+            <option value="omaggio">Omaggio</option>
+          </select>
           <button type="button" className="ad-bulk-x" onClick={() => setSel(new Set())}>
             Annulla
           </button>
@@ -224,21 +348,36 @@ function OrdersList() {
                   {o.customer_name || "—"}
                   <span className="ad-sub">{o.email}</span>
                 </td>
-                <td>
-                  <StatusPill s={o.status} />
+                <td onClick={(e) => e.stopPropagation()}>
+                  <select
+                    className="ad-pillsel"
+                    style={{ ["--c" as string]: STATUS_COLORS[o.status] ?? "#5A5D6B" }}
+                    value={o.status}
+                    aria-label="Stato"
+                    onChange={(e) => quick(o, { status: e.target.value })}
+                  >
+                    {Object.entries(STATUS_LABELS).map(([k, l]) => (
+                      <option key={k} value={k}>
+                        {l}
+                      </option>
+                    ))}
+                  </select>
                 </td>
                 <td className="hide-m">{fmtDate(o.created_at)}</td>
-                <td>
+                <td onClick={(e) => e.stopPropagation()}>
                   {euro(o.total)}
-                  {o.status === "annullato" ? (
-                    <span className="ad-sub">Annullato</span>
-                  ) : !o.paid && !o.total ? (
-                    <span className="ad-sub">Omaggio</span>
-                  ) : (
-                    <span className={o.paid ? "ad-paid" : "ad-unpaid"}>
-                      {o.paid ? "Pagato" : "Da pagare"}
-                    </span>
-                  )}
+                  <select
+                    className={`ad-paysel is-${o.status === "annullato" && !o.paid ? "off" : payOf(o)}`}
+                    value={payOf(o)}
+                    aria-label="Pagamento"
+                    onChange={(e) => quick(o, { pay: e.target.value as Pay })}
+                  >
+                    {(Object.keys(PAY_LABELS) as Pay[]).map((k) => (
+                      <option key={k} value={k}>
+                        {PAY_LABELS[k]}
+                      </option>
+                    ))}
+                  </select>
                 </td>
               </tr>
             ))}
