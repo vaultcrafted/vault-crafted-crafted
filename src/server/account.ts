@@ -122,10 +122,11 @@ async function sign(data: string) {
   );
   return b64u(await crypto.subtle.sign("HMAC", key, enc.encode(data)));
 }
-export async function customerCookie(id: string, ver: number) {
-  const exp = Date.now() + DAYS * 864e5;
+/** remember = false: il cookie sparisce alla chiusura del browser (e scade comunque in 1 giorno). */
+export async function customerCookie(id: string, ver: number, remember = true) {
+  const exp = Date.now() + (remember ? DAYS * 864e5 : 864e5);
   const payload = `${id}.${ver}.${exp}`;
-  return `${COOKIE}=${payload}.${await sign(payload)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${DAYS * 86400}`;
+  return `${COOKIE}=${payload}.${await sign(payload)}; Path=/; HttpOnly; Secure; SameSite=Lax${remember ? `; Max-Age=${DAYS * 86400}` : ""}`;
 }
 export const clearCustomerCookie = () =>
   `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;

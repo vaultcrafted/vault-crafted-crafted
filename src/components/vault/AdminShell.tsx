@@ -71,6 +71,7 @@ export function AdminShell({ children, title }: { children: React.ReactNode; tit
   const [pw, setPw] = useState("");
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
+  const [remember, setRemember] = useState(true);
 
   const check = () =>
     api<{ admin: boolean; configured: boolean }>("/api/admin/login")
@@ -88,7 +89,7 @@ export function AdminShell({ children, title }: { children: React.ReactNode; tit
     setBusy(true);
     setErr("");
     try {
-      await api("/api/admin/login", { method: "POST", json: { password: pw } });
+      await api("/api/admin/login", { method: "POST", json: { password: pw, remember } });
       setPw("");
       setState("in");
     } catch (x) {
@@ -142,15 +143,21 @@ export function AdminShell({ children, title }: { children: React.ReactNode; tit
         <form className="ad-login" onSubmit={login}>
           <p className="vc-kicker">VAULT · PANNELLO</p>
           <h1>Accedi</h1>
+          <input type="email" name="username" value="vaultcrafted@gmail.com" autoComplete="username" readOnly hidden />
           <label className="vc-field">
             <span>Password</span>
             <input
               type="password"
+              name="password"
               value={pw}
               autoFocus
               autoComplete="current-password"
               onChange={(e) => setPw(e.target.value)}
             />
+          </label>
+          <label style={{ display: "flex", alignItems: "center", gap: 10, margin: "10px 0", fontSize: 14, cursor: "pointer" }}>
+            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+            Ricordami su questo dispositivo
           </label>
           {err && <p className="vc-err">{err}</p>}
           <button className="vc-btn vc-btn-big" disabled={busy || !pw}>

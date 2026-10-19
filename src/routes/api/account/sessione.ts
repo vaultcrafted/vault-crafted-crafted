@@ -20,14 +20,15 @@ export const Route = createFileRoute("/api/account/sessione")({
       },
       POST: async ({ request }) => {
         await ensureSchema();
-        const b = (await request.json().catch(() => ({}))) as { email?: string; password?: string };
+        const b = (await request.json().catch(() => ({}))) as { email?: string; password?: string; remember?: boolean };
+        const remember = b.remember !== false;
         const email = str(b.email, 160).toLowerCase();
         const pw = typeof b.password === "string" ? b.password : "";
         await new Promise((r) => setTimeout(r, 300));
         // l'email di Vault con la password del pannello apre l'admin
         const adminEmail = (env.MAIL_ADMIN ?? "vaultcrafted@gmail.com").toLowerCase();
         if (email === adminEmail && pw && (await checkPassword(pw)))
-          return json({ ok: true, admin: true }, 200, { "set-cookie": await sessionCookie() });
+          return json({ ok: true, admin: true }, 200, { "set-cookie": await sessionCookie(remember) });
         const row = await env.DB.prepare(
           "SELECT id, pass, sess_ver, failed, locked_until FROM customers WHERE email = ?",
         )
@@ -48,7 +49,7 @@ export const Route = createFileRoute("/api/account/sessione")({
         await env.DB.prepare("UPDATE customers SET failed = 0, locked_until = '' WHERE id = ?")
           .bind(row.id)
           .run();
-        return json({ ok: true }, 200, { "set-cookie": await customerCookie(row.id, row.sess_ver) });
+        return json({ ok: true }, 200, { "set-cookie": await customerCookie(row.id, row.sess_ver, remember) });
       },
       DELETE: async () => json({ ok: true }, 200, { "set-cookie": clearCustomerCookie() }),
     },

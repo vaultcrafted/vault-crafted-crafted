@@ -10,6 +10,7 @@ export function AuthForm({ onDone, initial = "login" }: { onDone: () => void; in
   const [err, setErr] = useState("");
   const [msg, setMsg] = useState("");
   const [show, setShow] = useState(false);
+  const [remember, setRemember] = useState(true);
   const up = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value });
 
   const submit = async (e: React.FormEvent) => {
@@ -19,7 +20,7 @@ export function AuthForm({ onDone, initial = "login" }: { onDone: () => void; in
     setBusy(true);
     try {
       if (mode === "login") {
-        const r = await acc<{ admin?: boolean }>("sessione", { json: { email: f.email, password: f.password } });
+        const r = await acc<{ admin?: boolean }>("sessione", { json: { email: f.email, password: f.password, remember } });
         if (r.admin) {
           location.href = "/admin";
           return;
@@ -62,7 +63,7 @@ export function AuthForm({ onDone, initial = "login" }: { onDone: () => void; in
         )}
         <label>
           <span>Email</span>
-          <input type="email" value={f.email} onChange={up("email")} autoComplete="email" required />
+          <input type="email" name="email" value={f.email} onChange={up("email")} autoComplete={mode === "login" ? "username" : "email"} required />
         </label>
         {mode !== "forgot" && (
           <label>
@@ -70,6 +71,7 @@ export function AuthForm({ onDone, initial = "login" }: { onDone: () => void; in
             <div className="au-pw">
               <input
                 type={show ? "text" : "password"}
+                name="password"
                 value={f.password}
                 onChange={up("password")}
                 autoComplete={mode === "login" ? "current-password" : "new-password"}
@@ -81,6 +83,12 @@ export function AuthForm({ onDone, initial = "login" }: { onDone: () => void; in
               </button>
             </div>
             {mode === "signup" && <em>Almeno 8 caratteri.</em>}
+          </label>
+        )}
+        {mode === "login" && (
+          <label className="au-remember">
+            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+            <span>Ricordami su questo dispositivo</span>
           </label>
         )}
         {mode === "signup" && (
@@ -133,5 +141,7 @@ export const AUTH_CSS = `
 .au-link{border:0;background:none;color:var(--ink);font:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer;justify-self:center;font-size:14px}
 .au-err{margin:0;background:#FFF1F0;color:#7A1A12;border-radius:10px;padding:10px 12px;font-size:14px}
 .au-ok{margin:0;background:#EAF7F0;color:#14502F;border-radius:10px;padding:10px 12px;font-size:14px}
+.au-form label.au-remember{display:flex;align-items:center;gap:10px;font-weight:500;cursor:pointer}
+.au-remember input{width:18px !important;height:18px;margin:0;accent-color:#141A3A}
 .au-small{margin:0;color:var(--muted);font-size:12.5px;text-align:center}
 `;

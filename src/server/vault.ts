@@ -70,10 +70,10 @@ export async function checkPassword(pw: string) {
   if (!real) return false;
   return safeEqual(await hmac("pw:" + pw), await hmac("pw:" + real));
 }
-export async function sessionCookie() {
-  const exp = Date.now() + 1000 * 60 * 60 * 24 * 30; // 30 giorni
+export async function sessionCookie(remember = true) {
+  const exp = Date.now() + (remember ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 60 * 12); // 30 giorni o 12 ore
   const v = `${exp}.${await hmac("s:" + exp)}`;
-  return `${COOKIE}=${v}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${60 * 60 * 24 * 30}`;
+  return `${COOKIE}=${v}; Path=/; HttpOnly; Secure; SameSite=Lax${remember ? `; Max-Age=${60 * 60 * 24 * 30}` : ""}`;
 }
 export const clearCookie = () => `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
 export async function isAdmin(req: Request) {
