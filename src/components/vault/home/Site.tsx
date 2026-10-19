@@ -2,12 +2,23 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { WhatsappButton } from "@/components/vault/WhatsappButton";
 import { HOLO_CSS, HoloCard } from "./HoloCard";
+import { useMe } from "@/lib/accountClient";
 
 /** Cornice comune delle pagine pubbliche: barra in alto, piè di pagina, stile chiaro. */
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLElement>(null);
   const [menu, setMenu] = useState(false);
   const [bar, setBar] = useState(false);
+  const { me } = useMe();
+  const accountLink = (
+    <a href={me ? "/account" : "/account/accedi"} className="hm-acc" onClick={() => setMenu(false)}>
+      <svg viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round">
+        <circle cx="12" cy="8.5" r="3.8" />
+        <path d="M4.5 20c1.4-3.6 4.2-5.4 7.5-5.4s6.1 1.8 7.5 5.4" />
+      </svg>
+      <span>{me ? me.name.split(" ")[0] || "Il mio Vault" : "Accedi"}</span>
+    </a>
+  );
 
   useEffect(() => {
     const root = ref.current;
@@ -76,6 +87,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </Link>
         <div>
           {links}
+          {accountLink}
           <Link to="/crea" className="hm-btn sm">
             Crea la tua carta
           </Link>
@@ -90,7 +102,12 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <i />
           </button>
         </div>
-        {menu && <div className="hm-menu">{links}</div>}
+        {menu && (
+          <div className="hm-menu">
+            {links}
+            {accountLink}
+          </div>
+        )}
       </nav>
       {children}
       <footer className="hm-foot">
@@ -172,6 +189,10 @@ export const SITE_CSS = `
 .hm-nav div{display:flex;align-items:center;gap:26px}
 .hm-nav div a:not(.hm-btn){text-decoration:none;font-weight:600;font-size:15px;color:#C9CEE3}
 .hm-nav div a:not(.hm-btn):hover,.hm-nav div a[aria-current=page]{color:#fff}
+.hm-acc{display:inline-flex;align-items:center;gap:7px;text-decoration:none;font-weight:600;font-size:15px;color:#C9CEE3 !important}
+.hm-acc:hover{color:#fff !important}
+.hm-acc svg{width:21px;height:21px}
+.hm-menu .hm-acc{font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:26px;color:#fff !important;padding:10px 0;border-top:1px solid rgba(255,255,255,.1)}
 .hm-burger{display:none;width:42px;height:40px;border:0;border-radius:10px;background:rgba(255,255,255,.08);cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:6px}
 .hm-burger i{display:block;width:18px;height:2px;background:#fff;border-radius:2px;transition:transform .25s}
 .hm-burger[aria-expanded=true] i:first-child{transform:translateY(4px) rotate(45deg)}
@@ -441,6 +462,7 @@ export const SITE_CSS = `
 .hm-lb>button{position:absolute;top:16px;right:18px;width:44px;height:44px;border-radius:50%;border:0;background:#fff;color:var(--ink);font-size:18px;cursor:pointer}
 @keyframes hmfade{from{opacity:0}}
 /* pagine interne */
+.hm-fill{min-height:calc(100svh - 64px - 96px);box-sizing:border-box}
 .hm-head-anim>*{animation:hmrise .9s cubic-bezier(.2,.8,.2,1) both}
 .hm-head-anim>*:nth-child(2){animation-delay:.12s}
 .hm-head-anim>*:nth-child(3){animation-delay:.24s}
@@ -473,6 +495,8 @@ export const SITE_CSS = `
   .hm-nav{padding:10px 16px}
   .hm-nav div{gap:10px}
   .hm-nav div a:not(.hm-btn){display:none}
+  .hm-nav div a.hm-acc{display:inline-flex}
+  .hm-nav div a.hm-acc span{display:none}
   .hm-burger{display:flex}
   .hm-bar{display:flex;position:fixed;left:10px;right:84px;bottom:14px;z-index:40;align-items:center;justify-content:space-between;gap:10px;padding:8px 8px 8px 16px;border-radius:16px;
     background:rgba(255,255,255,.92);backdrop-filter:blur(10px);box-shadow:0 14px 34px -14px rgba(20,26,58,.5);font-size:14px;color:var(--muted);

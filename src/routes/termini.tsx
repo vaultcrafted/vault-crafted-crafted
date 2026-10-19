@@ -104,13 +104,14 @@ function TerminiPage() {
                 <li>Comunicazioni relative all'ordine (bozze, conferme, aggiornamenti spedizione)</li>
                 <li>Invio di comunicazioni promozionali (solo per gli iscritti alla newsletter, con consenso esplicito)</li>
               </ul>
+              <p className="mt-4">Chi crea un account cliente ci affida anche la password (conservata solo in forma cifrata, non leggibile nemmeno da noi), gli indirizzi salvati e le bozze delle carte con le relative foto. Questi dati servono solo a far funzionare l'area personale e restano finché l'account esiste: per eliminarlo basta scriverci.</p>
               <p className="mt-4">I dati non vengono ceduti a terzi, ad eccezione del corriere per la spedizione. I dati vengono conservati per il tempo necessario all'evasione dell'ordine e per eventuali obblighi di legge. Il titolare del trattamento è Vault Crafted, contattabile all'indirizzo <a href="mailto:vaultcrafted@gmail.com" className="text-gold hover:underline">vaultcrafted@gmail.com</a>.</p>
               <p className="mt-4">In conformità al Regolamento UE 2016/679 (GDPR), l'utente ha diritto di accedere, rettificare, cancellare i propri dati, opporsi al trattamento e richiedere la portabilità degli stessi inviando una richiesta a <a href="mailto:vaultcrafted@gmail.com" className="text-gold hover:underline">vaultcrafted@gmail.com</a>.</p>
             </div>
 
             <div>
               <h2 className="font-display text-xl text-foreground mb-4">10. Cookie</h2>
-              <p>Questo sito utilizza esclusivamente cookie tecnici necessari al funzionamento della pagina. Non vengono utilizzati cookie di profilazione o di terze parti a fini pubblicitari.</p>
+              <p>Questo sito utilizza esclusivamente cookie tecnici necessari al funzionamento della pagina, compreso quello che mantiene l'accesso all'area cliente. Non vengono utilizzati cookie di profilazione o di terze parti a fini pubblicitari.</p>
             </div>
 
             <div>

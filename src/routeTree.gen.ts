@@ -18,14 +18,27 @@ import { Route as CarteRouteImport } from './routes/carte'
 import { Route as AnteprimaHomeRouteImport } from './routes/anteprima-home'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AccountIndexRouteImport } from './routes/account.index'
 import { Route as ApiOrdiniRouteImport } from './routes/api/ordini'
 import { Route as AdminStampaRouteImport } from './routes/admin.stampa'
 import { Route as AdminImpostazioniRouteImport } from './routes/admin.impostazioni'
+import { Route as AccountPasswordRouteImport } from './routes/account.password'
+import { Route as AccountAccediRouteImport } from './routes/account.accedi'
 import { Route as ApiAdminOrdiniRouteImport } from './routes/api/admin/ordini'
 import { Route as ApiAdminLoginRouteImport } from './routes/api/admin/login'
 import { Route as ApiAdminImpostazioniRouteImport } from './routes/api/admin/impostazioni'
 import { Route as ApiAdminImportaRouteImport } from './routes/api/admin/importa'
 import { Route as ApiAdminFileRouteImport } from './routes/api/admin/file'
+import { Route as ApiAccountVerificaRouteImport } from './routes/api/account/verifica'
+import { Route as ApiAccountSessioneRouteImport } from './routes/api/account/sessione'
+import { Route as ApiAccountRiordinaRouteImport } from './routes/api/account/riordina'
+import { Route as ApiAccountRegistratiRouteImport } from './routes/api/account/registrati'
+import { Route as ApiAccountProfiloRouteImport } from './routes/api/account/profilo'
+import { Route as ApiAccountPasswordRouteImport } from './routes/api/account/password'
+import { Route as ApiAccountOrdiniRouteImport } from './routes/api/account/ordini'
+import { Route as ApiAccountIndirizziRouteImport } from './routes/api/account/indirizzi'
+import { Route as ApiAccountFotoRouteImport } from './routes/api/account/foto'
+import { Route as ApiAccountBozzeRouteImport } from './routes/api/account/bozze'
 import { Route as AdminOrdineIdRouteImport } from './routes/admin.ordine.$id'
 import { Route as ApiAdminOrdiniIdRouteImport } from './routes/api/admin/ordini.$id'
 import { Route as ApiAdminOrdiniIdIllustrazioneRouteImport } from './routes/api/admin/ordini.$id.illustrazione'
@@ -76,6 +89,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountIndexRoute = AccountIndexRouteImport.update({
+  id: '/account/',
+  path: '/account/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiOrdiniRoute = ApiOrdiniRouteImport.update({
   id: '/api/ordini',
   path: '/api/ordini',
@@ -89,6 +107,16 @@ const AdminStampaRoute = AdminStampaRouteImport.update({
 const AdminImpostazioniRoute = AdminImpostazioniRouteImport.update({
   id: '/admin/impostazioni',
   path: '/admin/impostazioni',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountPasswordRoute = AccountPasswordRouteImport.update({
+  id: '/account/password',
+  path: '/account/password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountAccediRoute = AccountAccediRouteImport.update({
+  id: '/account/accedi',
+  path: '/account/accedi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminOrdiniRoute = ApiAdminOrdiniRouteImport.update({
@@ -114,6 +142,56 @@ const ApiAdminImportaRoute = ApiAdminImportaRouteImport.update({
 const ApiAdminFileRoute = ApiAdminFileRouteImport.update({
   id: '/api/admin/file',
   path: '/api/admin/file',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountVerificaRoute = ApiAccountVerificaRouteImport.update({
+  id: '/api/account/verifica',
+  path: '/api/account/verifica',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountSessioneRoute = ApiAccountSessioneRouteImport.update({
+  id: '/api/account/sessione',
+  path: '/api/account/sessione',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountRiordinaRoute = ApiAccountRiordinaRouteImport.update({
+  id: '/api/account/riordina',
+  path: '/api/account/riordina',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountRegistratiRoute = ApiAccountRegistratiRouteImport.update({
+  id: '/api/account/registrati',
+  path: '/api/account/registrati',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountProfiloRoute = ApiAccountProfiloRouteImport.update({
+  id: '/api/account/profilo',
+  path: '/api/account/profilo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountPasswordRoute = ApiAccountPasswordRouteImport.update({
+  id: '/api/account/password',
+  path: '/api/account/password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountOrdiniRoute = ApiAccountOrdiniRouteImport.update({
+  id: '/api/account/ordini',
+  path: '/api/account/ordini',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountIndirizziRoute = ApiAccountIndirizziRouteImport.update({
+  id: '/api/account/indirizzi',
+  path: '/api/account/indirizzi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountFotoRoute = ApiAccountFotoRouteImport.update({
+  id: '/api/account/foto',
+  path: '/api/account/foto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountBozzeRoute = ApiAccountBozzeRouteImport.update({
+  id: '/api/account/bozze',
+  path: '/api/account/bozze',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminOrdineIdRoute = AdminOrdineIdRouteImport.update({
@@ -147,11 +225,24 @@ export interface FileRoutesByFullPath {
   '/ordina': typeof OrdinaRoute
   '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
+  '/account/accedi': typeof AccountAccediRoute
+  '/account/password': typeof AccountPasswordRoute
   '/admin/impostazioni': typeof AdminImpostazioniRoute
   '/admin/stampa': typeof AdminStampaRoute
   '/api/ordini': typeof ApiOrdiniRoute
+  '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/ordine/$id': typeof AdminOrdineIdRoute
+  '/api/account/bozze': typeof ApiAccountBozzeRoute
+  '/api/account/foto': typeof ApiAccountFotoRoute
+  '/api/account/indirizzi': typeof ApiAccountIndirizziRoute
+  '/api/account/ordini': typeof ApiAccountOrdiniRoute
+  '/api/account/password': typeof ApiAccountPasswordRoute
+  '/api/account/profilo': typeof ApiAccountProfiloRoute
+  '/api/account/registrati': typeof ApiAccountRegistratiRoute
+  '/api/account/riordina': typeof ApiAccountRiordinaRoute
+  '/api/account/sessione': typeof ApiAccountSessioneRoute
+  '/api/account/verifica': typeof ApiAccountVerificaRoute
   '/api/admin/file': typeof ApiAdminFileRoute
   '/api/admin/importa': typeof ApiAdminImportaRoute
   '/api/admin/impostazioni': typeof ApiAdminImpostazioniRoute
@@ -170,11 +261,24 @@ export interface FileRoutesByTo {
   '/ordina': typeof OrdinaRoute
   '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
+  '/account/accedi': typeof AccountAccediRoute
+  '/account/password': typeof AccountPasswordRoute
   '/admin/impostazioni': typeof AdminImpostazioniRoute
   '/admin/stampa': typeof AdminStampaRoute
   '/api/ordini': typeof ApiOrdiniRoute
+  '/account': typeof AccountIndexRoute
   '/admin': typeof AdminIndexRoute
   '/admin/ordine/$id': typeof AdminOrdineIdRoute
+  '/api/account/bozze': typeof ApiAccountBozzeRoute
+  '/api/account/foto': typeof ApiAccountFotoRoute
+  '/api/account/indirizzi': typeof ApiAccountIndirizziRoute
+  '/api/account/ordini': typeof ApiAccountOrdiniRoute
+  '/api/account/password': typeof ApiAccountPasswordRoute
+  '/api/account/profilo': typeof ApiAccountProfiloRoute
+  '/api/account/registrati': typeof ApiAccountRegistratiRoute
+  '/api/account/riordina': typeof ApiAccountRiordinaRoute
+  '/api/account/sessione': typeof ApiAccountSessioneRoute
+  '/api/account/verifica': typeof ApiAccountVerificaRoute
   '/api/admin/file': typeof ApiAdminFileRoute
   '/api/admin/importa': typeof ApiAdminImportaRoute
   '/api/admin/impostazioni': typeof ApiAdminImpostazioniRoute
@@ -194,11 +298,24 @@ export interface FileRoutesById {
   '/ordina': typeof OrdinaRoute
   '/regalo': typeof RegaloRoute
   '/termini': typeof TerminiRoute
+  '/account/accedi': typeof AccountAccediRoute
+  '/account/password': typeof AccountPasswordRoute
   '/admin/impostazioni': typeof AdminImpostazioniRoute
   '/admin/stampa': typeof AdminStampaRoute
   '/api/ordini': typeof ApiOrdiniRoute
+  '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/ordine/$id': typeof AdminOrdineIdRoute
+  '/api/account/bozze': typeof ApiAccountBozzeRoute
+  '/api/account/foto': typeof ApiAccountFotoRoute
+  '/api/account/indirizzi': typeof ApiAccountIndirizziRoute
+  '/api/account/ordini': typeof ApiAccountOrdiniRoute
+  '/api/account/password': typeof ApiAccountPasswordRoute
+  '/api/account/profilo': typeof ApiAccountProfiloRoute
+  '/api/account/registrati': typeof ApiAccountRegistratiRoute
+  '/api/account/riordina': typeof ApiAccountRiordinaRoute
+  '/api/account/sessione': typeof ApiAccountSessioneRoute
+  '/api/account/verifica': typeof ApiAccountVerificaRoute
   '/api/admin/file': typeof ApiAdminFileRoute
   '/api/admin/importa': typeof ApiAdminImportaRoute
   '/api/admin/impostazioni': typeof ApiAdminImpostazioniRoute
@@ -219,11 +336,24 @@ export interface FileRouteTypes {
     | '/ordina'
     | '/regalo'
     | '/termini'
+    | '/account/accedi'
+    | '/account/password'
     | '/admin/impostazioni'
     | '/admin/stampa'
     | '/api/ordini'
+    | '/account/'
     | '/admin/'
     | '/admin/ordine/$id'
+    | '/api/account/bozze'
+    | '/api/account/foto'
+    | '/api/account/indirizzi'
+    | '/api/account/ordini'
+    | '/api/account/password'
+    | '/api/account/profilo'
+    | '/api/account/registrati'
+    | '/api/account/riordina'
+    | '/api/account/sessione'
+    | '/api/account/verifica'
     | '/api/admin/file'
     | '/api/admin/importa'
     | '/api/admin/impostazioni'
@@ -242,11 +372,24 @@ export interface FileRouteTypes {
     | '/ordina'
     | '/regalo'
     | '/termini'
+    | '/account/accedi'
+    | '/account/password'
     | '/admin/impostazioni'
     | '/admin/stampa'
     | '/api/ordini'
+    | '/account'
     | '/admin'
     | '/admin/ordine/$id'
+    | '/api/account/bozze'
+    | '/api/account/foto'
+    | '/api/account/indirizzi'
+    | '/api/account/ordini'
+    | '/api/account/password'
+    | '/api/account/profilo'
+    | '/api/account/registrati'
+    | '/api/account/riordina'
+    | '/api/account/sessione'
+    | '/api/account/verifica'
     | '/api/admin/file'
     | '/api/admin/importa'
     | '/api/admin/impostazioni'
@@ -265,11 +408,24 @@ export interface FileRouteTypes {
     | '/ordina'
     | '/regalo'
     | '/termini'
+    | '/account/accedi'
+    | '/account/password'
     | '/admin/impostazioni'
     | '/admin/stampa'
     | '/api/ordini'
+    | '/account/'
     | '/admin/'
     | '/admin/ordine/$id'
+    | '/api/account/bozze'
+    | '/api/account/foto'
+    | '/api/account/indirizzi'
+    | '/api/account/ordini'
+    | '/api/account/password'
+    | '/api/account/profilo'
+    | '/api/account/registrati'
+    | '/api/account/riordina'
+    | '/api/account/sessione'
+    | '/api/account/verifica'
     | '/api/admin/file'
     | '/api/admin/importa'
     | '/api/admin/impostazioni'
@@ -289,11 +445,24 @@ export interface RootRouteChildren {
   OrdinaRoute: typeof OrdinaRoute
   RegaloRoute: typeof RegaloRoute
   TerminiRoute: typeof TerminiRoute
+  AccountAccediRoute: typeof AccountAccediRoute
+  AccountPasswordRoute: typeof AccountPasswordRoute
   AdminImpostazioniRoute: typeof AdminImpostazioniRoute
   AdminStampaRoute: typeof AdminStampaRoute
   ApiOrdiniRoute: typeof ApiOrdiniRoute
+  AccountIndexRoute: typeof AccountIndexRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminOrdineIdRoute: typeof AdminOrdineIdRoute
+  ApiAccountBozzeRoute: typeof ApiAccountBozzeRoute
+  ApiAccountFotoRoute: typeof ApiAccountFotoRoute
+  ApiAccountIndirizziRoute: typeof ApiAccountIndirizziRoute
+  ApiAccountOrdiniRoute: typeof ApiAccountOrdiniRoute
+  ApiAccountPasswordRoute: typeof ApiAccountPasswordRoute
+  ApiAccountProfiloRoute: typeof ApiAccountProfiloRoute
+  ApiAccountRegistratiRoute: typeof ApiAccountRegistratiRoute
+  ApiAccountRiordinaRoute: typeof ApiAccountRiordinaRoute
+  ApiAccountSessioneRoute: typeof ApiAccountSessioneRoute
+  ApiAccountVerificaRoute: typeof ApiAccountVerificaRoute
   ApiAdminFileRoute: typeof ApiAdminFileRoute
   ApiAdminImportaRoute: typeof ApiAdminImportaRoute
   ApiAdminImpostazioniRoute: typeof ApiAdminImpostazioniRoute
@@ -366,6 +535,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account/': {
+      id: '/account/'
+      path: '/account'
+      fullPath: '/account/'
+      preLoaderRoute: typeof AccountIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/ordini': {
       id: '/api/ordini'
       path: '/api/ordini'
@@ -385,6 +561,20 @@ declare module '@tanstack/react-router' {
       path: '/admin/impostazioni'
       fullPath: '/admin/impostazioni'
       preLoaderRoute: typeof AdminImpostazioniRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/password': {
+      id: '/account/password'
+      path: '/account/password'
+      fullPath: '/account/password'
+      preLoaderRoute: typeof AccountPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/accedi': {
+      id: '/account/accedi'
+      path: '/account/accedi'
+      fullPath: '/account/accedi'
+      preLoaderRoute: typeof AccountAccediRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/ordini': {
@@ -420,6 +610,76 @@ declare module '@tanstack/react-router' {
       path: '/api/admin/file'
       fullPath: '/api/admin/file'
       preLoaderRoute: typeof ApiAdminFileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/account/verifica': {
+      id: '/api/account/verifica'
+      path: '/api/account/verifica'
+      fullPath: '/api/account/verifica'
+      preLoaderRoute: typeof ApiAccountVerificaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/account/sessione': {
+      id: '/api/account/sessione'
+      path: '/api/account/sessione'
+      fullPath: '/api/account/sessione'
+      preLoaderRoute: typeof ApiAccountSessioneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/account/riordina': {
+      id: '/api/account/riordina'
+      path: '/api/account/riordina'
+      fullPath: '/api/account/riordina'
+      preLoaderRoute: typeof ApiAccountRiordinaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/account/registrati': {
+      id: '/api/account/registrati'
+      path: '/api/account/registrati'
+      fullPath: '/api/account/registrati'
+      preLoaderRoute: typeof ApiAccountRegistratiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/account/profilo': {
+      id: '/api/account/profilo'
+      path: '/api/account/profilo'
+      fullPath: '/api/account/profilo'
+      preLoaderRoute: typeof ApiAccountProfiloRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/account/password': {
+      id: '/api/account/password'
+      path: '/api/account/password'
+      fullPath: '/api/account/password'
+      preLoaderRoute: typeof ApiAccountPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/account/ordini': {
+      id: '/api/account/ordini'
+      path: '/api/account/ordini'
+      fullPath: '/api/account/ordini'
+      preLoaderRoute: typeof ApiAccountOrdiniRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/account/indirizzi': {
+      id: '/api/account/indirizzi'
+      path: '/api/account/indirizzi'
+      fullPath: '/api/account/indirizzi'
+      preLoaderRoute: typeof ApiAccountIndirizziRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/account/foto': {
+      id: '/api/account/foto'
+      path: '/api/account/foto'
+      fullPath: '/api/account/foto'
+      preLoaderRoute: typeof ApiAccountFotoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/account/bozze': {
+      id: '/api/account/bozze'
+      path: '/api/account/bozze'
+      fullPath: '/api/account/bozze'
+      preLoaderRoute: typeof ApiAccountBozzeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/ordine/$id': {
@@ -487,11 +747,24 @@ const rootRouteChildren: RootRouteChildren = {
   OrdinaRoute: OrdinaRoute,
   RegaloRoute: RegaloRoute,
   TerminiRoute: TerminiRoute,
+  AccountAccediRoute: AccountAccediRoute,
+  AccountPasswordRoute: AccountPasswordRoute,
   AdminImpostazioniRoute: AdminImpostazioniRoute,
   AdminStampaRoute: AdminStampaRoute,
   ApiOrdiniRoute: ApiOrdiniRoute,
+  AccountIndexRoute: AccountIndexRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminOrdineIdRoute: AdminOrdineIdRoute,
+  ApiAccountBozzeRoute: ApiAccountBozzeRoute,
+  ApiAccountFotoRoute: ApiAccountFotoRoute,
+  ApiAccountIndirizziRoute: ApiAccountIndirizziRoute,
+  ApiAccountOrdiniRoute: ApiAccountOrdiniRoute,
+  ApiAccountPasswordRoute: ApiAccountPasswordRoute,
+  ApiAccountProfiloRoute: ApiAccountProfiloRoute,
+  ApiAccountRegistratiRoute: ApiAccountRegistratiRoute,
+  ApiAccountRiordinaRoute: ApiAccountRiordinaRoute,
+  ApiAccountSessioneRoute: ApiAccountSessioneRoute,
+  ApiAccountVerificaRoute: ApiAccountVerificaRoute,
   ApiAdminFileRoute: ApiAdminFileRoute,
   ApiAdminImportaRoute: ApiAdminImportaRoute,
   ApiAdminImpostazioniRoute: ApiAdminImpostazioniRoute,

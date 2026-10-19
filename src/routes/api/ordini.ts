@@ -24,6 +24,7 @@ import {
   sendMail,
   esc,
 } from "@/server/vault";
+import { ensureSchema, getCustomer } from "@/server/account";
 
 // Nuovo ordine dal configuratore /crea.
 export const Route = createFileRoute("/api/ordini")({
@@ -45,15 +46,37 @@ export const Route = createFileRoute("/api/ordini")({
           indirizzo: str(body.contacts?.indirizzo, 400),
           note: str(body.contacts?.note, 2000),
         };
+        await ensureSchema();
+        const customer = await getCustomer(request);
+        // foto della bozza salvata, se il cliente non ne ha caricata una nuova
+        let draftPhoto: { key: string; name: string; type: string } | null = null;
+        if (customer && body.draftId && !body.photo?.base64) {
+          const d = await env.DB.prepare(
+            "SELECT photo_key, photo_name, photo_type FROM drafts WHERE id = ? AND customer_id = ?",
+          )
+            .bind(String(body.draftId), customer.id)
+            .first<{ photo_key: string; photo_name: string; photo_type: string }>();
+          if (d?.photo_key) draftPhoto = { key: d.photo_key, name: d.photo_name, type: d.photo_type };
+        }
         const missing = [...cardErrors(card), ...contactErrors(contacts)];
-        if (!body.photo?.base64) missing.push("La foto per la carta");
+        if (!body.photo?.base64 && !draftPhoto) missing.push("La foto per la carta");
         if (missing.length) return json({ error: "Mancano dei dati", missing }, 400);
 
-        const bytes = b64ToBytes(body.photo!.base64);
-        if (bytes.length > MAX_PHOTO) return bad("La foto supera i 10 MB");
-        const photoType = /^image\/[\w.+-]+$/.test(body.photo!.type)
-          ? body.photo!.type
-          : "application/octet-stream";
+        let bytes: Uint8Array | ArrayBuffer;
+        let photoType: string;
+        let photoName: string;
+        if (body.photo?.base64) {
+          bytes = b64ToBytes(body.photo.base64);
+          if (bytes.byteLength > MAX_PHOTO) return bad("La foto supera i 10 MB");
+          photoType = /^image\/[\w.+-]+$/.test(body.photo.type) ? body.photo.type : "application/octet-stream";
+          photoName = body.photo.name;
+        } else {
+          const obj = await env.FILES.get(draftPhoto!.key);
+          if (!obj) return json({ error: "Mancano dei dati", missing: ["La foto per la carta"] }, 400);
+          bytes = await new Response(obj.body).arrayBuffer();
+          photoType = draftPhoto!.type || "image/jpeg";
+          photoName = draftPhoto!.name || "foto.jpg";
+        }
 
         const count = await env.DB.prepare(
           "SELECT COUNT(*) AS n FROM orders WHERE email = ? AND source = 'sito' AND status != 'annullato'",
@@ -64,7 +87,7 @@ export const Route = createFileRoute("/api/ordini")({
           return bad(`Hai raggiunto il massimo di ${MAX_EDITION} carte.`);
 
         const id = crypto.randomUUID();
-        const photoKey = `ordini/${id}/foto-${safeName(body.photo!.name)}`;
+        const photoKey = `ordini/${id}/foto-${safeName(photoName)}`;
         await env.FILES.put(photoKey, bytes, { httpMetadata: { contentType: photoType } });
 
         const cu = custodiaOf(str(body.custodia, 40));
@@ -79,11 +102,11 @@ export const Route = createFileRoute("/api/ordini")({
 
         const res = await env.DB.prepare(
           `INSERT INTO orders (id, serial, edition, created_at, updated_at, status, email, customer_name, phone, address, customer_note,
-             category, card_name, card_json, art_pos, case_id, case_label, case_price, price, shipping, total, photo_key, photo_name, source)
+             category, card_name, card_json, art_pos, case_id, case_label, case_price, price, shipping, total, photo_key, photo_name, source, customer_id)
            VALUES (?1,
              (SELECT MAX(COALESCE((SELECT MAX(serial) FROM orders), 0) + 1, (SELECT CAST(value AS INTEGER) FROM settings WHERE key = 'serial_start'))),
              (SELECT COUNT(*) + 1 FROM orders WHERE email = ?2 AND source = 'sito' AND status != 'annullato'),
-             ?3, ?3, 'nuovo', ?2, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, 'sito')
+             ?3, ?3, 'nuovo', ?2, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, 'sito', ?20)
            RETURNING serial, edition`,
         )
           .bind(
@@ -105,10 +128,40 @@ export const Route = createFileRoute("/api/ordini")({
             p.shipping,
             p.total,
             photoKey,
-            body.photo!.name.slice(0, 160),
+            photoName.slice(0, 160),
+            customer?.id ?? "",
           )
           .first<{ serial: number; edition: number }>();
         if (!res) return bad("Non riesco a salvare l'ordine, riprova", 500);
+
+        if (customer) {
+          // la bozza diventata ordine non serve più
+          if (body.draftId) {
+            const d = await env.DB.prepare("SELECT photo_key FROM drafts WHERE id = ? AND customer_id = ?")
+              .bind(String(body.draftId), customer.id)
+              .first<{ photo_key: string }>();
+            if (d) {
+              if (d.photo_key) await env.FILES.delete(d.photo_key);
+              await env.DB.prepare("DELETE FROM drafts WHERE id = ?").bind(String(body.draftId)).run();
+            }
+          }
+          if (!customer.phone && contacts.cellulare)
+            await env.DB.prepare("UPDATE customers SET phone = ? WHERE id = ?").bind(contacts.cellulare, customer.id).run();
+          if (body.saveAddress) {
+            const dup = await env.DB.prepare("SELECT id FROM addresses WHERE customer_id = ? AND address = ?")
+              .bind(customer.id, contacts.indirizzo)
+              .first();
+            const n = await env.DB.prepare("SELECT COUNT(*) AS n FROM addresses WHERE customer_id = ?")
+              .bind(customer.id)
+              .first<{ n: number }>();
+            if (!dup && (n?.n ?? 0) < 20)
+              await env.DB.prepare(
+                "INSERT INTO addresses (id, customer_id, label, recipient, phone, address, is_default, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+              )
+                .bind(crypto.randomUUID(), customer.id, str(body.addressLabel, 40) || "Indirizzo", contacts.nome_cognome, contacts.cellulare, contacts.indirizzo, n?.n ? 0 : 1, now)
+                .run();
+          }
+        }
 
         const summary = rows([
           ["Numero", `N° ${pad3(res.serial)} · ${res.edition}/${MAX_EDITION}`],

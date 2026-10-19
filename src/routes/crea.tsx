@@ -31,6 +31,8 @@ import {
   custodiaOf,
   type Contacts,
 } from "@/lib/vaultShop";
+import { acc, photoUrl, urlToDataUrl, useMe } from "@/lib/accountClient";
+import { AUTH_CSS, AuthForm } from "@/components/vault/account/AuthForm";
 
 export const Route = createFileRoute("/crea")({
   component: CreaPage,
@@ -104,6 +106,99 @@ function CreaPage() {
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState<null | { serial: number; edition: number }>(null);
   const compact = useCompact();
+  const { me, reload: reloadMe } = useMe();
+  const [draftId, setDraftId] = useState<string | null>(null);
+  const [photoDirty, setPhotoDirty] = useState(false);
+  const [draftMsg, setDraftMsg] = useState("");
+  const [savingDraft, setSavingDraft] = useState(false);
+  const [authOpen, setAuthOpen] = useState<null | "save" | "data">(null);
+  const [addresses, setAddresses] = useState<
+    { id: string; label: string; recipient: string; phone: string; address: string; is_default: number }[]
+  >([]);
+  const [saveAddress, setSaveAddress] = useState(false);
+  const [addressLabel, setAddressLabel] = useState("");
+
+  // dati del cliente collegato e bozza da riprendere (?bozza=)
+  useEffect(() => {
+    if (!me) return;
+    setContacts((c) => ({
+      ...c,
+      nome_cognome: c.nome_cognome || me.name,
+      email: c.email || me.email,
+      cellulare: c.cellulare || me.phone,
+    }));
+    acc<{ addresses: typeof addresses }>("indirizzi")
+      .then((r) => {
+        setAddresses(r.addresses);
+        const def = r.addresses.find((a) => a.is_default);
+        if (def)
+          setContacts((c) => (c.indirizzo ? c : { ...c, indirizzo: def.address, nome_cognome: def.recipient || c.nome_cognome }));
+      })
+      .catch(() => null);
+  }, [me]);
+  useEffect(() => {
+    if (me === undefined) return;
+    const id = new URLSearchParams(location.search).get("bozza");
+    if (!id || draftId === id) return;
+    if (!me) {
+      setAuthOpen("data");
+      return;
+    }
+    acc<{ draft: { id: string; card_json: string; art_pos: string; custodia: string; photo_key: string; photo_name: string } }>(
+      `bozze?id=${encodeURIComponent(id)}`,
+    )
+      .then(async ({ draft }) => {
+        setDraftId(draft.id);
+        setD({ ...INITIAL, ...(JSON.parse(draft.card_json) as CardData), serial: null, edition: null });
+        setCustodia(draft.custodia || "nessuna");
+        const pos = { zoom: 1, px: 0, py: 0, ...(JSON.parse(draft.art_pos) as object) };
+        if (draft.photo_key) {
+          const { dataUrl, type } = await urlToDataUrl(photoUrl(draft.photo_key));
+          const im = new Image();
+          im.onload = () => {
+            art.current = { img: im, ...pos };
+            setZoom(pos.zoom);
+            setPhoto({ dataUrl, name: draft.photo_name || "foto.jpg", type });
+            setPhotoDirty(false);
+            setArtVersion((v) => v + 1);
+          };
+          im.src = dataUrl;
+        }
+        setDraftMsg("Bozza caricata: riprendi da dove avevi lasciato.");
+      })
+      .catch(() => setDraftMsg("Non trovo questa bozza."));
+  }, [me]);
+
+  const saveDraft = async () => {
+    if (!me) {
+      setAuthOpen("save");
+      return;
+    }
+    setSavingDraft(true);
+    setDraftMsg("");
+    try {
+      const r = await acc<{ id: string }>("bozze", {
+        json: {
+          id: draftId ?? undefined,
+          card: d,
+          artPos: { zoom: art.current.zoom, px: art.current.px, py: art.current.py },
+          custodia,
+          photo:
+            photo && photoDirty
+              ? { name: photo.name, type: photo.type, base64: photo.dataUrl.split(",")[1] ?? "" }
+              : null,
+        },
+      });
+      setDraftId(r.id);
+      setPhotoDirty(false);
+      history.replaceState(null, "", `/crea?bozza=${r.id}`);
+      setDraftMsg("Bozza salvata nel tuo account.");
+    } catch (e) {
+      setDraftMsg((e as Error).message);
+    } finally {
+      setSavingDraft(false);
+    }
+  };
 
   useEffect(() => {
     void loadFonts().then(() => setFontsVersion((v) => v + 1));
@@ -156,6 +251,7 @@ function CreaPage() {
         art.current = { img: im, zoom: 1, px: 0, py: 0 };
         setZoom(1);
         setPhoto({ dataUrl: url, name: f.name, type: f.type });
+        setPhotoDirty(true);
         setArtVersion((v) => v + 1);
       };
       im.src = url;
@@ -184,6 +280,9 @@ function CreaPage() {
           artPos: { zoom: art.current.zoom, px: art.current.px, py: art.current.py },
           custodia,
           contacts,
+          draftId: draftId ?? undefined,
+          saveAddress: !!me && saveAddress,
+          addressLabel,
           photo: photo && {
             name: photo.name,
             type: photo.type,
@@ -218,7 +317,7 @@ function CreaPage() {
     return (
       <main className="vc-page">
         <style>{EDITOR_CSS + PAGE_CSS + STAGE_CSS}</style>
-        <TopBar />
+        <TopBar me={me} />
         <section className="vc-done">
           <div className="vc-done-card">
             <CardStage data={shown} art={art} artVersion={artVersion} fontsVersion={fontsVersion} />
@@ -233,9 +332,21 @@ function CreaPage() {
               Ti abbiamo mandato una email di conferma. Controlliamo la carta e ti scriviamo con il
               riepilogo e le istruzioni per il pagamento, poi la stampiamo e te la spediamo.
             </p>
-            <Link to="/" className="vc-btn">
-              Torna alla home
-            </Link>
+            {me ? (
+              <a href="/account" className="vc-btn">
+                Segui l'ordine nel tuo Vault
+              </a>
+            ) : (
+              <>
+                <p>
+                  <b>Vuoi seguire l'ordine?</b> Crea un account con la stessa email: vedrai stato,
+                  pagamento e spedizione, e la carta entrerà nella tua collezione.
+                </p>
+                <a href="/account/accedi?nuovo=1&next=/account" className="vc-btn">
+                  Crea il tuo account
+                </a>
+              </>
+            )}
           </div>
         </section>
       </main>
@@ -244,8 +355,8 @@ function CreaPage() {
 
   return (
     <main className="vc-page">
-      <style>{EDITOR_CSS + PAGE_CSS + STAGE_CSS}</style>
-      <TopBar />
+      <style>{EDITOR_CSS + PAGE_CSS + STAGE_CSS + AUTH_CSS}</style>
+      <TopBar me={me} />
       <header className="vc-head">
         <p className="vc-kicker">FORMATO VAULT</p>
         <h1>Crea la tua carta</h1>
@@ -282,6 +393,15 @@ function CreaPage() {
               <b>€{total.toFixed(2)}</b>
             </div>
           )}
+          <div className="vc-draftbar">
+            <button type="button" className="vc-draftbtn" onClick={() => void saveDraft()} disabled={savingDraft}>
+              <svg viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 4h11l3 3v13H5zM8 4v5h7V4M8 20v-6h8v6" />
+              </svg>
+              {savingDraft ? "Salvo…" : draftId ? "Salva modifiche alla bozza" : "Salva bozza"}
+            </button>
+            {draftMsg && <span role="status">{draftMsg}</span>}
+          </div>
           <CardEditor
             d={d}
             set={set}
@@ -384,6 +504,37 @@ function CreaPage() {
           </Step>
 
           <Step n={9} title="Spedizione e contatti">
+            {me === null && (
+              <p className="vc-acchint">
+                Hai un account?{" "}
+                <button type="button" onClick={() => setAuthOpen("data")}>
+                  Accedi
+                </button>{" "}
+                per usare i tuoi dati e seguire l'ordine.
+              </p>
+            )}
+            {me && addresses.length > 0 && (
+              <div className="vc-addrpick">
+                <span>Spedisci a:</span>
+                {addresses.map((a) => (
+                  <button
+                    type="button"
+                    key={a.id}
+                    aria-pressed={contacts.indirizzo === a.address}
+                    onClick={() =>
+                      setContacts({
+                        ...contacts,
+                        indirizzo: a.address,
+                        nome_cognome: a.recipient || contacts.nome_cognome,
+                        cellulare: a.phone || contacts.cellulare,
+                      })
+                    }
+                  >
+                    {a.label}
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="vc-row vc-r2">
               <Field label="Nome e cognome">
                 <input
@@ -417,6 +568,21 @@ function CreaPage() {
                 onChange={(e) => setContacts({ ...contacts, indirizzo: e.target.value })}
               />
             </Field>
+            {me && contacts.indirizzo.trim() && !addresses.some((a) => a.address === contacts.indirizzo) && (
+              <div className="vc-saveaddr">
+                <label>
+                  <input type="checkbox" checked={saveAddress} onChange={(e) => setSaveAddress(e.target.checked)} />
+                  Salva questo indirizzo nel mio account
+                </label>
+                {saveAddress && (
+                  <input
+                    placeholder="Nome dell'indirizzo (es. Casa, Mamma)"
+                    value={addressLabel}
+                    onChange={(e) => setAddressLabel(e.target.value)}
+                  />
+                )}
+              </div>
+            )}
             <Field label="Note per noi (facoltativo)">
               <textarea
                 value={contacts.note}
@@ -485,6 +651,30 @@ function CreaPage() {
             setZoomCase(null);
           }}
         />
+      )}
+
+      {authOpen && (
+        <div className="vc-authmodal" role="dialog" aria-modal="true" aria-label="Accedi" onClick={() => setAuthOpen(null)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <button type="button" className="vc-authclose" aria-label="Chiudi" onClick={() => setAuthOpen(null)}>
+              ✕
+            </button>
+            <p className="vc-authwhy">
+              {authOpen === "save"
+                ? "Accedi o crea un account per salvare la bozza e riprenderla quando vuoi. La carta che hai fatto resta qui."
+                : "Accedi per usare i tuoi dati e i tuoi indirizzi."}
+            </p>
+            <AuthForm
+              onDone={() => {
+                const wasSave = authOpen === "save";
+                setAuthOpen(null);
+                void reloadMe().then(() => {
+                  if (wasSave) setTimeout(() => document.querySelector<HTMLButtonElement>(".vc-draftbtn")?.click(), 300);
+                });
+              }}
+            />
+          </div>
+        </div>
       )}
 
       {compact && (
@@ -574,20 +764,44 @@ function CaseLightbox({
   );
 }
 
-function TopBar() {
+function TopBar({ me }: { me?: { name: string } | null }) {
   return (
     <nav className="vc-top">
       <Link to="/" className="vc-logo" aria-label="Vault Crafted, home">
         <img src="/LOGO.png" alt="Vault Crafted" />
       </Link>
-      <Link to="/" className="vc-back">
-        ← Torna al sito
-      </Link>
+      <span className="vc-topr">
+        <a href={me ? "/account" : "/account/accedi?next=/crea"} className="vc-back">
+          {me ? `Il mio Vault (${me.name.split(" ")[0]})` : "Accedi"}
+        </a>
+        <Link to="/" className="vc-back">
+          ← Torna al sito
+        </Link>
+      </span>
     </nav>
   );
 }
 
 const PAGE_CSS = `
+.vc-topr{display:flex;gap:18px;align-items:center}
+.vc-draftbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.vc-draftbtn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;font-size:14px;color:var(--ink);cursor:pointer}
+.vc-draftbtn:hover{border-color:var(--ink)}
+.vc-draftbtn svg{width:18px;height:18px}
+.vc-draftbar span{font-size:13.5px;color:var(--muted)}
+.vc-acchint{margin:0 0 12px;font-size:14px;color:var(--muted)}
+.vc-acchint button{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--ink);text-decoration:underline;cursor:pointer}
+.vc-addrpick{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px;font-size:14px;color:var(--muted)}
+.vc-addrpick button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-weight:600;color:var(--ink);cursor:pointer}
+.vc-addrpick button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.vc-saveaddr{display:grid;gap:8px;margin:-4px 0 12px;font-size:14px}
+.vc-saveaddr label{display:flex;gap:8px;align-items:center}
+.vc-saveaddr input:not([type]){border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit}
+.vc-authmodal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:rgba(20,26,58,.6);backdrop-filter:blur(4px);padding:16px}
+.vc-authmodal>div{position:relative;background:#fff;border-radius:20px;padding:26px;width:min(100%,460px);max-height:90vh;overflow:auto;box-sizing:border-box}
+.vc-authclose{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;border:0;background:#F1F2F6;cursor:pointer;font-size:15px}
+.vc-authwhy{margin:0 0 16px;color:var(--muted);font-size:14.5px;padding-right:30px}
+.vc-authmodal .hm-btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;border-radius:12px;background:#141A3A;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:21px}
 .vc-head{padding:22px 24px 14px;max-width:1640px;margin:0 auto}
 .vc-head h1,.vc-done h1{margin:4px 0 6px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,6vw,64px);line-height:.95}
 .vc-head p:last-child{margin:0;color:var(--muted);max-width:560px}

@@ -86,6 +86,10 @@ export interface NewOrder {
   custodia: string;
   contacts: Contacts;
   photo: { name: string; type: string; base64: string } | null;
+  /** bozza dell'area cliente da cui arriva l'ordine (la sua foto vale se non ne arriva una nuova) */
+  draftId?: string;
+  saveAddress?: boolean;
+  addressLabel?: string;
 }
 
 export interface OrderRow {
@@ -118,6 +122,7 @@ export interface OrderRow {
   tracking: string;
   source: string;
   legacy_json: string;
+  customer_id?: string;
 }
 
 export function cardErrors(d: CardData) {
