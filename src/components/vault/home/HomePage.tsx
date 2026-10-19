@@ -32,45 +32,15 @@ const FAQ: [string, string][] = [
 ];
 
 const N = CARDS.length;
-const pageOf = (i: number) => Array.from({ length: 9 }, (_, j) => CARDS[(((i * 9 + j) % N) + N) % N]);
+// tasche della foto del raccoglitore, in % (sinistra, alto, larghezza, altezza)
+const POCKETS = [[11.523,7.639,10.938,22.917],[24.219,7.986,9.961,22.569],[35.742,7.292,10.039,22.917],[9.844,34.375,11.445,24.306],[22.461,34.722,11.133,24.306],[35.273,33.889,10.43,24.792],[8.203,62.847,11.914,27.083],[21.289,63.194,11.719,26.736],[34.57,62.639,11.055,26.944],[54.531,7.014,10.234,23.403],[66.172,7.708,10.664,23.125],[77.852,7.847,10.977,23.403],[54.648,34.028,10.664,24.861],[66.797,34.375,11.055,24.722],[78.867,34.722,11.523,24.722],[54.648,62.847,11.094,27.222],[67.422,63.333,11.406,27.083],[80,63.611,11.992,27.153]];
 
-function Page({ i, side, onOpen }: { i: number; side: "l" | "r"; onOpen?: (src: string) => void }) {
-  return (
-    <div className={`bd-page ${side}`}>
-      {pageOf(i).map((src, j) => (
-        <div className="bd-pocket" key={j}>
-          {onOpen ? (
-            <button type="button" onClick={() => onOpen(src)} aria-label="Ingrandisci la carta">
-              <img src={src} alt="Carta realizzata da Vault Crafted" loading="lazy" draggable={false} />
-            </button>
-          ) : (
-            <img src={src} alt="" loading="lazy" draggable={false} />
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/** Raccoglitore aperto a doppia pagina: la pagina gira in 3D e sfoglia da solo. */
+/** Raccoglitore vero (foto) con le carte infilate nelle buste; sfoglia da solo. */
 function Binder({ onOpen }: { onOpen: (src: string) => void }) {
-  const [s, setS] = useState(0); // doppia pagina corrente: pagine 2s e 2s+1
-  const [flip, setFlip] = useState<0 | 1 | -1>(0);
+  const [s, setS] = useState(0);
   const box = useRef<HTMLDivElement>(null);
   const hold = useRef(false);
-  const busy = useRef(false);
-  const go = (d: 1 | -1) => {
-    if (busy.current) return;
-    busy.current = true;
-    setFlip(d);
-    setTimeout(() => {
-      setS((x) => x + d);
-      setFlip(0);
-      busy.current = false;
-    }, 900);
-  };
-  const goRef = useRef(go);
-  goRef.current = go;
+  const go = (d: 1 | -1) => setS((x) => x + d);
   useEffect(() => {
     const el = box.current;
     if (!el || matchMedia("(prefers-reduced-motion:reduce)").matches) return;
@@ -78,18 +48,13 @@ function Binder({ onOpen }: { onOpen: (src: string) => void }) {
     const io = new IntersectionObserver(([e]) => (seen = e.isIntersecting), { threshold: 0.35 });
     io.observe(el);
     const t = setInterval(() => {
-      if (seen && !hold.current && !document.hidden) goRef.current(1);
-    }, 5000);
+      if (seen && !hold.current && !document.hidden) setS((x) => x + 1);
+    }, 5500);
     return () => {
       io.disconnect();
       clearInterval(t);
     };
   }, []);
-
-  const L = 2 * s;
-  // durante il giro, sotto la pagina che si muove compare già quella successiva
-  const left = flip === -1 ? L - 2 : L;
-  const right = flip === 1 ? L + 3 : L + 1;
   return (
     <div
       className="bd"
@@ -97,24 +62,28 @@ function Binder({ onOpen }: { onOpen: (src: string) => void }) {
       onPointerEnter={() => (hold.current = true)}
       onPointerLeave={() => (hold.current = false)}
     >
-      <div className="bd-book">
-        <Page i={left} side="l" onOpen={flip ? undefined : onOpen} />
-        <Page i={right} side="r" onOpen={flip ? undefined : onOpen} />
-        <div className="bd-spine" aria-hidden>
-          <i />
-          <i />
-          <i />
+      <div className="bd-view">
+        <div className="bd-photo">
+          <img className="bd-base" src="/home/binder.webp" alt="" loading="lazy" draggable={false} />
+          {POCKETS.map(([l, t, w, h], j) => {
+            const src = CARDS[(((s * 18 + j) % N) + N) % N];
+            return (
+              <div className="bd-pocket" key={j} style={{ left: `${l}%`, top: `${t}%`, width: `${w}%`, height: `${h}%` }}>
+                <button
+                  type="button"
+                  key={`${s}-${j}`}
+                  onClick={() => onOpen(src)}
+                  aria-label="Ingrandisci la carta"
+                  style={{ ["--d" as string]: `${(j % 9) * 45 + (j >= 9 ? 120 : 0)}ms` }}
+                >
+                  <img src={src} alt="Carta realizzata da Vault Crafted" loading="lazy" draggable={false} />
+                </button>
+              </div>
+            );
+          })}
+          <img className="bd-glare" src="/home/glare.webp" alt="" loading="lazy" draggable={false} />
+          <i className="bd-sweep" key={`sw${s}`} aria-hidden />
         </div>
-        {flip !== 0 && (
-          <div className={`bd-leaf ${flip === 1 ? "next" : "prev"}`} aria-hidden>
-            <div className="bd-face front">
-              <Page i={flip === 1 ? L + 1 : L} side={flip === 1 ? "r" : "l"} />
-            </div>
-            <div className="bd-face back">
-              <Page i={flip === 1 ? L + 2 : L - 1} side={flip === 1 ? "l" : "r"} />
-            </div>
-          </div>
-        )}
       </div>
       <div className="bd-nav">
         <button type="button" onClick={() => go(-1)} aria-label="Pagina precedente">
