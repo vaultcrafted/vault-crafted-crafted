@@ -207,6 +207,13 @@ export const ADMIN_CSS = `
 .ad-table tr:last-child td{border-bottom:0}
 .ad-table tbody tr{cursor:pointer}
 .ad-table tbody tr:hover td{background:#FAFAFC}
+.ad-table .ad-chk{width:36px;padding-right:0;cursor:default}
+.ad-table .ad-chk input{width:18px;height:18px;accent-color:var(--ink);cursor:pointer}
+.ad-table tr.is-sel td{background:#F1F3FA}
+.ad-bulk{position:sticky;top:8px;z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--ink);color:#fff;border-radius:14px;padding:10px 12px;margin:0 0 12px;box-shadow:0 10px 30px rgba(20,26,58,.25)}
+.ad-bulk b{font-size:14px;margin-right:4px}
+.ad-bulk select,.ad-bulk button{font:inherit;font-size:13px;font-weight:700;border:0;border-radius:999px;padding:7px 12px;background:#fff;color:var(--ink);cursor:pointer}
+.ad-bulk .ad-bulk-x{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);margin-left:auto}
 .ad-num{font-family:'JetBrains Mono',monospace;font-weight:700}
 .ad-sub{display:block;font-size:12px;color:var(--muted)}
 .ad-paid{display:block;font-size:12px;font-weight:700;color:#127A4B}

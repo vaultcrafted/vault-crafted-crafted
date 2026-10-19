@@ -54,7 +54,7 @@ export function legacyFields(r: Record<string, string>) {
   const stato = pick(r, "stato").toUpperCase();
   const pagato = pick(r, "pagato").toUpperCase();
   const metodo = pick(r, "metodopagamento");
-  const status = stato.startsWith("ANNULL") ? "annullato" : stato.startsWith("CONSEGN") ? "consegnato" : "storico";
+  const status = mapStato(stato);
   // pagato solo se nel foglio c'è SI; gli omaggi restano non pagati (a €0)
   const paid = pagato === "SI" || pagato === "SÌ" ? 1 : 0;
 
@@ -93,4 +93,17 @@ export function legacyFields(r: Record<string, string>) {
     total,
     admin_note: notes,
   };
+}
+
+/** Stato scritto nel foglio → stato del pannello. */
+function mapStato(s: string) {
+  const t = s.replace(/\s+/g, " ").trim();
+  if (/ANNULL|RIFIUT|CANCELL/.test(t)) return "annullato";
+  if (/CONSEGN|RITIRAT/.test(t)) return "consegnato";
+  if (/SPEDIT|INVIAT/.test(t)) return "spedito";
+  if (/STAMPA|STAMPAT|PRODUZ/.test(t)) return t.includes("PRONT") ? "approvato" : "in_stampa";
+  if (/APPROV|CONFERM|PRONT/.test(t)) return "approvato";
+  if (/ATTESA|DA PAGARE|BOZZA/.test(t)) return "bozza_inviata";
+  if (/LAVORAZ|NUOV|DA FARE/.test(t)) return "in_lavorazione";
+  return "storico";
 }

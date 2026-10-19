@@ -57,7 +57,7 @@ export const Route = createFileRoute("/api/admin/importa")({
         });
         for (let i = 0; i < stmts.length; i += 50) await env.DB.batch(stmts.slice(i, i + 50));
         const removed = await dedupe();
-        return json({ ok: true, imported: rows.length - removed, removed });
+        return json({ ok: true, imported: rows.length, removed });
       },
       // ricalcola totale, data e dati cliente degli ordini già importati dal foglio
       PUT: async ({ request }) => {

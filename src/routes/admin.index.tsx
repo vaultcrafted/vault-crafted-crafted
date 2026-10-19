@@ -59,6 +59,28 @@ function OrdersList() {
     money: { incassato: number; da_incassare: number };
   } | null>(null);
   const [err, setErr] = useState("");
+  const [sel, setSel] = useState<Set<string>>(new Set());
+  const [reload, setReload] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const toggle = (id: string) =>
+    setSel((s) => {
+      const n = new Set(s);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+  const bulk = async (patch: { status?: string; paid?: boolean }) => {
+    setBusy(true);
+    try {
+      await api("/api/admin/ordini", { method: "PATCH", json: { ids: [...sel], ...patch } });
+      setSel(new Set());
+      setReload((r) => r + 1);
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -72,7 +94,8 @@ function OrdersList() {
         .catch((e) => setErr(e.message));
     }, 200);
     return () => clearTimeout(t);
-  }, [tab, q]);
+  }, [tab, q, reload]);
+  useEffect(() => setSel(new Set()), [tab, q]);
 
   const count = (s: string) => data?.counts.find((c) => c.status === s)?.n ?? 0;
   const active = (data?.counts ?? [])
@@ -116,11 +139,48 @@ function OrdersList() {
         onChange={(e) => setQ(e.target.value)}
       />
       {err && <p className="vc-err">{err}</p>}
+      {sel.size > 0 && (
+        <div className="ad-bulk" role="toolbar">
+          <b>{sel.size} selezionati</b>
+          <select
+            value=""
+            disabled={busy}
+            onChange={(e) => e.target.value && bulk({ status: e.target.value })}
+            aria-label="Cambia stato"
+          >
+            <option value="">Cambia stato…</option>
+            {Object.entries(STATUS_LABELS).map(([k, l]) => (
+              <option key={k} value={k}>
+                {l}
+              </option>
+            ))}
+          </select>
+          <button type="button" disabled={busy} onClick={() => bulk({ paid: true })}>
+            Segna pagati
+          </button>
+          <button type="button" disabled={busy} onClick={() => bulk({ paid: false })}>
+            Segna non pagati
+          </button>
+          <button type="button" className="ad-bulk-x" onClick={() => setSel(new Set())}>
+            Annulla
+          </button>
+        </div>
+      )}
       {data && data.orders.length === 0 && <div className="ad-empty">Nessun ordine qui.</div>}
       {data && data.orders.length > 0 && (
         <table className="ad-table">
           <thead>
             <tr>
+              <th className="ad-chk">
+                <input
+                  type="checkbox"
+                  aria-label="Seleziona tutti"
+                  checked={sel.size > 0 && sel.size === data.orders.length}
+                  onChange={(e) =>
+                    setSel(e.target.checked ? new Set(data.orders.map((o) => o.id)) : new Set())
+                  }
+                />
+              </th>
               <th>N°</th>
               <th>Carta</th>
               <th className="hide-m">Cliente</th>
@@ -131,7 +191,19 @@ function OrdersList() {
           </thead>
           <tbody>
             {data.orders.map((o) => (
-              <tr key={o.id} onClick={() => nav({ to: "/admin/ordine/$id", params: { id: o.id } })}>
+              <tr
+                key={o.id}
+                className={sel.has(o.id) ? "is-sel" : undefined}
+                onClick={() => nav({ to: "/admin/ordine/$id", params: { id: o.id } })}
+              >
+                <td className="ad-chk" onClick={(e) => e.stopPropagation()}>
+                  <input
+                    type="checkbox"
+                    aria-label="Seleziona"
+                    checked={sel.has(o.id)}
+                    onChange={() => toggle(o.id)}
+                  />
+                </td>
                 <td>
                   <span className="ad-num">
                     {o.serial ? String(o.serial).padStart(3, "0") : "—"}

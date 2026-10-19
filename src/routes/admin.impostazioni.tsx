@@ -87,7 +87,7 @@ function Settings() {
       });
       setMsg(
         `Importati ${r.imported} ordini nello storico` +
-          (r.removed ? ` (tolti ${r.removed} doppioni)` : ""),
+          (r.removed ? ` (tolte ${r.removed} copie vecchie)` : ""),
       );
       setPreview(null);
     } catch (e) {
