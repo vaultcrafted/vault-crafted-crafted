@@ -9,20 +9,25 @@ export const Route = createFileRoute("/api/admin/importa")({
       POST: async ({ request }) => {
         const deny = await requireAdmin(request);
         if (deny) return deny;
-        const { rows } = (await request.json().catch(() => ({}))) as {
+        const { rows, replace } = (await request.json().catch(() => ({}))) as {
           rows?: Record<string, string>[];
+          replace?: boolean;
         };
         if (!Array.isArray(rows) || !rows.length) return bad("Nessuna riga da importare");
         if (rows.length > 2000) return bad("Troppe righe in una volta (max 2000)");
+        // sostituisce l'import precedente (solo gli ordini venuti dal foglio)
+        if (replace) await env.DB.prepare("DELETE FROM orders WHERE source = 'foglio'").run();
         const stmts = rows.map((r) => {
           const f = legacyFields(r);
           return env.DB.prepare(
-            `INSERT INTO orders (id, created_at, updated_at, status, paid, email, customer_name, phone, address, category, card_name, case_label, total, source, legacy_json)
-             VALUES (?, ?, ?, 'storico', 1, ?, ?, ?, ?, ?, ?, ?, ?, 'foglio', ?)`,
+            `INSERT INTO orders (id, created_at, updated_at, status, paid, email, customer_name, phone, address, category, card_name, case_label, total, admin_note, source, legacy_json)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'foglio', ?)`,
           ).bind(
             crypto.randomUUID(),
             f.created_at,
             nowIso(),
+            f.status,
+            f.paid,
             f.email,
             f.customer_name,
             f.phone,
@@ -31,6 +36,7 @@ export const Route = createFileRoute("/api/admin/importa")({
             f.card_name,
             f.case_label,
             f.total,
+            f.admin_note,
             JSON.stringify(r).slice(0, 60000),
           );
         });
@@ -58,8 +64,8 @@ export const Route = createFileRoute("/api/admin/importa")({
           const f = legacyFields(r);
           stmts.push(
             env.DB.prepare(
-              `UPDATE orders SET created_at = ?, email = ?, customer_name = ?, phone = ?, address = ?, category = ?, card_name = ?, case_label = ?, total = ? WHERE id = ?`,
-            ).bind(f.created_at, f.email, f.customer_name, f.phone, f.address, f.category, f.card_name, f.case_label, f.total, o.id),
+              `UPDATE orders SET created_at = ?, status = ?, paid = ?, email = CASE WHEN ? != '' THEN ? ELSE email END, customer_name = ?, phone = ?, address = ?, category = ?, card_name = ?, case_label = ?, total = ?, admin_note = ? WHERE id = ?`,
+            ).bind(f.created_at, f.status, f.paid, f.email, f.email, f.customer_name, f.phone, f.address, f.category, f.card_name, f.case_label, f.total, f.admin_note, o.id),
           );
           fixed++;
         }

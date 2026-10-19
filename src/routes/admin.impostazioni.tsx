@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AdminShell, api } from "@/components/vault/AdminShell";
 import { FONTS_HREF, Field } from "@/components/vault/CardEditor";
+import { parseCSV } from "@/lib/csv";
 
 export const Route = createFileRoute("/admin/impostazioni")({
   component: () => (
@@ -18,45 +19,6 @@ export const Route = createFileRoute("/admin/impostazioni")({
   }),
 });
 
-/** Legge un CSV (anche esportato da Google Fogli) in righe oggetto. */
-function parseCSV(text: string): Record<string, string>[] {
-  const rows: string[][] = [];
-  let row: string[] = [],
-    cell = "",
-    q = false;
-  const sep =
-    (text.split("\n")[0].match(/;/g)?.length ?? 0) > (text.split("\n")[0].match(/,/g)?.length ?? 0)
-      ? ";"
-      : ",";
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    if (q) {
-      if (ch === '"' && text[i + 1] === '"') {
-        cell += '"';
-        i++;
-      } else if (ch === '"') q = false;
-      else cell += ch;
-    } else if (ch === '"') q = true;
-    else if (ch === sep) {
-      row.push(cell);
-      cell = "";
-    } else if (ch === "\n" || ch === "\r") {
-      if (ch === "\r" && text[i + 1] === "\n") i++;
-      row.push(cell);
-      cell = "";
-      if (row.some((c) => c.trim())) rows.push(row);
-      row = [];
-    } else cell += ch;
-  }
-  row.push(cell);
-  if (row.some((c) => c.trim())) rows.push(row);
-  const [head, ...body] = rows;
-  if (!head) return [];
-  return body.map((r) =>
-    Object.fromEntries(head.map((h, i) => [h.trim() || `colonna_${i + 1}`, (r[i] ?? "").trim()])),
-  );
-}
-
 function Settings() {
   const [start, setStart] = useState("");
   const [maxSerial, setMaxSerial] = useState(0);
@@ -64,6 +26,7 @@ function Settings() {
   const [msg, setMsg] = useState("");
   const [preview, setPreview] = useState<Record<string, string>[] | null>(null);
   const [importing, setImporting] = useState(false);
+  const [replace, setReplace] = useState(true);
 
   useEffect(() => {
     api<{ settings: Record<string, string>; maxSerial: number; mail: boolean }>(
@@ -120,7 +83,7 @@ function Settings() {
     try {
       const r = await api<{ imported: number }>("/api/admin/importa", {
         method: "POST",
-        json: { rows: preview },
+        json: { rows: preview, replace },
       });
       setMsg(`Importati ${r.imported} ordini nello storico`);
       setPreview(null);
@@ -252,6 +215,10 @@ function Settings() {
             <p className="vc-hint">
               Trovate <b>{preview.length}</b> righe. Colonne: {Object.keys(preview[0]).join(", ")}
             </p>
+            <label style={{ display: "flex", gap: 10, alignItems: "center", margin: "10px 0 0", fontSize: 14 }}>
+              <input type="checkbox" checked={replace} onChange={(e) => setReplace(e.target.checked)} />
+              Sostituisci gli ordini già importati dal foglio (consigliato: evita i doppioni)
+            </label>
             <button
               type="button"
               className="vc-btn dark"
