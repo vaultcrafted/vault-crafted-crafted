@@ -77,7 +77,7 @@ function CartePage() {
   const [zoom, setZoom] = useState<string | null>(null);
   return (
     <SiteShell>
-      <header className="hm-page-head">
+      <header className="hm-page-head hm-head-anim">
         <h1>Le carte che abbiamo stampato.</h1>
         <p>
           Coppie, amici, artisti, cani di famiglia. Ognuna composta da chi l'ha ordinata, con la sua
@@ -88,7 +88,14 @@ function CartePage() {
       <section className="hm-sec" style={{ paddingTop: 30 }}>
         <div className="hm-grid">
           {CARD_SRCS.map((src, i) => (
-            <button type="button" key={src} onClick={() => setZoom(src)} aria-label="Ingrandisci la carta">
+            <button
+              type="button"
+              key={src}
+              className="rv"
+              style={{ ["--d" as string]: `${(i % 4) * 0.08}s` }}
+              onClick={() => setZoom(src)}
+              aria-label="Ingrandisci la carta"
+            >
               <img src={src} alt="Carta personalizzata Vault Crafted" loading={i < 8 ? "eager" : "lazy"} />
             </button>
           ))}

@@ -71,12 +71,12 @@ export const Route = createFileRoute("/chi-siamo")({
 function ChiSiamoPage() {
   return (
     <SiteShell>
-      <header className="hm-page-head">
+      <header className="hm-page-head hm-head-anim">
         <h1>Una tipografia, una passione per le carte.</h1>
         <p>Vault Crafted nasce a novembre 2024 a Livorno Ferraris, in provincia di Vercelli.</p>
       </header>
 
-      <section className="hm-sec hm-prose" style={{ paddingTop: 30 }}>
+      <section className="hm-sec hm-prose rv" style={{ paddingTop: 30 }}>
         <p>
           Tutto parte dalle <b>carte Pokémon</b>: quelle che collezionavo da bambino, quando aprire
           una bustina era un piccolo evento. Quella passione non se n'è mai andata, e a un certo
@@ -94,8 +94,8 @@ function ChiSiamoPage() {
       </section>
 
       <section className="hm-sec">
-        <h2>Come lavoriamo</h2>
-        <div className="hm-cards3">
+        <h2 className="rv">Come lavoriamo</h2>
+        <div className="hm-cards3 hm-stag rv">
           <div>
             <h3>La tua foto, le tue frasi</h3>
             <p>La carta la componi tu, quindi ogni carta è diversa da tutte le altre.</p>
@@ -111,7 +111,7 @@ function ChiSiamoPage() {
         </div>
       </section>
 
-      <section className="hm-final">
+      <section className="hm-final rv">
         <h2>Pronto a creare la tua carta?</h2>
         <Link to="/crea" className="hm-btn">
           Crea la tua carta

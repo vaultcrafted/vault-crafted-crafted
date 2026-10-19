@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { HoloCard } from "@/components/vault/home/HoloCard";
-import { CATS } from "@/lib/vaultCard";
+import { CATS, ELEMENTS } from "@/lib/vaultCard";
 import { CUSTODIE, HOLO_PRICE, SPEDIZIONE } from "@/lib/vaultShop";
 import { CARD_SRCS, SiteShell, CardZoom } from "@/components/vault/home/Site";
 
@@ -43,13 +43,37 @@ const FAQ: [string, string][] = [
 function Binder({ onOpen }: { onOpen: (src: string) => void }) {
   const [page, setPage] = useState(0);
   const [dir, setDir] = useState(0);
+  const box = useRef<HTMLDivElement>(null);
+  const hold = useRef(false);
   const go = (d: number) => {
     setDir(d);
     setPage((p) => (p + d + PAGES.length) % PAGES.length);
   };
+  // sfoglia da solo quando è sullo schermo e nessuno ci sta interagendo
+  useEffect(() => {
+    const el = box.current;
+    if (!el || matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+    let seen = false;
+    const io = new IntersectionObserver(([e]) => (seen = e.isIntersecting), { threshold: 0.4 });
+    io.observe(el);
+    const t = setInterval(() => {
+      if (seen && !hold.current && !document.hidden) go(1);
+    }, 5200);
+    return () => {
+      io.disconnect();
+      clearInterval(t);
+    };
+  }, []);
   const cards = PAGES[page];
   return (
-    <div className="hm-binder">
+    <div
+      className="hm-binder"
+      ref={box}
+      onPointerEnter={() => (hold.current = true)}
+      onPointerLeave={() => (hold.current = false)}
+      onFocus={() => (hold.current = true)}
+      onBlur={() => (hold.current = false)}
+    >
       <div className="hm-sheet" key={page} data-dir={dir}>
         {Array.from({ length: 9 }).map((_, i) => (
           <div className="hm-pocket" key={i}>
@@ -76,6 +100,85 @@ function Binder({ onOpen }: { onOpen: (src: string) => void }) {
         <button type="button" onClick={() => go(1)} aria-label="Pagina successiva">
           ›
         </button>
+      </div>
+    </div>
+  );
+}
+
+/** Passo 1: la carta si compone da sola nel configuratore (animazione in loop). */
+function StepCompose() {
+  return (
+    <div className="st st1" role="img" aria-label="Il configuratore: scegli categoria, elemento, nome e carichi la foto">
+      <div className="st1-card">
+        <img src="/carte/lincio.webp" alt="" loading="lazy" />
+        <div className="st1-empty">
+          <span className="st1-name">
+            <i>Smiley</i>
+          </span>
+          <span className="st1-up">
+            <svg viewBox="0 0 24 24"><path d="M12 16V5M7 10l5-5 5 5M5 19h14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </span>
+        </div>
+        <i className="st1-flash" />
+      </div>
+      <div className="st1-panel">
+        <b>Categoria</b>
+        <div className="st1-pills">
+          <span>Base</span>
+          <span className="on">Rara</span>
+          <span>Full Art</span>
+        </div>
+        <b>Elemento</b>
+        <div className="st1-dots">
+          {ELEMENTS.slice(0, 5).map(([k, , c], i) => (
+            <span key={k} className={i === 0 ? "on" : ""} style={{ background: c }} />
+          ))}
+        </div>
+        <b>Nome</b>
+        <div className="st1-input">
+          <i>Smiley</i>
+        </div>
+        <div className="st1-btn">Carica la foto</div>
+      </div>
+      <svg className="st1-cursor" viewBox="0 0 24 24" aria-hidden>
+        <path d="M4 3l15 7-6.5 2L10 19z" fill="#141A3A" stroke="#fff" strokeWidth="1.6" strokeLinejoin="round" />
+      </svg>
+    </div>
+  );
+}
+
+/** Passo 2: le carte escono dalla stampa, ognuna con il suo numero. */
+function StepPrint() {
+  return (
+    <div className="st st2" role="img" aria-label="Tre carte stampate e numerate">
+      <div className="st2-fan">
+        <img src="/carte/ric-de-large.webp" alt="" loading="lazy" />
+        <img src="/carte/jaz-e-bobo.webp" alt="" loading="lazy" />
+        <img src="/carte/etr.webp" alt="" loading="lazy" />
+        <i className="st2-scan" />
+      </div>
+      <span className="st2-serial">
+        N° <i />
+      </span>
+    </div>
+  );
+}
+
+/** Passo 3: la carta in custodia e la spedizione che avanza. */
+function StepShip() {
+  return (
+    <div className="st st3" role="img" aria-label="La carta nella custodia, spedita con corriere tracciato">
+      <img src="/home/passo-custodia.webp" alt="" loading="lazy" />
+      <i className="st3-glare" />
+      <div className="st3-track">
+        <div>
+          <span>Stampata</span>
+          <span>Spedita</span>
+          <span>Consegnata</span>
+        </div>
+        <p>
+          <i />
+        </p>
       </div>
     </div>
   );
@@ -182,7 +285,7 @@ export function HomePage() {
         <h2 className="rv">Come nasce una carta</h2>
         <ol className="hm-steps">
           <li className="rv">
-            <img src="/home/passo-configuratore.webp" alt="Il configuratore di Vault Crafted" loading="lazy" />
+            <StepCompose />
             <h3>La componi tu</h3>
             <p>
               Nel configuratore scegli categoria, elemento, attacchi e frase, carichi la tua foto e
@@ -190,7 +293,7 @@ export function HomePage() {
             </p>
           </li>
           <li className="rv" style={{ ["--d" as string]: ".12s" }}>
-            <img src="/home/passo-stampa.webp" alt="Una carta Vault stampata" loading="lazy" />
+            <StepPrint />
             <h3>La stampiamo noi</h3>
             <p>
               Controlliamo che foto e testi siano perfetti per la stampa, poi la stampiamo in alta
@@ -198,7 +301,7 @@ export function HomePage() {
             </p>
           </li>
           <li className="rv" style={{ ["--d" as string]: ".24s" }}>
-            <img src="/home/passo-custodia.webp" alt="Una carta Vault nella sua custodia" loading="lazy" />
+            <StepShip />
             <h3>Ti arriva a casa</h3>
             <p>
               Stampata, numerata e protetta. Spedizione tracciata in tutta Italia a {euro(SPEDIZIONE)}.
