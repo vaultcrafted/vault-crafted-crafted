@@ -10,14 +10,6 @@ const CARDS = CARD_SRCS;
 const COLS = [0, 1, 2, 3].map((c) => CARDS.filter((_, i) => i % 4 === c));
 const PAGES = Array.from({ length: Math.ceil(CARDS.length / 9) }, (_, i) => CARDS.slice(i * 9, i * 9 + 9));
 const euro = (n: number) => `€${n.toFixed(2).replace(".", ",").replace(",00", "")}`;
-const TICKER = [
-  "Con la tua foto",
-  "Numerata",
-  "Stampata a Livorno Ferraris",
-  "Olografica, se vuoi",
-  "Spedizione tracciata in tutta Italia",
-  "La vedi prima di ordinarla",
-];
 const minPrice = Math.min(...CATS.map((c) => c.price));
 
 const FAQ: [string, string][] = [
@@ -269,17 +261,6 @@ export function HomePage() {
         </header>
       </div>
 
-      <div className="hm-ticker" aria-hidden>
-        <div>
-          {[0, 1].map((k) => (
-            <span key={k}>
-              {TICKER.map((t) => (
-                <em key={t}>{t}</em>
-              ))}
-            </span>
-          ))}
-        </div>
-      </div>
 
       <section className="hm-sec" id="come">
         <h2 className="rv">Come nasce una carta</h2>

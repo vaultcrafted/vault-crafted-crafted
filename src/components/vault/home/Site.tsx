@@ -211,13 +211,6 @@ export const SITE_CSS = `
 @keyframes hmup{to{transform:translateY(calc(-50% - 8px))}}
 @media (hover:none){.hm-wall-in{animation:hmsway 9s ease-in-out infinite alternate}}
 @keyframes hmsway{from{transform:rotateX(14deg) rotateY(-18deg) rotateZ(4deg) scale(1.12)}to{transform:rotateX(8deg) rotateY(-6deg) rotateZ(3deg) scale(1.12)}}
-/* nastro */
-.hm-ticker{overflow:hidden;background:var(--ink);color:#fff;padding:16px 0;transform:rotate(-1.2deg);margin:10px -10px 0;box-shadow:0 20px 40px -24px rgba(20,26,58,.7)}
-.hm-ticker>div{display:flex;width:max-content;animation:hmtick 38s linear infinite}
-.hm-ticker span{display:flex}
-.hm-ticker em{font-style:normal;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:26px;letter-spacing:.02em;white-space:nowrap;padding:0 22px;display:flex;align-items:center;gap:44px}
-.hm-ticker em::after{content:"";width:9px;height:9px;transform:rotate(45deg);background:linear-gradient(135deg,#ff5aa8,#ffd23f,#3dffb5,#3dc8ff);margin-left:22px}
-@keyframes hmtick{to{transform:translateX(-50%)}}
 /* sezioni */
 .hm-sec{max-width:1240px;margin:0 auto;padding:100px 28px 10px}
 .hm-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;counter-reset:s}
@@ -395,7 +388,6 @@ export const SITE_CSS = `
   .hm-hero-txt{padding:34px 18px 26px}
   .hm-wall{height:62svh;padding:0 10px;order:2}
   .hm-wall-in{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-  .hm-ticker em{font-size:20px}
   .hm-col>div{gap:10px}
   .hm-col.c1{margin-top:-50px}
   .hm-col.c3{display:none}
