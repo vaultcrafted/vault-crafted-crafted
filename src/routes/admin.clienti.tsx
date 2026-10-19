@@ -65,6 +65,7 @@ function Clienti() {
               <th className="hide-m">Pagato</th>
               <th className="hide-m">Bozze</th>
               <th className="hide-m">Iscritto il</th>
+              <th />
             </tr>
           </thead>
           <tbody>
@@ -81,6 +82,24 @@ function Clienti() {
                 <td className="hide-m">€{Number(r.spent).toFixed(2).replace(".", ",")}</td>
                 <td className="hide-m">{r.drafts}</td>
                 <td className="hide-m">{new Date(r.created_at).toLocaleDateString("it-IT")}</td>
+                <td style={{ textAlign: "right" }}>
+                  <button
+                    type="button"
+                    className="vc-btn ghost"
+                    style={{ padding: "6px 12px", fontSize: 13 }}
+                    onClick={async () => {
+                      if (!confirm(`Eliminare l'account di ${r.email}? Gli ordini restano nel pannello, si cancellano account, indirizzi e bozze.`)) return;
+                      try {
+                        await api(`/api/admin/clienti?id=${encodeURIComponent(r.id)}`, { method: "DELETE" });
+                        setRows((x) => (x ?? []).filter((y) => y.id !== r.id));
+                      } catch (e) {
+                        alert((e as Error).message);
+                      }
+                    }}
+                  >
+                    Elimina
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

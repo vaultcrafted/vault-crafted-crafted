@@ -19,6 +19,28 @@ export const Route = createFileRoute("/api/admin/clienti")({
         ).all();
         return json({ customers: r.results });
       },
+      // elimina un account cliente: dati, indirizzi, bozze e foto delle bozze. Gli ordini restano.
+      DELETE: async ({ request }) => {
+        const deny = await requireAdmin(request);
+        if (deny) return deny;
+        await ensureSchema();
+        const id = new URL(request.url).searchParams.get("id") ?? "";
+        const c = await env.DB.prepare("SELECT id FROM customers WHERE id = ?").bind(id).first();
+        if (!c) return json({ error: "Cliente non trovato" }, 404);
+        const d = await env.DB.prepare("SELECT photo_key FROM drafts WHERE customer_id = ? AND photo_key != ''")
+          .bind(id)
+          .all<{ photo_key: string }>();
+        const keys = d.results.map((x) => x.photo_key);
+        if (keys.length) await env.FILES.delete(keys);
+        await env.DB.batch([
+          env.DB.prepare("DELETE FROM drafts WHERE customer_id = ?").bind(id),
+          env.DB.prepare("DELETE FROM addresses WHERE customer_id = ?").bind(id),
+          env.DB.prepare("DELETE FROM tokens WHERE customer_id = ?").bind(id),
+          env.DB.prepare("UPDATE orders SET customer_id = '' WHERE customer_id = ?").bind(id),
+          env.DB.prepare("DELETE FROM customers WHERE id = ?").bind(id),
+        ]);
+        return json({ ok: true });
+      },
     },
   },
 });
