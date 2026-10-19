@@ -55,7 +55,8 @@ export function legacyFields(r: Record<string, string>) {
   const pagato = pick(r, "pagato").toUpperCase();
   const metodo = pick(r, "metodopagamento");
   const status = stato.startsWith("ANNULL") ? "annullato" : stato.startsWith("CONSEGN") ? "consegnato" : "storico";
-  const paid = pagato === "SI" || pagato === "SÌ" || pagato === "OMAGGIO" ? 1 : 0;
+  // pagato solo se nel foglio c'è SI; gli omaggi restano non pagati (a €0)
+  const paid = pagato === "SI" || pagato === "SÌ" ? 1 : 0;
 
   const tipologia = pick(r, "tipologiadicarta", "tipologia");
   const custodia = pick(r, "custodiaholder", "custodia");
