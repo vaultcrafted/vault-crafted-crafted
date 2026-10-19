@@ -350,28 +350,64 @@ export const SITE_CSS = `
 .hm-binder-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 30px;margin-bottom:34px}
 .hm-binder-head h2{margin:0 0 8px}
 .hm-binder-head p{margin:0;color:var(--muted);max-width:52ch}
-.bd{width:min(100%,calc((100svh - 160px) * 1.78),1240px);margin:0 auto}
-.bd-view{border-radius:22px;overflow:hidden;box-shadow:0 50px 80px -40px rgba(20,26,58,.6),0 0 0 1px rgba(20,26,58,.08)}
-.bd-photo{position:relative;aspect-ratio:16/9}
-.bd-base,.bd-glare{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none}
-.bd-glare{mix-blend-mode:screen;pointer-events:none;opacity:.9}
-.bd-pocket{position:absolute;display:flex;align-items:center;justify-content:center}
-.bd-pocket button{display:block;height:95%;aspect-ratio:703/980;max-width:96%;padding:0;border:0;background:none;cursor:zoom-in;
-  animation:bdin .7s cubic-bezier(.2,.8,.2,1) var(--d) both}
-.bd-pocket img{display:block;width:100%;height:100%;object-fit:cover;border-radius:4.5% / 3.2%;filter:brightness(.93) contrast(1.03) saturate(.95);
-  box-shadow:0 1px 3px rgba(0,0,0,.55);transition:transform .45s cubic-bezier(.2,.8,.2,1),filter .45s;user-select:none}
-.bd-pocket button:hover img{transform:translateY(-5%);filter:brightness(1.02) contrast(1.03)}
-@keyframes bdin{from{opacity:0;transform:translateY(-14%) scale(.98)}}
-.bd-sweep{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;
-  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.7) 48%,transparent 66%);background-size:300% 100%;animation:bdsweep 1.1s ease-out both}
-@keyframes bdsweep{from{background-position:100% 0}to{background-position:0 0}}
+.bd{perspective:2400px;width:min(100%,calc((100svh - 150px) * 1.5),1000px);margin:0 auto}
+.bd-book{position:relative;display:grid;grid-template-columns:1fr 1fr;padding:20px;border-radius:20px;transform:rotateX(9deg);transform-style:preserve-3d;
+  background:radial-gradient(120% 90% at 30% 0%,#2A3152,#161A2E 70%);
+  box-shadow:0 60px 80px -40px rgba(20,26,58,.65),0 2px 0 rgba(255,255,255,.06) inset,0 0 0 1px rgba(0,0,0,.4)}
+.bd-book::before{content:"";position:absolute;inset:9px;border-radius:13px;border:1.5px dashed rgba(255,255,255,.13);pointer-events:none}
+.bd-page{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;padding:14px;border-radius:8px;
+  background:linear-gradient(160deg,#262B44,#1A1E31);
+  box-shadow:inset 0 0 0 9px rgba(214,220,234,.10),inset 0 0 0 10px rgba(255,255,255,.08)}
+.bd-page.l{padding-right:40px;border-radius:8px 3px 3px 8px}
+.bd-page.r{padding-left:40px;border-radius:3px 8px 8px 3px}
+.bd-page::after{content:"";position:absolute;top:0;bottom:0;width:56px;pointer-events:none;z-index:3}
+.bd-page.l::after{right:0;background:linear-gradient(90deg,transparent,rgba(0,0,0,.5))}
+.bd-page.r::after{left:0;background:linear-gradient(270deg,transparent,rgba(0,0,0,.5))}
+/* la busta: cuciture chiare, carta incassata, plastica lucida sopra */
+.bd-pocket{position:relative;aspect-ratio:703/980;padding:5.5% 6% 5%;box-sizing:border-box;
+  border:4px solid rgba(214,220,234,.13);margin:-2px;
+  background:radial-gradient(circle,rgba(255,255,255,.16) 1px,transparent 1.6px) 0 0/7px 7px,rgba(255,255,255,.03);
+  background-clip:border-box}
+.bd-pocket>*{position:relative;z-index:1}
+.bd-pocket button,.bd-pocket>img{display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:zoom-in}
+.bd-pocket img{display:block;width:100%;height:100%;object-fit:cover;border-radius:4.5% / 3.2%;user-select:none;
+  filter:brightness(.9) contrast(1.05) saturate(.96);box-shadow:0 1px 2px rgba(0,0,0,.7),0 0 0 1px rgba(0,0,0,.35);
+  transition:transform .5s cubic-bezier(.2,.8,.2,1),filter .5s}
+.bd-pocket button:hover img{transform:translateY(-9%);filter:brightness(1) contrast(1.04)}
+.bd-pocket::before{content:"";position:absolute;z-index:2;left:3%;right:3%;top:3.2%;height:2px;border-radius:50%;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.45) 20%,rgba(255,255,255,.25) 80%,transparent);box-shadow:0 1px 2px rgba(0,0,0,.4)}
+.bd-pocket::after{content:"";position:absolute;z-index:2;inset:1.5%;border-radius:3px;pointer-events:none;
+  background:
+    linear-gradient(118deg,rgba(255,255,255,.42) 0%,rgba(255,255,255,.14) 18%,transparent 34%,transparent 58%,rgba(255,255,255,.14) 74%,transparent 86%) var(--gx,30%) var(--gy,30%)/260% 260%,
+    linear-gradient(rgba(240,244,255,.07),rgba(240,244,255,.04));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 1px 0 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.35);transition:background-position .6s ease-out}
+.bd-spine{position:absolute;left:50%;top:20px;bottom:20px;width:54px;margin-left:-27px;display:flex;flex-direction:column;justify-content:space-around;align-items:center;z-index:3;pointer-events:none;
+  background:linear-gradient(90deg,rgba(0,0,0,.35),#12162A 30%,#0E1122 50%,#12162A 70%,rgba(0,0,0,.35))}
+.bd-spine i{display:block;width:70px;height:14px;border-radius:8px;background:linear-gradient(180deg,#F4F6FA,#9AA1B4 45%,#E3E7EF 60%,#7A8196);box-shadow:0 4px 8px rgba(0,0,0,.5)}
+.bd-leaf{position:absolute;top:20px;bottom:20px;z-index:4;transform-style:preserve-3d;pointer-events:none}
+.bd-leaf.next{left:50%;right:20px;transform-origin:left center;animation:bdnext .9s cubic-bezier(.5,.05,.25,1) forwards}
+.bd-leaf.prev{left:20px;right:50%;transform-origin:right center;animation:bdprev .9s cubic-bezier(.5,.05,.25,1) forwards}
+.bd-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.bd-face .bd-page{height:100%;box-sizing:border-box}
+.bd-face.back{transform:rotateY(180deg)}
+.bd-face::after{content:"";position:absolute;inset:0;border-radius:8px;pointer-events:none;background:#000;opacity:0;animation:bdshade .9s ease-in-out forwards}
+@keyframes bdnext{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}
+@keyframes bdprev{from{transform:rotateY(0)}to{transform:rotateY(180deg)}}
+@keyframes bdshade{50%{opacity:.35}}
 .bd-nav{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:26px;color:var(--muted);font-weight:600;font-size:15px}
 .bd-nav button{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
 .bd-nav button:hover{transform:translateY(-2px);border-color:var(--ink);box-shadow:0 10px 18px -12px rgba(20,26,58,.5)}
 .bd-nav svg{width:20px}
 @media (max-width:700px){
-  .bd-view{border-radius:16px}
-  .bd-photo{width:232%;margin-left:-120%}
+  .bd-book{grid-template-columns:1fr;padding:12px;transform:none}
+  .bd-book::before{inset:5px}
+  .bd-page.l{display:none}
+  .bd-page.r{padding:12px 12px 12px 30px;gap:8px}
+  .bd-spine{left:12px;margin-left:0;width:22px;top:12px;bottom:12px}
+  .bd-spine i{width:30px;height:10px}
+  .bd-leaf.next{left:12px;right:12px;top:12px;bottom:12px}
+  .bd-leaf.prev{display:none}
+  .bd-face.back{display:none}
 }
 /* prezzi */
 .hm-price{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 28px}
