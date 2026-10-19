@@ -132,7 +132,14 @@ export const CARD_SRCS = CARD_FILES.map((f) => `/carte/${f}.webp`);
 
 export const SITE_CSS = `
 .hm{--bg:#E9EAEF;--panel:#FFFFFF;--ink:#141A3A;--muted:#5A5D6B;--line:#D3D6DF;--red:#D7262E;
-  min-height:100vh;background:var(--bg);color:var(--ink);font-family:Archivo,system-ui,sans-serif;font-size:17px;line-height:1.55;overflow-x:clip}
+  position:relative;isolation:isolate;min-height:100vh;color:var(--ink);
+  background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='%23141A3A' fill-opacity='.075'%3E%3Cpath d='M34 33C35.62 40.38 35.62 40.38 43 42C35.62 43.62 35.62 43.62 34 51C32.38 43.62 32.38 43.62 25 42C32.38 40.38 32.38 40.38 34 33Z'/%3E%3Cpath d='M128 112.5C128.99 117.01 128.99 117.01 133.5 118C128.99 118.99 128.99 118.99 128 123.5C127.01 118.99 127.01 118.99 122.5 118C127.01 117.01 127.01 117.01 128 112.5Z'/%3E%3Cpath d='M150 26.5C150.63 29.37 150.63 29.37 153.5 30C150.63 30.63 150.63 30.63 150 33.5C149.37 30.63 149.37 30.63 146.5 30C149.37 29.37 149.37 29.37 150 26.5Z'/%3E%3Ccircle cx='80' cy='150' r='2'/%3E%3Ccircle cx='100' cy='70' r='1.6'/%3E%3Ccircle cx='18' cy='120' r='1.6'/%3E%3C/g%3E%3Cg fill='none' stroke='%23141A3A' stroke-opacity='.06' stroke-width='1.4'%3E%3Crect x='62' y='90' width='18' height='25' rx='2.5' transform='rotate(-14 71 102)'/%3E%3Cpath d='M150 160h10M155 155v10'/%3E%3C/g%3E%3C/svg%3E") 0 0/180px 180px;font-family:Archivo,system-ui,sans-serif;font-size:17px;line-height:1.55;overflow-x:clip}
+.hm::before{content:"";position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:radial-gradient(38vmax 38vmax at 8% 18%,rgba(255,110,190,.16),transparent 70%),
+    radial-gradient(42vmax 42vmax at 95% 45%,rgba(80,195,255,.16),transparent 70%),
+    radial-gradient(36vmax 36vmax at 40% 105%,rgba(255,210,80,.13),transparent 70%);
+  animation:hmdrift 30s ease-in-out infinite alternate}
+@keyframes hmdrift{to{transform:translate3d(4%,-3%,0) rotate(4deg)}}
 .hm a{color:inherit}
 .hm :focus-visible{outline:2px solid #1F86D6;outline-offset:3px}
 .hm h2{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,4.6vw,62px);line-height:.95;margin:0 0 26px}
