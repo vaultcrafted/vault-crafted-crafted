@@ -131,6 +131,22 @@ function Settings() {
     }
   };
 
+  const [fixing, setFixing] = useState(false);
+  const fixImported = async () => {
+    setFixing(true);
+    try {
+      const r = await api<{ fixed: number; headers: string[] }>("/api/admin/importa", { method: "PUT" });
+      setMsg(
+        `Sistemati ${r.fixed} ordini importati: totale, data e dati cliente ricalcolati dal foglio.` +
+          (r.headers.length ? ` Colonne lette: ${r.headers.join(", ")}` : ""),
+      );
+    } catch (e) {
+      setMsg((e as Error).message);
+    } finally {
+      setFixing(false);
+    }
+  };
+
   const next = Math.max(maxSerial + 1, Number(start) || 1);
 
   return (
@@ -224,6 +240,13 @@ function Settings() {
           />
           <span>Scegli il CSV</span>
         </label>
+        <p className="vc-hint" style={{ marginTop: 14 }}>
+          Hai già importato e vedi totali a €0 o date sbagliate? Ricalcola gli ordini dello storico
+          dai dati del foglio (tipologia + custodia + olografica + spedizione €4,99).
+        </p>
+        <button type="button" className="vc-btn ghost" onClick={fixImported} disabled={fixing}>
+          {fixing ? "Ricalcolo…" : "Sistema gli ordini già importati"}
+        </button>
         {preview && preview.length > 0 && (
           <>
             <p className="vc-hint">
