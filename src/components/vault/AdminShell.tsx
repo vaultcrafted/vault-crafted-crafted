@@ -124,6 +124,9 @@ export function AdminShell({ children, title }: { children: React.ReactNode; tit
             <Link to="/admin/impostazioni" activeProps={{ className: "on" }}>
               Impostazioni
             </Link>
+            <a href="/" className="ad-site">
+              Vai al sito ↗
+            </a>
             <button type="button" className="vc-back" onClick={logout}>
               Esci
             </button>
@@ -182,6 +185,9 @@ export const ADMIN_CSS = `
 .ad-nav{display:flex;align-items:center;gap:18px}
 .ad-nav a{color:#C9CEE3;text-decoration:none;font-weight:600;font-size:14px}
 .ad-nav a.on,.ad-nav a:hover{color:#fff}
+.ad-nav a.ad-site{background:#fff;color:#141A3A;padding:7px 12px;border-radius:9px}
+.ad-nav a.ad-site:hover{background:#E9EAEF;color:#141A3A}
+@media (max-width:700px){.vc-top{flex-wrap:wrap;row-gap:8px}.ad-nav{width:100%;overflow-x:auto;gap:14px;white-space:nowrap;padding-bottom:4px;scrollbar-width:none}.ad-nav>*{flex:none}}
 .ad-login{max-width:380px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px}
 .ad-login h1{margin:4px 0 8px;font-family:'Saira Condensed',sans-serif;font-size:36px}
 .ad-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:color-mix(in srgb,var(--c) 14%,#fff);color:color-mix(in srgb,var(--c) 75%,#000);white-space:nowrap}
