@@ -22,6 +22,7 @@ import { Route as AccountIndexRouteImport } from './routes/account.index'
 import { Route as ApiOrdiniRouteImport } from './routes/api/ordini'
 import { Route as AdminStampaRouteImport } from './routes/admin.stampa'
 import { Route as AdminImpostazioniRouteImport } from './routes/admin.impostazioni'
+import { Route as AdminClientiRouteImport } from './routes/admin.clienti'
 import { Route as AccountPasswordRouteImport } from './routes/account.password'
 import { Route as AccountAccediRouteImport } from './routes/account.accedi'
 import { Route as ApiAdminOrdiniRouteImport } from './routes/api/admin/ordini'
@@ -29,6 +30,7 @@ import { Route as ApiAdminLoginRouteImport } from './routes/api/admin/login'
 import { Route as ApiAdminImpostazioniRouteImport } from './routes/api/admin/impostazioni'
 import { Route as ApiAdminImportaRouteImport } from './routes/api/admin/importa'
 import { Route as ApiAdminFileRouteImport } from './routes/api/admin/file'
+import { Route as ApiAdminClientiRouteImport } from './routes/api/admin/clienti'
 import { Route as ApiAccountVerificaRouteImport } from './routes/api/account/verifica'
 import { Route as ApiAccountSessioneRouteImport } from './routes/api/account/sessione'
 import { Route as ApiAccountRiordinaRouteImport } from './routes/api/account/riordina'
@@ -109,6 +111,11 @@ const AdminImpostazioniRoute = AdminImpostazioniRouteImport.update({
   path: '/admin/impostazioni',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminClientiRoute = AdminClientiRouteImport.update({
+  id: '/admin/clienti',
+  path: '/admin/clienti',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountPasswordRoute = AccountPasswordRouteImport.update({
   id: '/account/password',
   path: '/account/password',
@@ -142,6 +149,11 @@ const ApiAdminImportaRoute = ApiAdminImportaRouteImport.update({
 const ApiAdminFileRoute = ApiAdminFileRouteImport.update({
   id: '/api/admin/file',
   path: '/api/admin/file',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminClientiRoute = ApiAdminClientiRouteImport.update({
+  id: '/api/admin/clienti',
+  path: '/api/admin/clienti',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAccountVerificaRoute = ApiAccountVerificaRouteImport.update({
@@ -227,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/termini': typeof TerminiRoute
   '/account/accedi': typeof AccountAccediRoute
   '/account/password': typeof AccountPasswordRoute
+  '/admin/clienti': typeof AdminClientiRoute
   '/admin/impostazioni': typeof AdminImpostazioniRoute
   '/admin/stampa': typeof AdminStampaRoute
   '/api/ordini': typeof ApiOrdiniRoute
@@ -243,6 +256,7 @@ export interface FileRoutesByFullPath {
   '/api/account/riordina': typeof ApiAccountRiordinaRoute
   '/api/account/sessione': typeof ApiAccountSessioneRoute
   '/api/account/verifica': typeof ApiAccountVerificaRoute
+  '/api/admin/clienti': typeof ApiAdminClientiRoute
   '/api/admin/file': typeof ApiAdminFileRoute
   '/api/admin/importa': typeof ApiAdminImportaRoute
   '/api/admin/impostazioni': typeof ApiAdminImpostazioniRoute
@@ -263,6 +277,7 @@ export interface FileRoutesByTo {
   '/termini': typeof TerminiRoute
   '/account/accedi': typeof AccountAccediRoute
   '/account/password': typeof AccountPasswordRoute
+  '/admin/clienti': typeof AdminClientiRoute
   '/admin/impostazioni': typeof AdminImpostazioniRoute
   '/admin/stampa': typeof AdminStampaRoute
   '/api/ordini': typeof ApiOrdiniRoute
@@ -279,6 +294,7 @@ export interface FileRoutesByTo {
   '/api/account/riordina': typeof ApiAccountRiordinaRoute
   '/api/account/sessione': typeof ApiAccountSessioneRoute
   '/api/account/verifica': typeof ApiAccountVerificaRoute
+  '/api/admin/clienti': typeof ApiAdminClientiRoute
   '/api/admin/file': typeof ApiAdminFileRoute
   '/api/admin/importa': typeof ApiAdminImportaRoute
   '/api/admin/impostazioni': typeof ApiAdminImpostazioniRoute
@@ -300,6 +316,7 @@ export interface FileRoutesById {
   '/termini': typeof TerminiRoute
   '/account/accedi': typeof AccountAccediRoute
   '/account/password': typeof AccountPasswordRoute
+  '/admin/clienti': typeof AdminClientiRoute
   '/admin/impostazioni': typeof AdminImpostazioniRoute
   '/admin/stampa': typeof AdminStampaRoute
   '/api/ordini': typeof ApiOrdiniRoute
@@ -316,6 +333,7 @@ export interface FileRoutesById {
   '/api/account/riordina': typeof ApiAccountRiordinaRoute
   '/api/account/sessione': typeof ApiAccountSessioneRoute
   '/api/account/verifica': typeof ApiAccountVerificaRoute
+  '/api/admin/clienti': typeof ApiAdminClientiRoute
   '/api/admin/file': typeof ApiAdminFileRoute
   '/api/admin/importa': typeof ApiAdminImportaRoute
   '/api/admin/impostazioni': typeof ApiAdminImpostazioniRoute
@@ -338,6 +356,7 @@ export interface FileRouteTypes {
     | '/termini'
     | '/account/accedi'
     | '/account/password'
+    | '/admin/clienti'
     | '/admin/impostazioni'
     | '/admin/stampa'
     | '/api/ordini'
@@ -354,6 +373,7 @@ export interface FileRouteTypes {
     | '/api/account/riordina'
     | '/api/account/sessione'
     | '/api/account/verifica'
+    | '/api/admin/clienti'
     | '/api/admin/file'
     | '/api/admin/importa'
     | '/api/admin/impostazioni'
@@ -374,6 +394,7 @@ export interface FileRouteTypes {
     | '/termini'
     | '/account/accedi'
     | '/account/password'
+    | '/admin/clienti'
     | '/admin/impostazioni'
     | '/admin/stampa'
     | '/api/ordini'
@@ -390,6 +411,7 @@ export interface FileRouteTypes {
     | '/api/account/riordina'
     | '/api/account/sessione'
     | '/api/account/verifica'
+    | '/api/admin/clienti'
     | '/api/admin/file'
     | '/api/admin/importa'
     | '/api/admin/impostazioni'
@@ -410,6 +432,7 @@ export interface FileRouteTypes {
     | '/termini'
     | '/account/accedi'
     | '/account/password'
+    | '/admin/clienti'
     | '/admin/impostazioni'
     | '/admin/stampa'
     | '/api/ordini'
@@ -426,6 +449,7 @@ export interface FileRouteTypes {
     | '/api/account/riordina'
     | '/api/account/sessione'
     | '/api/account/verifica'
+    | '/api/admin/clienti'
     | '/api/admin/file'
     | '/api/admin/importa'
     | '/api/admin/impostazioni'
@@ -447,6 +471,7 @@ export interface RootRouteChildren {
   TerminiRoute: typeof TerminiRoute
   AccountAccediRoute: typeof AccountAccediRoute
   AccountPasswordRoute: typeof AccountPasswordRoute
+  AdminClientiRoute: typeof AdminClientiRoute
   AdminImpostazioniRoute: typeof AdminImpostazioniRoute
   AdminStampaRoute: typeof AdminStampaRoute
   ApiOrdiniRoute: typeof ApiOrdiniRoute
@@ -463,6 +488,7 @@ export interface RootRouteChildren {
   ApiAccountRiordinaRoute: typeof ApiAccountRiordinaRoute
   ApiAccountSessioneRoute: typeof ApiAccountSessioneRoute
   ApiAccountVerificaRoute: typeof ApiAccountVerificaRoute
+  ApiAdminClientiRoute: typeof ApiAdminClientiRoute
   ApiAdminFileRoute: typeof ApiAdminFileRoute
   ApiAdminImportaRoute: typeof ApiAdminImportaRoute
   ApiAdminImpostazioniRoute: typeof ApiAdminImpostazioniRoute
@@ -563,6 +589,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImpostazioniRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/clienti': {
+      id: '/admin/clienti'
+      path: '/admin/clienti'
+      fullPath: '/admin/clienti'
+      preLoaderRoute: typeof AdminClientiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/password': {
       id: '/account/password'
       path: '/account/password'
@@ -610,6 +643,13 @@ declare module '@tanstack/react-router' {
       path: '/api/admin/file'
       fullPath: '/api/admin/file'
       preLoaderRoute: typeof ApiAdminFileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/clienti': {
+      id: '/api/admin/clienti'
+      path: '/api/admin/clienti'
+      fullPath: '/api/admin/clienti'
+      preLoaderRoute: typeof ApiAdminClientiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/account/verifica': {
@@ -749,6 +789,7 @@ const rootRouteChildren: RootRouteChildren = {
   TerminiRoute: TerminiRoute,
   AccountAccediRoute: AccountAccediRoute,
   AccountPasswordRoute: AccountPasswordRoute,
+  AdminClientiRoute: AdminClientiRoute,
   AdminImpostazioniRoute: AdminImpostazioniRoute,
   AdminStampaRoute: AdminStampaRoute,
   ApiOrdiniRoute: ApiOrdiniRoute,
@@ -765,6 +806,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAccountRiordinaRoute: ApiAccountRiordinaRoute,
   ApiAccountSessioneRoute: ApiAccountSessioneRoute,
   ApiAccountVerificaRoute: ApiAccountVerificaRoute,
+  ApiAdminClientiRoute: ApiAdminClientiRoute,
   ApiAdminFileRoute: ApiAdminFileRoute,
   ApiAdminImportaRoute: ApiAdminImportaRoute,
   ApiAdminImpostazioniRoute: ApiAdminImpostazioniRoute,
