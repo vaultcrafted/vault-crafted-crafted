@@ -57,7 +57,21 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     <main className="hm" ref={ref}>
       <style>{HOLO_CSS + SITE_CSS}</style>
       <nav className="hm-nav">
-        <Link to="/" aria-label="Vault Crafted, home" className="hm-logo">
+        <Link
+          to="/"
+          hash=""
+          aria-label="Vault Crafted, home"
+          className="hm-logo"
+          resetScroll
+          onClick={() => {
+            setMenu(false);
+            // già in home: torna in cima con uno scorrimento morbido
+            if (location.pathname === "/") {
+              history.replaceState(null, "", "/");
+              scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
+        >
           <img src="/LOGO.png" alt="Vault Crafted" />
         </Link>
         <div>
