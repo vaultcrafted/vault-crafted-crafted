@@ -1,31 +1,82 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { WhatsappButton } from "@/components/vault/WhatsappButton";
 import { HOLO_CSS, HoloCard } from "./HoloCard";
 
 /** Cornice comune delle pagine pubbliche: barra in alto, piè di pagina, stile chiaro. */
 export function SiteShell({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLElement>(null);
+  const [menu, setMenu] = useState(false);
+  const [bar, setBar] = useState(false);
+
+  useEffect(() => {
+    const root = ref.current;
+    if (!root) return;
+    root.classList.add("hm-js");
+    // comparsa morbida degli elementi .rv quando entrano nello schermo
+    const els = root.querySelectorAll<HTMLElement>(".rv");
+    if (!("IntersectionObserver" in window)) {
+      els.forEach((e) => e.classList.add("in"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (es) =>
+        es.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        }),
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.12 },
+    );
+    els.forEach((e) => io.observe(e));
+    const onScroll = () => setBar(scrollY > 560 && innerHeight + scrollY < document.body.scrollHeight - 260);
+    onScroll();
+    addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      io.disconnect();
+      removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  const links = (
+    <>
+      <Link to="/carte" activeProps={{ "aria-current": "page" }} onClick={() => setMenu(false)}>
+        Le carte
+      </Link>
+      <Link to="/regalo" activeProps={{ "aria-current": "page" }} onClick={() => setMenu(false)}>
+        Regalo
+      </Link>
+      <Link to="/chi-siamo" activeProps={{ "aria-current": "page" }} onClick={() => setMenu(false)}>
+        Chi siamo
+      </Link>
+    </>
+  );
+
   return (
-    <main className="hm">
+    <main className="hm" ref={ref}>
       <style>{HOLO_CSS + SITE_CSS}</style>
       <nav className="hm-nav">
         <Link to="/" aria-label="Vault Crafted, home" className="hm-logo">
           <img src="/LOGO.png" alt="Vault Crafted" />
         </Link>
         <div>
-          <Link to="/carte" activeProps={{ "aria-current": "page" }}>
-            Le carte
-          </Link>
-          <Link to="/regalo" activeProps={{ "aria-current": "page" }}>
-            Regalo
-          </Link>
-          <Link to="/chi-siamo" activeProps={{ "aria-current": "page" }}>
-            Chi siamo
-          </Link>
+          {links}
           <Link to="/crea" className="hm-btn sm">
             Crea la tua carta
           </Link>
+          <button
+            type="button"
+            className="hm-burger"
+            aria-label={menu ? "Chiudi il menu" : "Apri il menu"}
+            aria-expanded={menu}
+            onClick={() => setMenu(!menu)}
+          >
+            <i />
+            <i />
+          </button>
         </div>
+        {menu && <div className="hm-menu">{links}</div>}
       </nav>
       {children}
       <footer className="hm-foot">
@@ -39,6 +90,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <a href="https://www.instagram.com/vault_crafted">Instagram</a>
         </span>
       </footer>
+      <div className={`hm-bar${bar ? " on" : ""}`} aria-hidden={!bar}>
+        <span>
+          Da <b>€20</b> · numerata
+        </span>
+        <Link to="/crea" className="hm-btn" tabIndex={bar ? 0 : -1}>
+          Crea la tua carta
+        </Link>
+      </div>
       <WhatsappButton />
     </main>
   );
@@ -89,14 +148,50 @@ export const SITE_CSS = `
 .hm-nav div{display:flex;align-items:center;gap:26px}
 .hm-nav div a:not(.hm-btn){text-decoration:none;font-weight:600;font-size:15px;color:#C9CEE3}
 .hm-nav div a:not(.hm-btn):hover,.hm-nav div a[aria-current=page]{color:#fff}
+.hm-burger{display:none;width:42px;height:40px;border:0;border-radius:10px;background:rgba(255,255,255,.08);cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.hm-burger i{display:block;width:18px;height:2px;background:#fff;border-radius:2px;transition:transform .25s}
+.hm-burger[aria-expanded=true] i:first-child{transform:translateY(4px) rotate(45deg)}
+.hm-burger[aria-expanded=true] i:last-child{transform:translateY(-4px) rotate(-45deg)}
+.hm-menu{position:absolute;left:0;right:0;top:100%;background:#141A3A;display:flex;flex-direction:column;padding:6px 16px 18px;box-shadow:0 20px 30px -20px rgba(0,0,0,.5);animation:hmdrop .25s cubic-bezier(.2,.8,.2,1)}
+.hm-menu a{color:#fff;text-decoration:none;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:26px;padding:10px 0;border-top:1px solid rgba(255,255,255,.1)}
+@keyframes hmdrop{from{opacity:0;transform:translateY(-8px)}}
+.hm-bar{display:none}
+/* comparsa allo scroll */
+.hm-js .rv{transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0s)}
+.hm-js .rv:not(.in){opacity:0;transform:translateY(34px)}
 /* apertura */
-.hm-hero{max-width:1400px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr);gap:40px;align-items:center;min-height:calc(100svh - 64px)}
-.hm-hero-txt{padding:60px 0}
+.hm-hero-wrap{--px:.5;--py:.5;position:relative;overflow:hidden;
+  background:radial-gradient(900px circle at calc(var(--px) * 100%) calc(var(--py) * 100%),rgba(255,255,255,.85),rgba(255,255,255,0) 60%)}
+.hm-hero-wrap::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(20,26,58,.22) 1px,transparent 1.4px);background-size:22px 22px;
+  -webkit-mask-image:radial-gradient(520px circle at calc(var(--px) * 100%) calc(var(--py) * 100%),#000,transparent 70%);
+  mask-image:radial-gradient(520px circle at calc(var(--px) * 100%) calc(var(--py) * 100%),#000,transparent 70%)}
+.hm-hero{position:relative;padding:0 0 0 max(28px,calc(50% - 672px));display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr);gap:40px;align-items:center;min-height:calc(100svh - 64px)}
+.hm-hero-txt{padding:60px 0;position:relative;z-index:2}
 .hm-hero h1{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(52px,6.6vw,104px);line-height:.9;letter-spacing:-.01em;margin:0 0 22px;max-width:11ch}
+.hm-hero h1 .ln{display:inline-block;animation:hmrise .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d)}
+.hm-hero .up{animation:hmrise .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d)}
+@keyframes hmrise{from{opacity:0;transform:translateY(40px);filter:blur(6px)}}
 .hm-hero p{font-size:clamp(17px,1.4vw,20px);color:var(--muted);max-width:44ch;margin:0 0 28px}
 .hm-cta{display:flex;flex-wrap:wrap;align-items:center;gap:22px}
-.hm-wall{position:relative;height:calc(100svh - 64px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;overflow:hidden;
-  -webkit-mask-image:linear-gradient(transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(transparent,#000 12%,#000 88%,transparent)}
+.hm-btn-shine{position:relative;overflow:hidden}
+.hm-btn-shine::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-120%);animation:hmshine 4.5s ease-in-out 1.6s infinite}
+@keyframes hmshine{0%,60%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.hm-trust{list-style:none;display:flex;flex-wrap:wrap;gap:8px 18px;margin:30px 0 0;padding:0;font-size:14px;color:var(--muted)}
+.hm-trust li{display:flex;align-items:center;gap:7px}
+.hm-trust li::before{content:"";width:16px;height:16px;border-radius:50%;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.2l2.2 2.2 4.8-4.8' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat}
+.hm-wall{position:relative;height:calc(100svh - 64px);perspective:1500px;
+  -webkit-mask-image:linear-gradient(transparent,#000 10%,#000 90%,transparent),linear-gradient(90deg,transparent,#000 9%,#000 96%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(transparent,#000 10%,#000 90%,transparent),linear-gradient(90deg,transparent,#000 9%,#000 96%,transparent);mask-composite:intersect;
+  animation:hmfade 1.4s .2s both}
+.hm-wall-in{height:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;transform-origin:50% 50%;
+  transform:rotateX(calc(12deg + (var(--py) - .5) * -10deg)) rotateY(calc(-14deg + (var(--px) - .5) * 14deg)) rotateZ(4deg) scale(1.12)}
+.hm-sweep{position:absolute;inset:-10% -30%;pointer-events:none;mix-blend-mode:overlay;
+  background:linear-gradient(105deg,transparent 38%,rgba(255,90,170,.35) 45%,rgba(255,255,255,.75) 50%,rgba(80,200,255,.35) 55%,transparent 62%);
+  background-size:300% 100%;animation:hmsweep 7s cubic-bezier(.45,0,.2,1) 1.2s infinite}
+@keyframes hmsweep{0%{background-position:100% 0}55%,100%{background-position:0 0}}
+.hm-col{min-width:0}
 .hm-col>div{display:flex;flex-direction:column;gap:16px;animation:hmup 60s linear infinite}
 .hm-col.c1>div{animation-direction:reverse;animation-duration:70s}
 .hm-col.c2>div{animation-duration:54s}
@@ -106,9 +201,18 @@ export const SITE_CSS = `
 .hm-wall:hover .hm-col>div{animation-play-state:paused}
 .hm-col button{display:block;padding:0;border:0;background:none;cursor:zoom-in;border-radius:4.5% / 3.2%;overflow:hidden;
   box-shadow:0 14px 30px -18px rgba(20,26,58,.55);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
-.hm-col button:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 26px 44px -20px rgba(20,26,58,.6)}
+.hm-col button:hover{transform:translateY(-6px) translateZ(40px) scale(1.04);box-shadow:0 30px 50px -20px rgba(20,26,58,.7)}
 .hm-col img{display:block;width:100%;height:auto}
 @keyframes hmup{to{transform:translateY(calc(-50% - 8px))}}
+@media (hover:none){.hm-wall-in{animation:hmsway 9s ease-in-out infinite alternate}}
+@keyframes hmsway{from{transform:rotateX(14deg) rotateY(-18deg) rotateZ(4deg) scale(1.12)}to{transform:rotateX(8deg) rotateY(-6deg) rotateZ(3deg) scale(1.12)}}
+/* nastro */
+.hm-ticker{overflow:hidden;background:var(--ink);color:#fff;padding:16px 0;transform:rotate(-1.2deg);margin:10px -10px 0;box-shadow:0 20px 40px -24px rgba(20,26,58,.7)}
+.hm-ticker>div{display:flex;width:max-content;animation:hmtick 38s linear infinite}
+.hm-ticker span{display:flex}
+.hm-ticker em{font-style:normal;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:26px;letter-spacing:.02em;white-space:nowrap;padding:0 22px;display:flex;align-items:center;gap:44px}
+.hm-ticker em::after{content:"";width:9px;height:9px;transform:rotate(45deg);background:linear-gradient(135deg,#ff5aa8,#ffd23f,#3dffb5,#3dc8ff);margin-left:22px}
+@keyframes hmtick{to{transform:translateX(-50%)}}
 /* sezioni */
 .hm-sec{max-width:1240px;margin:0 auto;padding:100px 28px 10px}
 .hm-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;counter-reset:s}
@@ -118,7 +222,11 @@ export const SITE_CSS = `
 .hm-steps h3::before{content:counter(s);font-size:18px;color:var(--muted);font-weight:700}
 .hm-steps p{margin:0 6px;color:var(--muted);max-width:38ch}
 .hm-feature{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:64px;align-items:center}
-.hm-feature-card{width:min(100%,380px);justify-self:center}
+.hm-feature-card{width:min(100%,380px);justify-self:center;position:relative}
+.hm-feature-card::before{content:"";position:absolute;inset:8% -6%;border-radius:40%;filter:blur(50px);opacity:.55;z-index:-1;
+  background:conic-gradient(from 0deg,#ff5aa8,#ffd23f,#3dffb5,#3dc8ff,#b25cff,#ff5aa8);animation:hmspin 14s linear infinite}
+@keyframes hmspin{to{transform:rotate(360deg)}}
+.hm-feature{position:relative;isolation:isolate}
 .hm-feature-card .hx-holo-in{box-shadow:0 40px 70px -30px rgba(20,26,58,.6)}
 .hm-facts{list-style:none;margin:0;padding:0;display:grid;gap:18px}
 .hm-facts li{color:var(--muted);max-width:52ch;padding-left:18px;border-left:3px solid var(--line)}
@@ -146,6 +254,8 @@ export const SITE_CSS = `
 .hm-price{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 28px}
 .hm-price table{width:100%;border-collapse:collapse}
 .hm-price caption{text-align:left;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:22px;color:var(--muted);padding-bottom:6px}
+.hm-price tr{transition:background .2s}
+.hm-price tbody tr:hover{background:#F5F6FA}
 .hm-price th,.hm-price td{padding:12px 0;border-top:1px solid #E6E8EE;text-align:left;vertical-align:baseline}
 .hm-price th{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:23px;white-space:nowrap;padding-right:16px}
 .hm-price td{color:var(--muted);font-size:15px}
@@ -195,10 +305,20 @@ export const SITE_CSS = `
   .hm-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .hm-cards3,.hm-occ{grid-template-columns:1fr}
   .hm-nav{padding:10px 16px}
+  .hm-nav div{gap:10px}
   .hm-nav div a:not(.hm-btn){display:none}
+  .hm-burger{display:flex}
+  .hm-bar{display:flex;position:fixed;left:10px;right:84px;bottom:14px;z-index:40;align-items:center;justify-content:space-between;gap:10px;padding:8px 8px 8px 16px;border-radius:16px;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(10px);box-shadow:0 14px 34px -14px rgba(20,26,58,.5);font-size:14px;color:var(--muted);
+    transform:translateY(120%);opacity:0;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .35s}
+  .hm-bar.on{transform:none;opacity:1}
+  .hm-bar b{color:var(--ink)}
+  .hm-bar .hm-btn{min-height:44px;font-size:18px;padding:0 16px}
   .hm-hero{grid-template-columns:1fr;min-height:0;padding:0;gap:0}
   .hm-hero-txt{padding:34px 18px 26px}
-  .hm-wall{height:62svh;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0 10px;order:2}
+  .hm-wall{height:62svh;padding:0 10px;order:2}
+  .hm-wall-in{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .hm-ticker em{font-size:20px}
   .hm-col>div{gap:10px}
   .hm-col.c1{margin-top:-50px}
   .hm-col.c3{display:none}
