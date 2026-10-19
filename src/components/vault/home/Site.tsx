@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { WhatsappButton } from "@/components/vault/WhatsappButton";
 import { HOLO_CSS, HoloCard } from "./HoloCard";
 import { useMe } from "@/lib/accountClient";
+import { AM_CSS, AccountMenu } from "@/components/vault/account/AccountMenu";
 
 /** Cornice comune delle pagine pubbliche: barra in alto, piè di pagina, stile chiaro. */
 export function SiteShell({ children }: { children: React.ReactNode }) {
@@ -66,7 +67,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
   return (
     <main className="hm" ref={ref}>
-      <style>{HOLO_CSS + SITE_CSS}</style>
+      <style>{HOLO_CSS + SITE_CSS + AM_CSS}</style>
       <nav className="hm-nav">
         <Link
           to="/"
@@ -87,7 +88,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </Link>
         <div>
           {links}
-          {accountLink}
+          <AccountMenu me={me} />
           <Link to="/crea" className="hm-btn sm">
             Crea la tua carta
           </Link>
@@ -186,9 +187,9 @@ export const SITE_CSS = `
 .hm-link:hover{text-decoration-color:var(--ink)}
 .hm-nav{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:12px 28px;background:#141A3A}
 .hm-logo img{height:34px;display:block}
-.hm-nav div{display:flex;align-items:center;gap:26px}
-.hm-nav div a:not(.hm-btn){text-decoration:none;font-weight:600;font-size:15px;color:#C9CEE3}
-.hm-nav div a:not(.hm-btn):hover,.hm-nav div a[aria-current=page]{color:#fff}
+.hm-nav>div{display:flex;align-items:center;gap:26px}
+.hm-nav>div>a:not(.hm-btn){text-decoration:none;font-weight:600;font-size:15px;color:#C9CEE3}
+.hm-nav>div>a:not(.hm-btn):hover,.hm-nav>div>a[aria-current=page]{color:#fff}
 .hm-acc{display:inline-flex;align-items:center;gap:7px;text-decoration:none;font-weight:600;font-size:15px;color:#C9CEE3 !important}
 .hm-acc:hover{color:#fff !important}
 .hm-acc svg{width:21px;height:21px}
@@ -493,10 +494,9 @@ export const SITE_CSS = `
   .hm-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .hm-cards3,.hm-occ{grid-template-columns:1fr}
   .hm-nav{padding:10px 16px}
-  .hm-nav div{gap:10px}
-  .hm-nav div a:not(.hm-btn){display:none}
-  .hm-nav div a.hm-acc{display:inline-flex}
-  .hm-nav div a.hm-acc span{display:none}
+  .hm-nav>div{gap:10px}
+  .hm-nav>div>a:not(.hm-btn){display:none}
+  .hm-nav .am .hm-acc span,.hm-nav .am-caret{display:none}
   .hm-burger{display:flex}
   .hm-bar{display:flex;position:fixed;left:10px;right:84px;bottom:14px;z-index:40;align-items:center;justify-content:space-between;gap:10px;padding:8px 8px 8px 16px;border-radius:16px;
     background:rgba(255,255,255,.92);backdrop-filter:blur(10px);box-shadow:0 14px 34px -14px rgba(20,26,58,.5);font-size:14px;color:var(--muted);
