@@ -97,7 +97,7 @@ export function AccountMenu({ me }: { me: Me | null | undefined }) {
           )}
           {admin && (
             <a href="/admin" className="am-admin" role="menuitem">
-              Pannello admin
+              Pannello admin <small>· solo su questo dispositivo</small>
             </a>
           )}
           {me && (
@@ -105,9 +105,9 @@ export function AccountMenu({ me }: { me: Me | null | undefined }) {
               Esci
             </button>
           )}
-          {admin && !me && (
+          {admin && (
             <button type="button" role="menuitem" onClick={logoutAdmin}>
-              Esci dal pannello
+              Esci dal pannello admin
             </button>
           )}
         </div>
@@ -132,6 +132,7 @@ export const AM_CSS = `
 .am-who b{display:block;font-size:15px}
 .am-who em{display:block;font-style:normal;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .am-pop a.am-warn{background:#FFF7E0;color:#5A4300 !important;font-size:13.5px !important;font-weight:600 !important;margin-bottom:4px}
+.am-pop a.am-admin small{font-weight:500;color:var(--muted);font-size:12px}
 .am-hint{margin:6px 12px 8px;font-size:13.5px;color:var(--muted)}
 .am-pop a.am-primary,.am-pop a.am-primary:hover{background:#141A3A !important;color:#fff !important;text-align:center !important;font-weight:700 !important;margin-bottom:4px}
 .am-pop a.am-admin{color:#1F86D6 !important;font-weight:700 !important;border-top:1px solid #EEF0F4;border-radius:0 !important;margin-top:4px}
