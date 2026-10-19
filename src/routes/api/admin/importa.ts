@@ -2,6 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 import { bad, env, json, nowIso, requireAdmin } from "@/server/vault";
 import { legacyFields } from "@/server/legacy";
 
+// Elimina i doppioni dell'import: stessa data, stesso cliente, stessa carta. Tiene il più recente.
+async function dedupe() {
+  const r = await env.DB.prepare(
+    `DELETE FROM orders WHERE source = 'foglio' AND id NOT IN (
+       SELECT id FROM (
+         SELECT id, ROW_NUMBER() OVER (
+           PARTITION BY substr(created_at, 1, 16), lower(trim(customer_name)), lower(trim(card_name))
+           ORDER BY updated_at DESC, rowid DESC
+         ) AS rn FROM orders WHERE source = 'foglio'
+       ) WHERE rn = 1
+     )`,
+  ).run();
+  return r.meta?.changes ?? 0;
+}
+
 // Importa lo storico ordini (righe del vecchio foglio Google già lette dal CSV).
 export const Route = createFileRoute("/api/admin/importa")({
   server: {
@@ -41,7 +56,8 @@ export const Route = createFileRoute("/api/admin/importa")({
           );
         });
         for (let i = 0; i < stmts.length; i += 50) await env.DB.batch(stmts.slice(i, i + 50));
-        return json({ ok: true, imported: rows.length });
+        const removed = await dedupe();
+        return json({ ok: true, imported: rows.length - removed, removed });
       },
       // ricalcola totale, data e dati cliente degli ordini già importati dal foglio
       PUT: async ({ request }) => {
@@ -70,7 +86,8 @@ export const Route = createFileRoute("/api/admin/importa")({
           fixed++;
         }
         for (let i = 0; i < stmts.length; i += 50) await env.DB.batch(stmts.slice(i, i + 50));
-        return json({ ok: true, fixed, headers });
+        const removed = await dedupe();
+        return json({ ok: true, fixed: fixed - removed, removed, headers });
       },
     },
   },

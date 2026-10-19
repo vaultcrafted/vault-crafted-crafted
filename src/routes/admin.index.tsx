@@ -158,9 +158,15 @@ function OrdersList() {
                 <td className="hide-m">{fmtDate(o.created_at)}</td>
                 <td>
                   {euro(o.total)}
-                  <span className={o.paid ? "ad-paid" : "ad-unpaid"}>
-                    {o.paid ? "Pagato" : "Da pagare"}
-                  </span>
+                  {o.status === "annullato" ? (
+                    <span className="ad-sub">Annullato</span>
+                  ) : !o.paid && !o.total ? (
+                    <span className="ad-sub">Omaggio</span>
+                  ) : (
+                    <span className={o.paid ? "ad-paid" : "ad-unpaid"}>
+                      {o.paid ? "Pagato" : "Da pagare"}
+                    </span>
+                  )}
                 </td>
               </tr>
             ))}

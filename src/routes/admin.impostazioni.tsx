@@ -81,11 +81,14 @@ function Settings() {
     if (!preview?.length) return;
     setImporting(true);
     try {
-      const r = await api<{ imported: number }>("/api/admin/importa", {
+      const r = await api<{ imported: number; removed: number }>("/api/admin/importa", {
         method: "POST",
         json: { rows: preview, replace },
       });
-      setMsg(`Importati ${r.imported} ordini nello storico`);
+      setMsg(
+        `Importati ${r.imported} ordini nello storico` +
+          (r.removed ? ` (tolti ${r.removed} doppioni)` : ""),
+      );
       setPreview(null);
     } catch (e) {
       setMsg((e as Error).message);
@@ -98,10 +101,10 @@ function Settings() {
   const fixImported = async () => {
     setFixing(true);
     try {
-      const r = await api<{ fixed: number; headers: string[] }>("/api/admin/importa", { method: "PUT" });
+      const r = await api<{ fixed: number; removed: number }>("/api/admin/importa", { method: "PUT" });
       setMsg(
-        `Sistemati ${r.fixed} ordini importati: totale, data e dati cliente ricalcolati dal foglio.` +
-          (r.headers.length ? ` Colonne lette: ${r.headers.join(", ")}` : ""),
+        `Sistemati ${r.fixed} ordini importati: stato, pagato, totale e data ricalcolati dal foglio.` +
+          (r.removed ? ` Tolti ${r.removed} doppioni.` : " Nessun doppione."),
       );
     } catch (e) {
       setMsg((e as Error).message);
@@ -204,11 +207,11 @@ function Settings() {
           <span>Scegli il CSV</span>
         </label>
         <p className="vc-hint" style={{ marginTop: 14 }}>
-          Hai già importato e vedi totali a €0 o date sbagliate? Ricalcola gli ordini dello storico
-          dai dati del foglio (tipologia + custodia + olografica + spedizione €4,99).
+          Hai importato più volte o vedi pagati, totali o date sbagliati? Questo pulsante ricalcola
+          gli ordini del foglio e toglie i doppioni, senza ricaricare il CSV.
         </p>
         <button type="button" className="vc-btn ghost" onClick={fixImported} disabled={fixing}>
-          {fixing ? "Ricalcolo…" : "Sistema gli ordini già importati"}
+          {fixing ? "Ricalcolo…" : "Sistema e togli i doppioni"}
         </button>
         {preview && preview.length > 0 && (
           <>
