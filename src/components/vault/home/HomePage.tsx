@@ -129,6 +129,78 @@ function Binder({ onOpen }: { onOpen: (src: string) => void }) {
   );
 }
 
+const PARTS: [string, string, number, number, number, number][] = [
+  ["Il nome", "Il suo, un soprannome o una battuta: lo scrivi tu.", 7, 5, 30, 5],
+  ["Elemento e punti vita", "Scegli l'elemento e quanti PS dargli.", 66, 5, 82, 5],
+  ["La tua foto", "A tutta carta o nella finestra: la inquadri tu nel configuratore.", 62, 30, 55, 34],
+  ["Gli attacchi", "Nomi, danni e descrizioni con le vostre frasi.", 85, 72, 50, 80],
+  ["Il numero di serie", "Ogni carta stampata ha il suo numero.", 36, 93.5, 44, 93],
+  ["La frase finale", "Una riga in basso, per chiudere in bellezza.", 93, 95, 72, 95.5],
+];
+
+/** Anatomia di una carta: punti numerati che si accendono uno alla volta. */
+function Anatomy() {
+  const [on, setOn] = useState(0);
+  const [hover, setHover] = useState(false);
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = box.current;
+    if (!el || matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+    let seen = false;
+    const io = new IntersectionObserver(([e]) => (seen = e.isIntersecting), { threshold: 0.3 });
+    io.observe(el);
+    const t = setInterval(() => {
+      if (seen && !hover && !document.hidden) setOn((x) => (x + 1) % PARTS.length);
+    }, 2600);
+    return () => {
+      io.disconnect();
+      clearInterval(t);
+    };
+  }, [hover]);
+  const [, , , , x, y] = PARTS[on];
+  return (
+    <section className="hm-sec an" ref={box} onPointerEnter={() => setHover(true)} onPointerLeave={() => setHover(false)}>
+      <div className="an-card rv" style={{ ["--ax" as string]: `${x}%`, ["--ay" as string]: `${y}%` }}>
+        <img src="/carte/mattak.webp" alt="Una carta Vault Crafted con la foto del cliente" loading="lazy" />
+        <i className="an-dim" aria-hidden />
+        <i className="an-shine" aria-hidden />
+        {PARTS.map(([t, , px, py], i) => (
+          <button
+            type="button"
+            key={t}
+            className="an-pin" data-on={i === on}
+            style={{ left: `${px}%`, top: `${py}%` }}
+            onClick={() => setOn(i)}
+            aria-label={t}
+          >
+            {i + 1}
+          </button>
+        ))}
+      </div>
+      <div className="an-txt">
+        <h2 className="rv">Com'è fatta una carta</h2>
+        <p className="an-lead rv">Ogni parte la decidi tu. Noi pensiamo a stamparla bene.</p>
+        <ol className="an-list">
+          {PARTS.map(([t, d], i) => (
+            <li key={t} className="rv" data-on={i === on} style={{ ["--d" as string]: `${0.06 * i}s` }}>
+              <button type="button" onClick={() => setOn(i)} onPointerEnter={() => setOn(i)}>
+                <b>{i + 1}</b>
+                <span>
+                  <strong>{t}</strong>
+                  <em>{d}</em>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ol>
+        <Link to="/crea" className="hm-btn hm-btn-shine rv">
+          Componi la tua
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 /** Passo 1: la carta si compone da sola nel configuratore (animazione in loop). */
 function StepCompose() {
   return (
@@ -293,6 +365,8 @@ export function HomePage() {
         </header>
       </div>
 
+
+      <Anatomy />
 
       <section className="hm-sec" id="come">
         <h2 className="rv">Come nasce una carta</h2>

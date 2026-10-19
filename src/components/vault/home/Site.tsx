@@ -296,6 +296,32 @@ export const SITE_CSS = `
 .hm-facts b{color:var(--ink)}
 .hm-split{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:56px;align-items:center}
 .hm-split-txt p{color:var(--muted);max-width:36ch;margin:0 0 18px}
+/* anatomia della carta */
+@property --ax{syntax:'<percentage>';initial-value:50%;inherits:true}
+@property --ay{syntax:'<percentage>';initial-value:50%;inherits:true}
+.an{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:70px;align-items:center}
+.an-card{position:relative;width:min(100%,420px);justify-self:center;border-radius:4.5% / 3.2%;transition:--ax .7s cubic-bezier(.2,.8,.2,1),--ay .7s cubic-bezier(.2,.8,.2,1),opacity .8s,transform .8s;
+  box-shadow:0 50px 80px -40px rgba(20,26,58,.7)}
+.an-card img{display:block;width:100%;height:auto;border-radius:inherit}
+.hm-js .an-card.rv{transition:--ax .7s cubic-bezier(.2,.8,.2,1),--ay .7s cubic-bezier(.2,.8,.2,1),opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+.an-dim{position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(circle at var(--ax) var(--ay),transparent 0,transparent 17%,rgba(12,16,38,.62) 30%)}
+.an-shine{position:absolute;inset:0;border-radius:inherit;pointer-events:none;mix-blend-mode:overlay;
+  background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.6) 47%,rgba(255,110,200,.3) 51%,rgba(110,210,255,.3) 55%,transparent 65%);background-size:300% 100%;animation:hmsweep 6s cubic-bezier(.45,0,.2,1) infinite}
+.an-pin{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:2px solid #fff;background:var(--ink);color:#fff;cursor:pointer;
+  font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:16px;line-height:1;display:grid;place-items:center;box-shadow:0 4px 10px rgba(0,0,0,.4);transition:transform .3s cubic-bezier(.2,.8,.2,1),background .3s}
+.an-pin[data-on=true]{background:var(--red);transform:scale(1.25)}
+.an-pin[data-on=true]::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid #fff;animation:anping 1.4s ease-out infinite}
+@keyframes anping{from{transform:scale(.7);opacity:1}to{transform:scale(1.8);opacity:0}}
+.an-lead{color:var(--muted);font-size:19px;margin:-6px 0 22px}
+.an-list{list-style:none;margin:0 0 28px;padding:0;display:grid;gap:4px}
+.an-list button{width:100%;display:flex;align-items:flex-start;gap:16px;text-align:left;padding:12px 14px;border:0;border-radius:14px;background:transparent;color:inherit;font:inherit;cursor:pointer;transition:background .3s}
+.an-list b{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--line);font-family:'Saira Condensed',sans-serif;font-size:17px;transition:all .3s}
+.an-list strong{display:block;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:24px;line-height:1.1}
+.an-list em{display:block;font-style:normal;color:var(--muted);font-size:15px;max-height:0;overflow:hidden;opacity:0;transition:max-height .4s,opacity .4s,margin .4s}
+.an-list li[data-on=true] button{background:var(--panel);box-shadow:0 14px 28px -22px rgba(20,26,58,.5)}
+.an-list li[data-on=true] b{background:var(--red);border-color:var(--red);color:#fff}
+.an-list li[data-on=true] em{max-height:60px;opacity:1;margin-top:4px}
 /* il raccoglitore */
 .hm-binder-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 30px;margin-bottom:34px}
 .hm-binder-head h2{margin:0 0 8px}
@@ -429,6 +455,15 @@ export const SITE_CSS = `
   .hm-sec{padding:70px 18px 6px}
   .hm-steps,.hm-split,.hm-feature{grid-template-columns:1fr}
   .hm-binder-head{margin-bottom:22px}
+  .an{grid-template-columns:1fr;gap:18px}
+  .an-card{width:min(78vw,340px)}
+  .an-txt{display:contents}
+  .an-txt h2{order:0;margin-bottom:0}
+  .an-lead{order:1;margin:0}
+  .an-card{order:2}
+  .an-list{order:3;margin:0}
+  .an .hm-btn{order:4;justify-self:start}
+  .an-pin{width:26px;height:26px;margin:-13px 0 0 -13px;font-size:14px}
   .hm-feature{gap:34px}
   .hm-feature-card{width:min(70vw,300px)}
   .hm-price{grid-template-columns:1fr;padding:14px 18px}
