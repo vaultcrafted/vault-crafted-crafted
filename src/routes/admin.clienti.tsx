@@ -54,9 +54,9 @@ function Clienti() {
         />
       </div>
       {rows.length === 0 ? (
-        <div className="ad-empty">Ancora nessun cliente registrato.</div>
+        <div className="pan-empty">Ancora nessun cliente registrato.</div>
       ) : (
-        <table className="ad-table">
+        <table className="pan-table">
           <thead>
             <tr>
               <th>Cliente</th>
@@ -73,7 +73,7 @@ function Clienti() {
               <tr key={r.id} style={{ cursor: "default" }}>
                 <td>
                   <b>{r.name || "—"}</b>
-                  <span className="ad-sub">
+                  <span className="pan-sub">
                     {r.email} {r.email_verified ? "✓" : "· da confermare"}
                   </span>
                 </td>
