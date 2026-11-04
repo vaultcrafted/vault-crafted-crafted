@@ -3,6 +3,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { AdminShell, api } from "@/components/vault/AdminShell";
 import { FONTS_HREF, Field } from "@/components/vault/CardEditor";
 import { CONTACT_STATUSES, CONTACT_WORLDS, type ContactRow } from "@/lib/contatti";
+import { messaggioPer, seguito } from "@/lib/contattiTesti";
 
 export const Route = createFileRoute("/admin/contatti")({
   component: () => (
@@ -42,6 +43,8 @@ function Contatti() {
   const [open, setOpen] = useState<string | null>(null);
   const [draft, setDraft] = useState<Partial<ContactRow> | null>(null);
   const [busy, setBusy] = useState(false);
+  const [sel, setSel] = useState<string[]>([]);
+  const [scheda, setScheda] = useState<ContactRow | null>(null);
 
   const load = () =>
     api<{ contacts: ContactRow[] }>("/api/admin/contatti")
@@ -134,6 +137,29 @@ function Contatti() {
     try {
       await api(`/api/admin/contatti?id=${encodeURIComponent(r.id)}`, { method: "DELETE" });
       setRows((x) => (x ?? []).filter((y) => y.id !== r.id));
+    } catch (e) {
+      setMsg((e as Error).message);
+    }
+  };
+
+  const eliminaSelezionati = async () => {
+    if (!confirm(`Elimino ${sel.length} contatti dall'elenco?`)) return;
+    try {
+      await api(`/api/admin/contatti?id=${encodeURIComponent(sel.join(","))}`, {
+        method: "DELETE",
+      });
+      setRows((x) => (x ?? []).filter((y) => !sel.includes(y.id)));
+      setSel([]);
+    } catch (e) {
+      setMsg((e as Error).message);
+    }
+  };
+
+  const statoSelezionati = async (stato: string) => {
+    try {
+      await api("/api/admin/contatti", { method: "PATCH", json: { ids: sel, status: stato } });
+      setRows((x) => (x ?? []).map((y) => (sel.includes(y.id) ? { ...y, status: stato } : y)));
+      setSel([]);
     } catch (e) {
       setMsg((e as Error).message);
     }
@@ -257,6 +283,33 @@ function Contatti() {
         <i className="pan-filters-n">{list.length} in vista</i>
       </div>
 
+      {sel.length > 0 && (
+        <div className="pan-bulk">
+          <b>
+            {sel.length} {sel.length === 1 ? "selezionato" : "selezionati"}
+          </b>
+          <select
+            value=""
+            onChange={(e) => {
+              if (e.target.value) void statoSelezionati(e.target.value);
+            }}
+          >
+            <option value="">Cambia stato…</option>
+            {CONTACT_STATUSES.map(([k, v]) => (
+              <option key={k} value={k}>
+                {v}
+              </option>
+            ))}
+          </select>
+          <button type="button" onClick={() => void eliminaSelezionati()}>
+            Elimina
+          </button>
+          <button type="button" className="pan-bulk-x" onClick={() => setSel([])}>
+            Annulla
+          </button>
+        </div>
+      )}
+
       <input
         className="pan-search"
         placeholder="Cerca nome, profilo, contatto, codice"
@@ -288,6 +341,14 @@ function Contatti() {
         <table className="pan-table ct-table">
           <thead>
             <tr>
+              <th className="pan-chk">
+                <input
+                  type="checkbox"
+                  aria-label="Seleziona tutti"
+                  checked={list.length > 0 && sel.length === list.length}
+                  onChange={(e) => setSel(e.target.checked ? list.map((r) => r.id) : [])}
+                />
+              </th>
               <th>Nome</th>
               <th className="hide-m">Mondo</th>
               <th className="hide-m">Seguito</th>
@@ -300,7 +361,22 @@ function Contatti() {
           <tbody>
             {list.map((r) => (
               <Fragment key={r.id}>
-                <tr onClick={() => setOpen(open === r.id ? null : r.id)}>
+                <tr
+                  className={sel.includes(r.id) ? "is-sel" : ""}
+                  onClick={() => setOpen(open === r.id ? null : r.id)}
+                >
+                  <td className="pan-chk" onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      aria-label={`Seleziona ${r.name}`}
+                      checked={sel.includes(r.id)}
+                      onChange={(e) =>
+                        setSel((x) =>
+                          e.target.checked ? [...x, r.id] : x.filter((y) => y !== r.id),
+                        )
+                      }
+                    />
+                  </td>
                   <td>
                     <b>{r.name}</b>
                     <span className="pan-sub">
@@ -334,7 +410,7 @@ function Contatti() {
                 </tr>
                 {open === r.id && (
                   <tr className="ct-detail">
-                    <td colSpan={7}>
+                    <td colSpan={8}>
                       <div className="ct-grid">
                         <div>
                           <h3>Chi è</h3>
@@ -423,6 +499,9 @@ function Contatti() {
                             </Field>
                           </div>
                           <div className="pan-actions" style={{ marginTop: 12 }}>
+                            <button type="button" className="vc-btn" onClick={() => setScheda(r)}>
+                              Messaggio pronto
+                            </button>
                             <button
                               type="button"
                               className="vc-btn ghost"
@@ -560,11 +639,93 @@ function Contatti() {
         </div>
       )}
 
+      {scheda && <FinestraMessaggio c={scheda} chiudi={() => setScheda(null)} segna={patch} />}
+
       {msg && (
         <div className="pan-toast" onClick={() => setMsg("")}>
           {msg}
         </div>
       )}
+    </div>
+  );
+}
+
+function FinestraMessaggio({
+  c,
+  chiudi,
+  segna,
+}: {
+  c: ContactRow;
+  chiudi: () => void;
+  segna: (id: string, data: Partial<ContactRow>) => void;
+}) {
+  const m = messaggioPer(c);
+  const [testo, setTesto] = useState(m.testo);
+  const [copiato, setCopiato] = useState("");
+
+  const copia = async (t: string, cosa: string) => {
+    try {
+      await navigator.clipboard.writeText(t);
+      setCopiato(cosa);
+      setTimeout(() => setCopiato(""), 2000);
+    } catch {
+      setCopiato("copia a mano");
+    }
+  };
+
+  return (
+    <div className="ct-modal" onClick={chiudi}>
+      <div className="ct-card" onClick={(e) => e.stopPropagation()}>
+        <h2>Messaggio per {c.name}</h2>
+        <p className="vc-hint" style={{ marginTop: -6 }}>
+          {m.canale === "mail"
+            ? `Via mail, a ${m.mail}`
+            : "Nessuna mail pubblica: va mandato in DM dal profilo"}
+          . Prima pubblica il contenuto in cui mostri la carta e taggalo, poi scrivi.
+        </p>
+
+        {m.canale === "mail" && (
+          <Field label="Oggetto">
+            <input readOnly value={m.oggetto} onFocus={(e) => e.currentTarget.select()} />
+          </Field>
+        )}
+        <Field label="Testo">
+          <textarea rows={14} value={testo} onChange={(e) => setTesto(e.target.value)} />
+        </Field>
+
+        {c.promo_code && (
+          <p className="vc-hint">
+            Quando risponde, il secondo messaggio: <em>{seguito(c)}</em>
+          </p>
+        )}
+
+        <div className="pan-actions" style={{ marginTop: 12 }}>
+          <button type="button" className="vc-btn" onClick={() => void copia(testo, "testo")}>
+            {copiato === "testo" ? "Copiato" : "Copia il testo"}
+          </button>
+          {m.canale === "mail" && (
+            <a
+              className="vc-btn ghost"
+              href={`mailto:${m.mail}?subject=${encodeURIComponent(m.oggetto)}&body=${encodeURIComponent(testo)}`}
+            >
+              Apri nella posta
+            </a>
+          )}
+          <button
+            type="button"
+            className="vc-btn ghost"
+            onClick={() => {
+              segna(c.id, { status: "contattato" });
+              chiudi();
+            }}
+          >
+            Segna come contattato
+          </button>
+          <button type="button" className="vc-btn ghost" onClick={chiudi}>
+            Chiudi
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
