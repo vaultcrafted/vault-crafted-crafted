@@ -121,6 +121,9 @@ export function AdminShell({ children, title }: { children: React.ReactNode; tit
             <Link to="/admin/clienti" activeProps={{ className: "on" }}>
               Clienti
             </Link>
+            <Link to="/admin/contatti" activeProps={{ className: "on" }}>
+              Contatti
+            </Link>
             <Link to="/admin/impostazioni" activeProps={{ className: "on" }}>
               Impostazioni
             </Link>
