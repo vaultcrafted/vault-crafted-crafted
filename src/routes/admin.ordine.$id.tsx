@@ -281,7 +281,7 @@ function OrderDetail({ id }: { id: string }) {
 
   return (
     <>
-      <div className="ad-head">
+      <div className="pan-head">
         <Link to="/admin" className="vc-btn ghost">
           ← Ordini
         </Link>
@@ -290,7 +290,7 @@ function OrderDetail({ id }: { id: string }) {
         </h1>
         <StatusPill s={o.status} />
         {card?.holo && (
-          <span className="ad-pill" style={{ ["--c" as string]: "#8B5CF6" }}>
+          <span className="pan-pill" style={{ ["--c" as string]: "#8B5CF6" }}>
             ✨ Pellicola olografica
           </span>
         )}
@@ -301,8 +301,8 @@ function OrderDetail({ id }: { id: string }) {
         </span>
       </div>
 
-      <div className="ad-grid">
-        <div className="ad-side">
+      <div className="pan-grid">
+        <div className="pan-side">
           {card ? (
             <CardStage
               data={withSamples({ ...card, serial: o.serial, edition: o.edition })}
@@ -312,13 +312,13 @@ function OrderDetail({ id }: { id: string }) {
               onArtMoved={saveArtPos}
             />
           ) : (
-            <div className="ad-box">
+            <div className="pan-box">
               <h2>Vecchio ordine</h2>
               <p className="vc-hint">Importato dal foglio Google: niente anteprima della carta.</p>
             </div>
           )}
           {card && (
-            <div className="ad-box">
+            <div className="pan-box">
               <h2>Stampa</h2>
               <label className="vc-field">
                 <span>Zoom (trascina sulla carta per spostare)</span>
@@ -338,7 +338,7 @@ function OrderDetail({ id }: { id: string }) {
                   onPointerUp={saveArtPos}
                 />
               </label>
-              <div className="ad-actions" style={{ marginTop: 12 }}>
+              <div className="pan-actions" style={{ marginTop: 12 }}>
                 <button
                   type="button"
                   className="vc-btn"
@@ -348,7 +348,7 @@ function OrderDetail({ id }: { id: string }) {
                   {busy === "print" ? "Preparo…" : "Scarica file di stampa"}
                 </button>
               </div>
-              <div className="ad-actions" style={{ marginTop: 8 }}>
+              <div className="pan-actions" style={{ marginTop: 8 }}>
                 {o.photo_key && (
                   <a className="vc-btn ghost" href={fileUrl(o.photo_key, true)}>
                     Foto cliente
@@ -364,7 +364,7 @@ function OrderDetail({ id }: { id: string }) {
         </div>
 
         <div className="vc-form" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <div className="ad-box">
+          <div className="pan-box">
             <h2>Stato</h2>
             <div className="vc-row vc-r2">
               <label className="vc-field">
@@ -384,7 +384,7 @@ function OrderDetail({ id }: { id: string }) {
               </label>
               <div className="vc-field">
                 <span>Pagamento · {euro(o.total)}</span>
-                <label className="ad-check" style={{ minHeight: 42 }}>
+                <label className="pan-check" style={{ minHeight: 42 }}>
                   <input
                     type="checkbox"
                     checked={!!o.paid}
@@ -410,7 +410,7 @@ function OrderDetail({ id }: { id: string }) {
                     onChange={(e) => setDraftMsg(e.target.value)}
                   />
                 </Field>
-                <div className="ad-actions" style={{ marginTop: 10 }}>
+                <div className="pan-actions" style={{ marginTop: 10 }}>
                   <button
                     type="button"
                     className="vc-btn dark"
@@ -441,7 +441,7 @@ function OrderDetail({ id }: { id: string }) {
             )}
           </div>
 
-          <div className="ad-box">
+          <div className="pan-box">
             <h2>Cliente</h2>
             <div className="vc-row vc-r2">
               <Field label="Nome e cognome">
@@ -460,7 +460,7 @@ function OrderDetail({ id }: { id: string }) {
             <Field label="Note del cliente">
               <textarea value={form.customer_note} onChange={setF("customer_note")} />
             </Field>
-            <div className="ad-actions" style={{ marginTop: 10 }}>
+            <div className="pan-actions" style={{ marginTop: 10 }}>
               {form.phone && (
                 <a
                   className="vc-btn ghost"
@@ -479,7 +479,7 @@ function OrderDetail({ id }: { id: string }) {
             </div>
           </div>
 
-          <div className="ad-box">
+          <div className="pan-box">
             <h2>Gestione</h2>
             <div className="vc-row vc-r2">
               <Field label="Numero di serie">
@@ -530,9 +530,9 @@ function OrderDetail({ id }: { id: string }) {
           )}
 
           {legacy && (
-            <div className="ad-box">
+            <div className="pan-box">
               <h2>Dati dal foglio Google</h2>
-              <dl className="ad-kv">
+              <dl className="pan-kv">
                 {legacyRows.map(([k, v]) => (
                   <Fragment key={k}>
                     <dt>{k}</dt>
@@ -543,16 +543,16 @@ function OrderDetail({ id }: { id: string }) {
             </div>
           )}
 
-          <div className="ad-actions">
+          <div className="pan-actions">
             <button type="button" className="vc-btn danger" onClick={remove}>
               Elimina ordine
             </button>
           </div>
 
           {dirty && (
-            <div className="ad-save">
+            <div className="pan-save">
               <span>Hai modifiche non salvate</span>
-              <div className="ad-actions">
+              <div className="pan-actions">
                 <button
                   type="button"
                   className="vc-btn ghost"
@@ -575,7 +575,7 @@ function OrderDetail({ id }: { id: string }) {
           )}
         </div>
       </div>
-      {toast && <div className="ad-toast">{toast}</div>}
+      {toast && <div className="pan-toast">{toast}</div>}
     </>
   );
 }
