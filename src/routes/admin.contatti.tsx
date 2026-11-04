@@ -185,26 +185,26 @@ function Contatti() {
     <div>
       <style>{CSS}</style>
 
-      <div className="ad-stats">
-        <div className="ad-stat">
+      <div className="pan-stats">
+        <div className="pan-stat">
           <span>In elenco</span>
           <b>{rows.length}</b>
         </div>
-        <div className="ad-stat">
+        <div className="pan-stat">
           <span>Carte inviate</span>
           <b>{inviate}</b>
         </div>
-        <div className="ad-stat">
+        <div className="pan-stat">
           <span>Hanno pubblicato</span>
           <b>{counts.pubblicato ?? 0}</b>
         </div>
-        <div className="ad-stat">
+        <div className="pan-stat">
           <span>Ordini dai codici</span>
           <b>{ordini}</b>
         </div>
       </div>
 
-      <div className="ad-tabs">
+      <div className="pan-tabs">
         <button type="button" aria-pressed={tab === "tutti"} onClick={() => setTab("tutti")}>
           Tutti <em>{rows.length}</em>
         </button>
@@ -215,7 +215,7 @@ function Contatti() {
         ))}
       </div>
 
-      <div className="ad-filters">
+      <div className="pan-filters">
         <label>
           <span>Mondo</span>
           <select value={world} onChange={(e) => setWorld(e.target.value)}>
@@ -254,18 +254,18 @@ function Contatti() {
             Carica i nomi del primo giro
           </button>
         )}
-        <i className="ad-filters-n">{list.length} in vista</i>
+        <i className="pan-filters-n">{list.length} in vista</i>
       </div>
 
       <input
-        className="ad-search"
+        className="pan-search"
         placeholder="Cerca nome, profilo, contatto, codice"
         value={q}
         onChange={(e) => setQ(e.target.value)}
       />
 
       {list.length === 0 ? (
-        <div className="ad-empty">
+        <div className="pan-empty">
           {rows.length === 0 ? (
             <>
               Ancora nessun contatto.
@@ -285,7 +285,7 @@ function Contatti() {
           )}
         </div>
       ) : (
-        <table className="ad-table ct-table">
+        <table className="pan-table ct-table">
           <thead>
             <tr>
               <th>Nome</th>
@@ -303,7 +303,7 @@ function Contatti() {
                 <tr onClick={() => setOpen(open === r.id ? null : r.id)}>
                   <td>
                     <b>{r.name}</b>
-                    <span className="ad-sub">
+                    <span className="pan-sub">
                       {r.handle || r.tier || "—"}
                       {r.card_name ? ` · ${r.card_name}` : ""}
                     </span>
@@ -314,7 +314,7 @@ function Contatti() {
                   </td>
                   <td onClick={(e) => e.stopPropagation()}>
                     <select
-                      className="ad-pillsel"
+                      className="pan-pillsel"
                       style={{ ["--c" as string]: COLOR[r.status] ?? "#5A5D6B" }}
                       value={r.status}
                       onChange={(e) => void patch(r.id, { status: e.target.value })}
@@ -326,7 +326,7 @@ function Contatti() {
                       ))}
                     </select>
                   </td>
-                  <td className="hide-m ad-num">{r.promo_code || "—"}</td>
+                  <td className="hide-m pan-num">{r.promo_code || "—"}</td>
                   <td className="hide-m">{r.orders || 0}</td>
                   <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
                     <span className="ct-open">{open === r.id ? "Chiudi" : "Apri"}</span>
@@ -338,7 +338,7 @@ function Contatti() {
                       <div className="ct-grid">
                         <div>
                           <h3>Chi è</h3>
-                          <dl className="ad-kv">
+                          <dl className="pan-kv">
                             <dt>Fascia</dt>
                             <dd>{r.tier || "—"}</dd>
                             <dt>Profilo</dt>
@@ -422,7 +422,7 @@ function Contatti() {
                               />
                             </Field>
                           </div>
-                          <div className="ad-actions" style={{ marginTop: 12 }}>
+                          <div className="pan-actions" style={{ marginTop: 12 }}>
                             <button
                               type="button"
                               className="vc-btn ghost"
@@ -548,7 +548,7 @@ function Contatti() {
                 onChange={(e) => setDraft({ ...draft, delivery: e.target.value })}
               />
             </Field>
-            <div className="ad-actions" style={{ marginTop: 14 }}>
+            <div className="pan-actions" style={{ marginTop: 14 }}>
               <button type="button" className="vc-btn" disabled={busy} onClick={() => void save()}>
                 {busy ? "Salvo…" : "Salva"}
               </button>
@@ -561,7 +561,7 @@ function Contatti() {
       )}
 
       {msg && (
-        <div className="ad-toast" onClick={() => setMsg("")}>
+        <div className="pan-toast" onClick={() => setMsg("")}>
           {msg}
         </div>
       )}
