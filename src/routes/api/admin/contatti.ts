@@ -207,10 +207,17 @@ export const Route = createFileRoute("/api/admin/contatti")({
         const deny = await requireAdmin(request);
         if (deny) return deny;
         await ensureContacts();
-        const id = new URL(request.url).searchParams.get("id") ?? "";
-        if (!id) return bad("Manca l'id");
-        await env.DB.prepare("DELETE FROM contacts WHERE id = ?").bind(id).run();
-        return json({ ok: true });
+        // un id solo, oppure più id separati da virgola
+        const ids = (new URL(request.url).searchParams.get("id") ?? "")
+          .split(",")
+          .map((x) => x.trim())
+          .filter(Boolean)
+          .slice(0, 200);
+        if (!ids.length) return bad("Manca l'id");
+        await env.DB.prepare(`DELETE FROM contacts WHERE id IN (${ids.map(() => "?").join(",")})`)
+          .bind(...ids)
+          .run();
+        return json({ ok: true, eliminati: ids.length });
       },
     },
   },
