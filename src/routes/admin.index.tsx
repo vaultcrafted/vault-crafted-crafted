@@ -167,25 +167,25 @@ function OrdersList() {
 
   return (
     <>
-      <div className="ad-stats">
-        <div className="ad-stat">
+      <div className="pan-stats">
+        <div className="pan-stat">
           <span>Da fare</span>
           <b>{active}</b>
         </div>
-        <div className="ad-stat">
+        <div className="pan-stat">
           <span>Nuovi</span>
           <b>{count("nuovo")}</b>
         </div>
-        <div className="ad-stat">
+        <div className="pan-stat">
           <span>Incassato</span>
           <b>{euro(data?.money.incassato ?? 0)}</b>
         </div>
-        <div className="ad-stat">
+        <div className="pan-stat">
           <span>Da incassare</span>
           <b>{euro(data?.money.da_incassare ?? 0)}</b>
         </div>
       </div>
-      <div className="ad-tabs" role="tablist">
+      <div className="pan-tabs" role="tablist">
         {TABS.map(([k, l]) => (
           <button key={k || "all"} type="button" aria-pressed={tab === k} onClick={() => setTab(k)}>
             {l}
@@ -194,13 +194,13 @@ function OrdersList() {
         ))}
       </div>
       <input
-        className="ad-search"
+        className="pan-search"
         type="search"
         placeholder="Cerca per nome carta, cliente, email o numero…"
         value={q}
         onChange={(e) => setQ(e.target.value)}
       />
-      <div className="ad-filters">
+      <div className="pan-filters">
         <label>
           <span>Pagamento</span>
           <select value={f.pay} onChange={(e) => setFilter("pay", e.target.value)}>
@@ -242,7 +242,7 @@ function OrdersList() {
         {filtersOn && (
           <button
             type="button"
-            className="ad-filters-x"
+            className="pan-filters-x"
             onClick={() => {
               setF(NO_FILTERS);
               try {
@@ -255,11 +255,11 @@ function OrdersList() {
             Azzera filtri
           </button>
         )}
-        {data && <em className="ad-filters-n">{data.orders.length} ordini</em>}
+        {data && <em className="pan-filters-n">{data.orders.length} ordini</em>}
       </div>
       {err && <p className="vc-err">{err}</p>}
       {sel.size > 0 && (
-        <div className="ad-bulk" role="toolbar">
+        <div className="pan-bulk" role="toolbar">
           <b>{sel.size} selezionati</b>
           <select
             value=""
@@ -285,17 +285,17 @@ function OrdersList() {
             <option value="da_pagare">Da pagare</option>
             <option value="omaggio">Omaggio</option>
           </select>
-          <button type="button" className="ad-bulk-x" onClick={() => setSel(new Set())}>
+          <button type="button" className="pan-bulk-x" onClick={() => setSel(new Set())}>
             Annulla
           </button>
         </div>
       )}
-      {data && data.orders.length === 0 && <div className="ad-empty">Nessun ordine qui.</div>}
+      {data && data.orders.length === 0 && <div className="pan-empty">Nessun ordine qui.</div>}
       {data && data.orders.length > 0 && (
-        <table className="ad-table">
+        <table className="pan-table">
           <thead>
             <tr>
-              <th className="ad-chk">
+              <th className="pan-chk">
                 <input
                   type="checkbox"
                   aria-label="Seleziona tutti"
@@ -320,7 +320,7 @@ function OrdersList() {
                 className={sel.has(o.id) ? "is-sel" : undefined}
                 onClick={() => nav({ to: "/admin/ordine/$id", params: { id: o.id } })}
               >
-                <td className="ad-chk" onClick={(e) => e.stopPropagation()}>
+                <td className="pan-chk" onClick={(e) => e.stopPropagation()}>
                   <input
                     type="checkbox"
                     aria-label="Seleziona"
@@ -329,28 +329,28 @@ function OrdersList() {
                   />
                 </td>
                 <td>
-                  <span className="ad-num">
+                  <span className="pan-num">
                     {o.serial ? String(o.serial).padStart(3, "0") : "—"}
                   </span>
                   {o.edition ? (
-                    <span className="ad-sub">
+                    <span className="pan-sub">
                       {o.edition}/{MAX_EDITION}
                     </span>
                   ) : null}
                 </td>
                 <td>
                   <b>{o.card_name || "—"}</b>
-                  <span className="ad-sub">
+                  <span className="pan-sub">
                     {o.source === "foglio" ? o.category || "Vecchio ordine" : catOf(o.category).n}
                   </span>
                 </td>
                 <td className="hide-m">
                   {o.customer_name || "—"}
-                  <span className="ad-sub">{o.email}</span>
+                  <span className="pan-sub">{o.email}</span>
                 </td>
                 <td onClick={(e) => e.stopPropagation()}>
                   <select
-                    className="ad-pillsel"
+                    className="pan-pillsel"
                     style={{ ["--c" as string]: STATUS_COLORS[o.status] ?? "#5A5D6B" }}
                     value={o.status}
                     aria-label="Stato"
@@ -367,7 +367,7 @@ function OrdersList() {
                 <td onClick={(e) => e.stopPropagation()}>
                   {euro(o.total)}
                   <select
-                    className={`ad-paysel is-${o.status === "annullato" && !o.paid ? "off" : payOf(o)}`}
+                    className={`pan-paysel is-${o.status === "annullato" && !o.paid ? "off" : payOf(o)}`}
                     value={payOf(o)}
                     aria-label="Pagamento"
                     onChange={(e) => quick(o, { pay: e.target.value as Pay })}
