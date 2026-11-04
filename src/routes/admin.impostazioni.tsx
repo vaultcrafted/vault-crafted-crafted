@@ -118,12 +118,12 @@ function Settings() {
   return (
     <div style={{ display: "grid", gap: 14, maxWidth: 760 }}>
       {msg && (
-        <div className="ad-box" role="status">
+        <div className="pan-box" role="status">
           {msg}
         </div>
       )}
 
-      <section className="ad-box">
+      <section className="pan-box">
         <h2>Numerazione</h2>
         <p className="vc-hint">
           Ogni ordine dal sito prende il numero successivo. Il prossimo sarà{" "}
@@ -149,7 +149,7 @@ function Settings() {
         </p>
       </section>
 
-      <section className="ad-box">
+      <section className="pan-box">
         <h2>Pagamento</h2>
         <p className="vc-hint">
           Queste istruzioni vengono aggiunte all'email "riepilogo e pagamento" che mandi dal
@@ -163,14 +163,14 @@ function Settings() {
             onChange={(e) => setPayInfo(e.target.value)}
           />
         </Field>
-        <div className="ad-actions" style={{ marginTop: 10 }}>
+        <div className="pan-actions" style={{ marginTop: 10 }}>
           <button type="button" className="vc-btn" onClick={savePay}>
             Salva
           </button>
         </div>
       </section>
 
-      <section className="ad-box">
+      <section className="pan-box">
         <h2>Email</h2>
         <p className="vc-hint">
           {mail === null
@@ -179,14 +179,14 @@ function Settings() {
               ? "Brevo è collegato: conferme d'ordine, riepiloghi di pagamento e avvisi di spedizione partono in automatico."
               : "Brevo non è ancora collegato: gli ordini arrivano nel pannello ma le email non partono."}
         </p>
-        <div className="ad-actions">
+        <div className="pan-actions">
           <button type="button" className="vc-btn" onClick={testMail} disabled={testing}>
             {testing ? "Invio…" : "Manda un'email di prova"}
           </button>
         </div>
       </section>
 
-      <section className="ad-box">
+      <section className="pan-box">
         <h2>Importa i vecchi ordini</h2>
         <p className="vc-hint">
           Su Google Fogli: File → Scarica → Valori separati da virgola (.csv). Carica qui il file:
