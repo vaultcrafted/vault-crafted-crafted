@@ -6,4 +6,12 @@
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig();
+export default defineConfig({
+  vite: {
+    build: {
+      // Il builder di Cloudflare ha un limite basso di file aperti: con la lettura
+      // in parallelo di tutte le icone di lucide-react la build muore con EMFILE.
+      rollupOptions: { maxParallelFileOps: 4 },
+    },
+  },
+});
