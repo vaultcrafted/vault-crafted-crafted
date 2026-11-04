@@ -156,14 +156,14 @@ function PrintSheet() {
   };
 
   return (
-    <div className="ad-grid" style={{ gridTemplateColumns: "minmax(0,1fr) minmax(0,360px)" }}>
+    <div className="pan-grid" style={{ gridTemplateColumns: "minmax(0,1fr) minmax(0,360px)" }}>
       <div>
         {!rows && <p className="vc-hint">Caricamento…</p>}
         {rows && rows.length === 0 && (
-          <div className="ad-empty">Nessun ordine in corso da stampare.</div>
+          <div className="pan-empty">Nessun ordine in corso da stampare.</div>
         )}
         {rows && rows.length > 0 && (
-          <table className="ad-table">
+          <table className="pan-table">
             <thead>
               <tr>
                 <th style={{ width: 40 }}>
@@ -189,11 +189,11 @@ function PrintSheet() {
                     <input type="checkbox" readOnly checked={!!sel[o.id]} aria-label="Seleziona" />
                   </td>
                   <td>
-                    <span className="ad-num">{pad(o.serial)}</span>
+                    <span className="pan-num">{pad(o.serial)}</span>
                   </td>
                   <td>
                     <b>{o.card_name || "—"}</b>
-                    <span className="ad-sub">
+                    <span className="pan-sub">
                       {catOf(o.category).n}
                     </span>
                   </td>
@@ -208,8 +208,8 @@ function PrintSheet() {
         )}
       </div>
 
-      <div className="ad-side">
-        <div className="ad-box">
+      <div className="pan-side">
+        <div className="pan-box">
           <h2>Foglio</h2>
           <div className="vc-seg" style={{ flexDirection: "column", alignItems: "stretch" }}>
             {SHEETS.map((s) => (
@@ -229,7 +229,7 @@ function PrintSheet() {
             taglio ai bordi, PDF a 300 dpi. Sotto il foglio c'è l'elenco delle carte in ordine di
             posizione.
           </p>
-          <label className="ad-check" style={{ margin: "10px 0" }}>
+          <label className="pan-check" style={{ margin: "10px 0" }}>
             <input
               type="checkbox"
               checked={splitHolo}
@@ -240,7 +240,7 @@ function PrintSheet() {
           <p className="vc-hint" style={{ margin: "0 0 12px" }}>
             {chosen.length} carte selezionate · {perSheet} per foglio
           </p>
-          <div className="ad-actions">
+          <div className="pan-actions">
             <button
               type="button"
               className="vc-btn"
